@@ -1,25 +1,56 @@
+<style>
+    .nav-link.inner-nav {
+        color: gray; /* default color for inactive */
+        font-weight: normal;
+      }
+      
+      .nav-link.inner-nav.active {
+        color: teal !important; /* color for active tab */
+        font-weight: bold;
+        background: #fffdf2;
+        border-top: 1px solid rgba(0, 128, 128, 0.356);
+        border-bottom: 5px solid rgba(0, 128, 128, 0.356);
+        border-right: 1px solid rgba(0, 128, 128, 0.356);
+        border-left: 1px solid rgba(0, 128, 128, 0.356);
+        vertical-align:bottom;
+
+
+      }
+
+      .seshat-edit-tab {
+        color: teal !important; /* color for active tab */
+        font-weight: bold;
+        border-top: 1px solid rgba(0, 128, 128, 0.356);
+        border-bottom: 5px solid rgba(0, 128, 128, 0.356);
+        border-right: 1px solid rgba(0, 128, 128, 0.356);
+        border-left: 1px solid rgba(0, 128, 128, 0.356);
+        background: #fffdf2;
+        vertical-align:bottom;
+      }
+</style>
+
 <div class="col-md-12 my-3">
 
     <div class="mt-1">
         <!-- Nav Tabs -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs pb-0 mb-0" id="myTab" role="tablist">
             <li class="nav-item pb-0 mb-0" role="presentation">
-                <button class="nav-link active pb-0 mb-0" style="padding:0px !important;"  id="table1-tab" data-bs-toggle="tab" data-bs-target="#table1" type="button" role="tab" aria-controls="table1" aria-selected="true">
+                <button class="nav-link active inner-nav pb-0 mb-0" style="padding:0px !important; margin:0px !important;"  id="table1-tab" data-bs-toggle="tab" data-bs-target="#table1" type="button" role="tab" aria-controls="table1" aria-selected="true">
                     {% if form.instance.comment  %}
-                    <div class="fw-bold" style=" border-bottom:5px solid maroon;">
-                        <div class="fs-5 pb-0 mb-0 px-3" style="font-family: Roboto Mono; color:#800000;">
+                    <div>
+                        <div class="fs-6 pb-0 mb-0 px-2">
                             Seshat Data (Final)
                         </div>
                     </div>
                     {% elif form.instance.researchers_list %}
-                    <div class="fw-bold pb-0 mb-0" style=" border-bottom:5px solid maroon;">
-                        <div class="fs-5 pb-0 mb-0  px-3" style="font-family: Roboto Mono; color:#800000;">
+                    <div class="pb-0 mb-0">
+                        <div class="fs-6 pb-0 mb-0  px-2">
                             Seshat Data (Check in Progress)
                         </div>
                     </div>
                     {% else %}
-                    <div class="fw-bold text-secondary" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
-                        <div class="fs-5 pb-0 mb-0 px-3" style="font-family: Roboto Mono; color: black;">
+                    <div>
+                        <div class="fs-6 pb-0 mb-0 px-2">
                             LLM Data 
                         </div>
                     </div>
@@ -34,20 +65,16 @@
             none
             {% endif %}                
 ;">
-                <button class="nav-link" id="table2-tab" style="padding:0px !important;"  data-bs-toggle="tab" data-bs-target="#table2" type="button" role="tab" aria-controls="table2" aria-selected="false">
+                <button class="nav-link inner-nav" id="table2-tab" style="padding:0px !important;"  data-bs-toggle="tab" data-bs-target="#table2" type="button" role="tab" aria-controls="table2" aria-selected="false">
 
-                    <div class="fw-bold" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
-                        <div class="fs-5  pb-0 mb-0 px-3" style="font-family: Roboto Mono; color: lightgray;">
+                    <div>
+                        <div class="fs-6  pb-0 mb-0 px-2">
                             LLM Data
                         </div>
                     </div>
                 </button>
             </li>
-            <li class="nav-item" role="presentation" style="display:none;">
-                <button class="nav-link" id="table3-tab" data-bs-toggle="tab" data-bs-target="#table3" type="button" role="tab" aria-controls="table3" aria-selected="false">
-                  XXXX3
-                </button>
-            </li>
+
         </ul>
 
         <!-- Tab Content -->
@@ -55,41 +82,7 @@
             <!-- Tab 1 -->
             <div class="tab-pane fade show active  " id="table1" role="tabpanel" aria-labelledby="table1-tab">
                 <div class="table-container pb-0" >
-                    <table id="table_id" class="table align-middle table-hover" style="border-width:0;">
-                        {% if form.instance.comment or form.instance.researchers_list %}
-                            <thead> 
-                                <tr style="border-width:0;">
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Event</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Macro Event</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Polity</th>
-
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Type(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Year(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Intensity</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Extent</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Data Point</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">LLM Checks</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Progress</th>
-                                </tr>
-                            </thead>
-                        {% else %}
-                            <thead> 
-                                <tr style="border-width:0;">
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Event Name</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Macro Event</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Polity</th>
-
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Type(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Year(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">LLM Checks 
-                                    </th>
-
-                                </tr>
-                            </thead>
-                        {% endif %}
-    
+                    <table id="table_id1" class="table align-middle" style="border-width:0;">
                         <tbody>
                       
                             {% autoescape off %}
@@ -121,23 +114,7 @@
             <!-- Tab 2 -->
             <div class="tab-pane fade row gutters-sm" id="table2" role="tabpanel" aria-labelledby="table2-tab">
                 <div class="table-container pb-0" >
-                    <table id="table_id" class="table align-middle table-hover" style="border-width:0;">
-
-                            <thead> 
-                                <tr style="border-width:0;">
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Event Name</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Macro Event</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Polity</th>
-
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Type(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Year(s)</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">LLM Checks 
-                                    </th>
-                                </tr>
-                            </thead>
-    
+                    <table id="table_id2" class="table align-middle" style="border-width:0;">
                         <tbody>
                       
                             {% autoescape off %}

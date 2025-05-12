@@ -435,6 +435,19 @@ from .views.rt import (
     SocVioFreqRelGrpViewSet,
     SocDisRelGrpOccFunViewSet,
     GovPressConvForAgaViewSet,
+
+    MoralizingSupernaturalPunishmentAndRewardViewSet,
+    MoralizingSupernaturalConcernIsPrimaryViewSet,
+    MoralizingEnforcementIsCertainViewSet,
+    MoralizingEnforcementIsBroadViewSet,
+    MoralizingEnforcementIsTargetedViewSet,
+    MoralizingEnforcementOfRulersViewSet,
+    MoralizingReligionAdoptedByElitesViewSet,
+    MoralizingReligionAdoptedByCommonersViewSet,
+    MoralizingEnforcementInAfterlifeViewSet,
+    MoralizingEnforcementInThisLifeViewSet,
+    MoralizingEnforcementIsAgenticViewSet
+
 )
 
 router.register(
@@ -540,6 +553,73 @@ router.register(
     GovPressConvForAgaViewSet,
     basename="api_societal-pressure-to-convert-or-against-conversions",
 )
+
+router.register(
+    r"rt/moralizing-supernatural-punishment-and-reward",
+    MoralizingSupernaturalPunishmentAndRewardViewSet,
+    basename="api_moralizing-supernatural-punishment-and-reward",
+)
+
+router.register(
+    r"rt/moralizing-supernatural-concern-is-primary",
+    MoralizingSupernaturalConcernIsPrimaryViewSet,
+    basename="api_moralizing-supernatural-concern-is-primary",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-is-certain",
+    MoralizingEnforcementIsCertainViewSet,
+    basename="api_moralizing-enforcement-is-certain",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-is-broad",
+    MoralizingEnforcementIsBroadViewSet,
+    basename="api_moralizing-enforcement-is-broad",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-is-targeted",
+    MoralizingEnforcementIsTargetedViewSet,
+    basename="api_moralizing-enforcement-is-targeted",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-of-rulers",
+    MoralizingEnforcementOfRulersViewSet,
+    basename="api_moralizing-enforcement-of-rulers",
+)
+
+router.register(
+    r"rt/moralizing-religion-adopted-by-elites",
+    MoralizingReligionAdoptedByElitesViewSet,
+    basename="api_moralizing-religion-adopted-by-elites",
+)
+
+router.register(
+    r"rt/moralizing-religion-adopted-by-commoners",
+    MoralizingReligionAdoptedByCommonersViewSet,
+    basename="api_moralizing-religion-adopted-by-commoners",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-in-afterlife",
+    MoralizingEnforcementInAfterlifeViewSet,
+    basename="api_moralizing-enforcement-in-afterlife",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-in-this-life",
+    MoralizingEnforcementInThisLifeViewSet,
+    basename="api_moralizing-enforcement-in-this-life",
+)
+
+router.register(
+    r"rt/moralizing-enforcement-is-agentic",
+    MoralizingEnforcementIsAgenticViewSet,
+    basename="api_moralizing-enforcement-is-agentic",
+)
+
 
 
 # Add views for "sc" app to the router

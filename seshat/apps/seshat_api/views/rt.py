@@ -29,6 +29,19 @@ from ..filters.rt import (
     SocVioFreqRelGrpFilter,
     SocDisRelGrpOccFunFilter,
     GovPressConvForAgaFilter,
+
+    MoralizingSupernaturalPunishmentAndRewardFilter,
+    MoralizingSupernaturalConcernIsPrimaryFilter,
+    MoralizingEnforcementIsCertainFilter,
+    MoralizingEnforcementIsBroadFilter,
+    MoralizingEnforcementIsTargetedFilter,
+    MoralizingEnforcementOfRulersFilter,
+    MoralizingReligionAdoptedByElitesFilter,
+    MoralizingReligionAdoptedByCommonersFilter,
+    MoralizingEnforcementInAfterlifeFilter,
+    MoralizingEnforcementInThisLifeFilter,
+    MoralizingEnforcementIsAgenticFilter
+
 )
 
 from ..models import (
@@ -53,6 +66,18 @@ from ..models import (
     Soc_vio_freq_rel_grp,
     Soc_dis_rel_grp_occ_fun,
     Gov_press_conv_for_aga,
+
+    Moralizing_supernatural_punishment_and_reward,
+    Moralizing_supernatural_concern_is_primary,
+    Moralizing_enforcement_is_certain,
+    Moralizing_enforcement_is_broad,
+    Moralizing_enforcement_is_targeted,
+    Moralizing_enforcement_of_rulers,
+    Moralizing_religion_adopted_by_elites,
+    Moralizing_religion_adopted_by_commoners,
+    Moralizing_enforcement_in_afterlife,
+    Moralizing_enforcement_in_this_life,
+    Moralizing_enforcement_is_agentic,
 )
 
 
@@ -369,3 +394,124 @@ class GovPressConvForAgaViewSet(
     model = Gov_press_conv_for_aga
     pagination_class = SeshatAPIPagination
     filterset_class = GovPressConvForAgaFilter
+
+
+class MoralizingSupernaturalPunishmentAndRewardViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_supernatural_punishment_and_reward
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingSupernaturalPunishmentAndRewardFilter
+
+
+class MoralizingSupernaturalConcernIsPrimaryViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_supernatural_concern_is_primary
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingSupernaturalConcernIsPrimaryFilter
+
+
+class MoralizingEnforcementIsCertainViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_is_certain
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementIsCertainFilter
+
+
+class MoralizingEnforcementIsBroadViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_is_broad
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementIsBroadFilter
+
+
+class MoralizingEnforcementIsTargetedViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_is_targeted
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementIsTargetedFilter
+
+
+class MoralizingEnforcementOfRulersViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_of_rulers
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementOfRulersFilter
+
+
+class MoralizingReligionAdoptedByElitesViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_religion_adopted_by_elites
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingReligionAdoptedByElitesFilter
+
+
+class MoralizingReligionAdoptedByCommonersViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_religion_adopted_by_commoners
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingReligionAdoptedByCommonersFilter
+
+
+class MoralizingEnforcementInAfterlifeViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_in_afterlife
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementInAfterlifeFilter
+
+
+class MoralizingEnforcementInThisLifeViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_in_this_life
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementInThisLifeFilter
+
+
+class MoralizingEnforcementIsAgenticViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    model = Moralizing_enforcement_is_agentic
+    pagination_class = SeshatAPIPagination
+    filterset_class = MoralizingEnforcementIsAgenticFilter

@@ -335,9 +335,10 @@
                 <br>
                 <select name="macro_event" id="macro_event"  class="form-select js-example-basic-single " onchange="this.form.submit()">
                   <option value="">All</option>
-                  {% for macro in macro_events %}
-                    <option value="{{ macro }}" {% if macro == selected_macro %}selected{% endif %}>
-                      {{ macro }}
+                  {% for event, count in macro_events_with_counts %}
+                    <option value="{{ event }}" {% if event == selected_macro %}selected{% endif %}>
+                       {{ event }} (#{{ count }} Events)
+
                     </option>
                   {% endfor %}
                 </select>

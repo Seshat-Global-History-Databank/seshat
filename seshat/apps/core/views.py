@@ -73,7 +73,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
-from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level
+from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level, Polity_territory, Polity_population
 
 from ..crisisdb.models import Power_transition
 
@@ -2763,7 +2763,7 @@ class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
         context['plot_data'] = json.dumps({
             'datasets': datasets
         })
-        
+
         context['log_plot_data'] = json.dumps({
             'datasets': log_datasets
         })
@@ -6212,3 +6212,80 @@ def download_habitation_sites_csv(request):
         ])
 
     return response
+
+
+from collections import defaultdict
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
+import json
+
+def territory_plot_view_old(request):
+    territories = Polity_territory.objects.select_related('polity').order_by('year_from')
+
+    polity_data = defaultdict(lambda: {'years': [], 'data': [], 'label': '', 'color': ''})
+    color_palette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f']  # add more if needed
+
+    polity_id_to_color = {}
+    color_index = 0
+
+    for terr in territories:
+        if not (terr.year_from and terr.polity_territory_from and terr.polity):
+            continue
+        polity_name = terr.polity.new_name
+        if terr.polity.id not in polity_id_to_color:
+            polity_id_to_color[terr.polity.id] = color_palette[color_index % len(color_palette)]
+            color_index += 1
+        #log10(p) if p > 0 else None for p in values
+        data = polity_data[terr.polity.id]
+        data['years'].append(terr.year_from)
+        p = terr.polity_territory_from
+        data['data'].append(log10(p) if p > 0 else None)
+        data['label'] = polity_name
+        data['color'] = polity_id_to_color[terr.polity.id]
+
+    datasets = list(polity_data.values())
+    plot_data = {'datasets': datasets}
+
+    context = {
+        'territory_plot_data': json.dumps(plot_data, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'core/polity/ter_analytics.html', context)
+
+def territory_plot_view(request):
+    from collections import defaultdict
+    from django.core.serializers.json import DjangoJSONEncoder
+    import json
+
+    territories = Polity_territory.objects.select_related('polity').order_by('year_from')
+
+    plot_segments = []
+    color_palette = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f']
+    polity_id_to_color = {}
+    color_index = 0
+
+    for terr in territories:
+        if not (terr.year_from and terr.year_to and terr.polity_territory_from and terr.polity_territory_to and terr.polity):
+            continue
+
+        polity_id = terr.polity.id
+        polity_name = terr.polity.name
+
+        if polity_id not in polity_id_to_color:
+            polity_id_to_color[polity_id] = color_palette[color_index % len(color_palette)]
+            color_index += 1
+
+        color = polity_id_to_color[polity_id]
+
+        # One segment per record
+        segment = {
+            'x': [terr.year_from, terr.year_to],
+            'y': [terr.polity_territory_from, terr.polity_territory_to],
+            'label': polity_name,
+            'color': color
+        }
+        plot_segments.append(segment)
+
+    context = {
+        'territory_segments_data': json.dumps(plot_segments, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'core/polity/ter_analytics.html', context)

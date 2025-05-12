@@ -2,9 +2,51 @@
 {% load mathfilters %}
 {% load custom_filters %}
 
+<style>
+    .top-level-header {
+        border-bottom: 4px solid rgba(0, 128, 128, 0.122);
+        border-radius:3px;
+        color: gray;
+        display:block;
+        margin-bottom: 2px;
+        font-size:0.85rem;
+    }
+</style>
 
-<tr class="highlighted-value-title-full">
-    <td class="fw-normal text-dark" style="text-align: left;">     
+<tr style="background:#fffdf2; vertical-align:top; border-left: 1px solid rgba(0, 128, 128, 0.356);         box-shadow: -2px 2px 2px rgba(0, 128, 128, 0.356);
+">
+    <td class="fw-normal text-dark ps-2" style="text-align: left; width:25%">     
+        <span class="top-level-header">Event</span> 
+
+        <span> <b>{{ form.instance.name}}</b> </span>
+        <br>
+
+        <span class="bg-secondary text-white px-2  me-2 rounded">
+            {% if form.instance.year_from == None %}                        
+            {% elif form.instance.year_from == form.instance.year_to %}
+                {% if form.instance.year_from < 0 %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small>BCE</small> </span>
+                {% else %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small>CE</small></span>
+                {% endif %}
+            {% elif form.instance.year_to == None %}
+                {% if form.instance.year_from < 0 %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small>BCE</small></span>
+                {% else %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small>CE</small></span>
+                {% endif %}
+            {% elif form.instance.year_to == None and form.instance.year_from == None %}
+            <span style="text-align: center; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+            {% else %}
+                {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small>BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small>BCE</small></span>
+                {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small>BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small>CE</small></span>
+                {% else %}
+                <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small>CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small>CE</small></span>
+                {% endif %}
+            {% endif %}
+        </span>
         <small style="vertical-align: top;">
             {% if form.instance.created_date|date:"Y-m-d" < "2025-03-29" %}
             <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
@@ -13,13 +55,13 @@
           {% else %}
             <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
           {% endif %}
-        </small>                      
-        <span> {{ form.instance.name}}</span>
-    </td>
-    <td class="fw-normal text-dark" style="text-align: left;">
+        </small>   
+<br>
+Macro Event: 
         {{form.instance.llm_name|extract_macro_event}}
     </td>
-    <td class="fw-normal text-dark" style="text-align: left;">
+    <td class="fw-normal text-dark" style="text-align: left; width:20%;">
+       <span class="top-level-header">Polity</span> 
         {% if form.instance.polity.long_name %}
         <span class="fw-bold">
             <a href="{% url 'polity-detail-main' form.instance.polity.id %}#instability_event_var">{{ form.instance.polity.long_name }}</a>
@@ -30,46 +72,36 @@
         </span>
         {% endif %}
     </td>
-    <td class="fw-normal text-dark" style="text-align: left;">{{ form.instance.get_instability_types }}
+    <td class="fw-norma text-dark" style="text-align: left;">
+        <span class="top-level-header">Types</span> 
+    
+        <b>{{ form.instance.get_instability_types }}</b> 
     </td>
-    <td class="fw-normal text-dark" style="text-align: center;">                        
-        {% if form.instance.year_from == None %}                        
-        {% elif form.instance.year_from == form.instance.year_to %}
-            {% if form.instance.year_from < 0 %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
-            {% else %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% elif form.instance.year_to == None %}
-            {% if form.instance.year_from < 0 %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></span>
-            {% else %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% elif form.instance.year_to == None and form.instance.year_from == None %}
-        <span style="text-align: center; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
-        {% else %}
-            {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
-            {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-            {% else %}
-            <span style="text-align: center; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% endif %}
-        </td>
-    <td class="fw-bold text-dark" style="text-align: center;">
-        <span> {{ form.instance.inst_intensity}}</span>
+
+    <td class="text-secondary" style="text-align: center;">
+        <span class="top-level-header">Intensity</span> 
+        
+        <b>{{ form.instance.inst_intensity}}</b>
     </td>
-    <td class="fw-bold text-dark" style="text-align: center;"><span> {{ form.instance.inst_extent}}</span></td>
-    <td class="fw-normal text-dark" style="text-align: center;">
-        {{ form.instance.real_event_check }}
+    <td class="text-secondary" style="text-align: center;">
+        <span class="top-level-header">Extent</span> 
+
+    
+        <b>{{ form.instance.inst_extent}}</b></td>
+    <td class="text-secondary" style="text-align: center;">
+       <span class="top-level-header">DataPoint</span> 
+
+    
+       <b>{{ form.instance.real_event_check }}</b> 
 
     </td>
-        <td class="fw-normal text-dark" style="text-align: left;">
-            {{ form.instance.get_instability_checks }}
+        <td class="fw-normal text-secondary" style="text-align: left;">
+          <span class="top-level-header">Checks</span> 
+          {{ form.instance.get_instability_checks }}
         </td>
-        <td class="fw-normal text-dark" style="text-align: left;">
+        <td class="fw-normal text-secondary pe-2" style="text-align: left;  border-right: 1px solid rgba(0, 128, 128, 0.356);">
+            <span class="top-level-header">Progress</span> 
+        
             {% autoescape off %}
                                                 
             <small style="vertical-align: bottom;  display:inline-block;">

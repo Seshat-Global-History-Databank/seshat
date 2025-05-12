@@ -20,6 +20,18 @@ from ..models import (
     Soc_vio_freq_rel_grp,
     Soc_dis_rel_grp_occ_fun,
     Gov_press_conv_for_aga,
+
+    Moralizing_supernatural_punishment_and_reward,
+    Moralizing_supernatural_concern_is_primary,
+    Moralizing_enforcement_is_certain,
+    Moralizing_enforcement_is_broad,
+    Moralizing_enforcement_is_targeted,
+    Moralizing_enforcement_of_rulers,
+    Moralizing_religion_adopted_by_elites,
+    Moralizing_religion_adopted_by_commoners,
+    Moralizing_enforcement_in_afterlife,
+    Moralizing_enforcement_in_this_life,
+    Moralizing_enforcement_is_agentic,
 )
 
 from django_filters import rest_framework as django_filters
@@ -215,6 +227,84 @@ class SocDisRelGrpOccFunFilter(RestrictedPolityFilter):
 class GovPressConvForAgaFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_press_conv_for_aga
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+
+class MoralizingSupernaturalPunishmentAndRewardFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_supernatural_punishment_and_reward
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingSupernaturalConcernIsPrimaryFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_supernatural_concern_is_primary
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementIsCertainFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_is_certain
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementIsBroadFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_is_broad
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementIsTargetedFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_is_targeted
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementOfRulersFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_of_rulers
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingReligionAdoptedByElitesFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_religion_adopted_by_elites
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingReligionAdoptedByCommonersFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_religion_adopted_by_commoners
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementInAfterlifeFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_in_afterlife
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementInThisLifeFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_in_this_life
+        fields = {
+            "coded_value": ["exact"],
+        }
+
+class MoralizingEnforcementIsAgenticFilter(SeshatCommonFilter, django_filters.FilterSet):
+    class Meta:
+        model = Moralizing_enforcement_is_agentic
         fields = {
             "coded_value": ["exact"],
         }
