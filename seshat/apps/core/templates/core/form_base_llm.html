@@ -113,6 +113,7 @@
     .select2-container .select2-selection__arrow {
       height: 36px;
       margin-top: 4px; /* Adjust the margin-top as needed */
+      width:100%;
 
     }
 
@@ -389,45 +390,28 @@
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-1">
-    <div class="row d-flex mt-3">
+    <div class="row d-flex mt-2">
         <div class="row" style="--bs-gutter-x: 0.0rem;">
             <div class="col-sm-5">
                 {% if db_section_mapper %}
     
-                <div class="h4 p-1" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
-                    {% if var_section %}
-                    <span class="p-2 m-0 fw-normal">&nbsp;&nbsp; {{var_section}} </span>
-                    {% endif %}
+                <div class="h4 p-1">
+                    <h5 class="mb-1"><small class="text-secondary text-end">Variable:</small> <span>{{myvar}}</span> <span class="h6 text-secondary">
+
+                    </span></h5>
     
                 </div>
                 {% endif %}
 
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-2">
             </div>
 
-            <div class="col-sm-3">
-                <div class="accordion-header rounded  " id="flush-headingOne" style="width:100%; display:inline-block;">
-        
-                    <button class="accordion-button collapsed rounded p-2 highlighted-value-title" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="background-color:#fefae6;"> 
-                        <span class="fs-5 text-teal fw-bold py-0"><i class="fa-solid fa-comments"></i> &nbsp;Private Comments 
-                            <span class="badge bg-success-light fw-bold">
-                                {{ form.instance.private_comment.inner_private_comments_related.all|length }}
-                            </span>
-            
-            
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                      
-                        </span></span> 
-                    </button>
-                </div>
+            <div class="col-sm-5 pe-2">
+            <small class="float-end text-secondary">Private comments? See the popup button at the bottom-right of the page.</small>    
+
             </div>
 
-
-            <div class="col-sm-12 pb-0">
-
-                {% include "core/partials/_private_comment_inline_accordion.html" %}
-            </div>
         </div>
 
 
@@ -699,6 +683,45 @@
     </div> 
 
 </div> 
+<!-- Floating Chat Button -->
+<div id="chat-toggle" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+">
+ 
+
+    {% if form.instance.private_comment.inner_private_comments_related.all|length != 0 %}
+        <button class="btn btn-success rounded-circle p-3 shadow highlighted-value-title text-dark" onclick="toggleChat()" title="Private Comments">
+            <i class="fa-solid fa-comments fa-lg"></i>
+        </button>
+    {% else %}
+    <button class="btn btn-secondary rounded-circle p-3 shadow highlighted-value-title text-dark" onclick="toggleChat()" title="Private Comments">
+        <i class="fa-solid fa-comment fa-lg"></i>
+    </button>
+    {% endif %}
+
+</div>
+
+<!-- Chat Box (Initially hidden) -->
+<div id="chat-box" class="card shadow" style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 40%;
+    display: none;
+    z-index: 1050;
+">
+  <div class="card-header highlighted-value-title text-dark d-flex justify-content-between align-items-center">
+    <span><i class="fa-solid fa-comments"></i> Private Comments</span>
+    <button type="button" class="btn-close btn-close-darl btn-sm" onclick="toggleChat()"></button>
+  </div>
+  {% include "core/partials/_private_comment_inline_absolute.html" %}
+
+
+</div>
+
 
 <script>
 
@@ -837,5 +860,11 @@ for (let i = 0; i <= 5; i++) {
     return true;
 }
 
-</script>
+
+    function toggleChat() {
+      const chatBox = document.getElementById("chat-box");
+      chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+    }
+  </script>
+  
 {% endblock %}

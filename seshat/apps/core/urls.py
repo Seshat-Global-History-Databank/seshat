@@ -33,6 +33,7 @@ urlpatterns += [path('polity_filter_options/', views.polity_filter_options_view,
 
 
 urlpatterns += [
+     path('core/pol_ter/', views.territory_plot_view, name='my_1'),
      path('core/religions_all/', views.ReligionListView.as_view(), name='religion_list'),
      path('core/create_religion/', views.religion_create, name='religion_create'),
      path('core/update_religion/<int:pk>/', views.religion_update, name='religion_update'),

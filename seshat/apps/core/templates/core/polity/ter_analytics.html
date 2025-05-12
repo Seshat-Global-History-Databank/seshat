@@ -1,0 +1,54 @@
+
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div id="territory-plot" style="height: 700px;"></div>
+
+<script>
+  const segments = JSON.parse('{{ territory_segments_data|safe }}');
+
+  const segmentTraces = segments.map(segment => ({
+    x: segment.x,
+    y: segment.y,
+    mode: 'lines+markers',
+    name: segment.label,
+    marker: {
+      color: segment.color,
+      size: 6
+    },
+    line: {
+      color: segment.color,
+      width: 1,
+      dash: 'dot'
+    }
+  }));
+
+  const layout = {
+    xaxis: { title: '<b>Year</b>' },
+    yaxis: { title: '<b>Territory Size</b>' },
+    paper_bgcolor: '#fffdf2',
+    plot_bgcolor: '#fffdf2',
+    legend: {
+      x: 0,
+      y: 1,
+      xanchor: 'left',
+      yanchor: 'top',
+      bgcolor: '#fffdf2',
+      bordercolor: 'teal',
+      orientation: 'v'
+    }
+  };
+
+  Plotly.newPlot('territory-plot', segmentTraces, layout, { responsive: true });
+</script>
+
+{% endblock content %}

@@ -16,6 +16,7 @@ from ..core.models import Citation, Reference, Polity, Section, Subsection, Coun
 
 from seshat.apps.accounts.models import Seshat_Expert
 from django.utils.dateparse import parse_date
+from collections import Counter
 
 
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
@@ -9049,7 +9050,16 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         context['paginated'] = paginated
         context["instability_types"] = Instability_type.objects.all()
         context["check_choices"] = Check_choice.objects.all()
-        macro_events = sorted(set(obj.made_up_macro_event for obj in object_list if obj.made_up_macro_event))
+        macro_events = sorted(set(obj.made_up_macro_event for obj in all_object_list if obj.made_up_macro_event))
+
+        # Get all macro events from the objects
+        macro_event_list = [obj.made_up_macro_event for obj in all_object_list if obj.made_up_macro_event]
+        macro_event_counts = Counter(macro_event_list)
+
+        # Sort alphabetically by macro event name
+        macro_events_with_counts = sorted(macro_event_counts.items(), key=lambda x: (-x[1], x[0]))
+
+        context["macro_events_with_counts"] = macro_events_with_counts
 
         context["INST_EXTENT_CHOICES"] = INST_EXTENT_CHOICES
         context["INST_INTENSITY_CHOICES"] = INST_INTENSITY_CHOICES
@@ -9528,7 +9538,7 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
             data_list.append(data_entry)
 
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"{db_section_mapper[db_section]}_{var_name}_{current_datetime}_goooooo.json"
+    file_name = f"{db_section_mapper[db_section]}_{var_name}_{current_datetime}.json"
     response = JsonResponse(data_list, safe=False)
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response

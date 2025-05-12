@@ -2,9 +2,51 @@
 {% load mathfilters %}
 {% load custom_filters %}
 
-<tr style="border-width:0; background-image: linear-gradient(to left, rgb(246, 127, 127, 0.056),rgb(242, 199, 119, 0.056),rgb(151, 230, 151, 0.056)); ">
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">        
-                         
+
+
+<style>
+    .top-level-header {
+        border-bottom: 4px solid rgba(0, 128, 128, 0.122);
+        border-radius:3px;
+        color: gray;
+        display:block;
+        margin-bottom: 2px;
+        font-size:0.85rem;
+    }
+</style>
+
+<tr style="background:#fffdf2; vertical-align:top; border-left: 1px solid rgba(0, 128, 128, 0.356);         box-shadow: -2px 2px 2px rgba(0, 128, 128, 0.356);
+">
+<td class="fw-normal text-dark ps-2" style="text-align: left; width:25%">     
+    <span class="top-level-header">Event</span> 
+
+    <span> <b>{{ form.instance.llm_name|remove_macro_event}}</b> </span>
+    <br>    
+    {% if form.instance.llm_year_from == None %}                        
+    {% elif form.instance.llm_year_from == form.instance.llm_year_to %}
+        {% if form.instance.llm_year_from < 0 %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+        {% else %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
+        {% endif %}
+    {% elif form.instance.llm_year_to == None %}
+        {% if form.instance.llm_year_from < 0 %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small></span>
+        {% else %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
+        {% endif %}
+    {% elif form.instance.llm_year_to == None and form.instance.llm_year_from == None %}
+    <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+    {% else %}
+        {% if form.instance.llm_year_from < 0 and form.instance.llm_year_to < 0 %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+        {% elif form.instance.llm_year_from < 0 and form.instance.llm_year_to >= 0 %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+        {% else %}
+        <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+        {% endif %}
+    {% endif %}            
+
         <small style="vertical-align: top;">
             {% if form.instance.created_date|date:"Y-m-d" < "2025-03-29" %}
             <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
@@ -15,12 +57,16 @@
           {% endif %}
         </small>
 
-        <span> {{ form.instance.llm_name|remove_macro_event}}</span>
-    </td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">        
-        {{form.instance.llm_name|extract_macro_event}}
+        
+
+        <br>
+        Macro Event: 
+                {{form.instance.llm_name|extract_macro_event}}   
+    
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
+        <span class="top-level-header">Polity</span> 
+
         {% if form.instance.polity.long_name %}
         <span class="fw-bold">
             <a href="{% url 'polity-detail-main' form.instance.polity.id %}#instability_event_var">{{ form.instance.polity.long_name }}</a>
@@ -31,41 +77,28 @@
         </span>
         {% endif %}
     </td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_llm_instability_types }}
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
+        <span class="top-level-header">Types</span> 
+
+        {{ form.instance.get_llm_instability_types }}
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">                        
-        {% if form.instance.llm_year_from == None %}                        
-        {% elif form.instance.llm_year_from == form.instance.llm_year_to %}
-            {% if form.instance.llm_year_from < 0 %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
-            {% else %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% elif form.instance.llm_year_to == None %}
-            {% if form.instance.llm_year_from < 0 %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small></span>
-            {% else %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% elif form.instance.llm_year_to == None and form.instance.llm_year_from == None %}
-        <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
-        {% else %}
-            {% if form.instance.llm_year_from < 0 and form.instance.llm_year_to < 0 %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
-            {% elif form.instance.llm_year_from < 0 and form.instance.llm_year_to >= 0 %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-            {% else %}
-            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-            {% endif %}
-        {% endif %}
+
         </td>
     <td class="fw-bold text-dark " style="border-width: 0; text-align: center;">
+        <span class="top-level-header">Intensity</span> 
+
         <span> {{ form.instance.llm_inst_intensity}}</span>
     </td>
-    <td class="fw-bold text-dark" style="border-width: 0; text-align: center;">
+    <td class="fw-bold text-dark" style="border-width: 0; text-align: center; ">
+        <span class="top-level-header">Extent</span> 
+
         <span> {{ form.instance.llm_inst_extent}}</span></td>
 
-        <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_instability_checks}}
+        <td class="fw-normal text-dark" style="border-width: 0; text-align: left; border-right: 1px solid rgba(0, 128, 128, 0.356);">
+            <span class="top-level-header">Checks</span> 
+
+            {{ form.instance.get_instability_checks}}
         </td>
     
 </tr>
