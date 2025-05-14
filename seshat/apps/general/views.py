@@ -7188,6 +7188,7 @@ def generalvars(request):
     number_of_all_rows = 0
     number_of_variables = 0
     all_vars_grouped = {}
+    all_vars_types = {}
 
     all_sect_download_links = {}
 
@@ -7504,7 +7505,7 @@ def generalvars(request):
                 ]
 
 
-
+        all_vars_types[model_name.lower()] = (var_type, subsection_value, sub_subsection_value)
         if sub_subsection_value:
             all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
         else:
@@ -7518,6 +7519,10 @@ def generalvars(request):
     context["number_of_all_rows"] = number_of_all_rows
 
     context["number_of_variables"] = number_of_variables
+
+    print('----------------')
+    print(all_vars_types)
+    print('-----------------')
 
     return render(request, 'general/generalvars.html', context=context)
 
@@ -8843,6 +8848,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     else:
         object_list = model_class.objects.all()
 
+
+
     year_from_min = request.GET.get('year_from_min')
     year_to_max = request.GET.get('year_to_max')
     created_before = request.GET.get('created_before')
@@ -8900,6 +8907,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         if parsed_date:
             object_list = object_list.filter(created_date__lt=parsed_date)
 
+
     if selected_batch:
         if selected_batch == "Batch 1":
             object_list = object_list.filter(created_date__lt=BATCH_1_END)
@@ -8913,7 +8921,10 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
 
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
-    if coded_value == "suprapolity_relations":
+
+    if coded_value in ['instability_event',]:
+        extra_var_dict = {}
+    elif coded_value == "suprapolity_relations":
         extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
     #elif var_name == "lux_precious_metal":
     #    extra_var_dict = {obj.id: obj.display_table_value() for obj in #object_list}
@@ -9008,6 +9019,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     else:
         good_ordering_tag = coded_value 
 
+
     # Define any additional context variables you want to pass to the template
     context = {
         'object_list': object_list,
@@ -9036,6 +9048,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #"myvar": myvar,
         #"my_exp": my_exp,
     }
+
+
 
     all_object_list = model_class.objects.all()
     polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
@@ -9117,6 +9131,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
             'units': None, 
             'choices': 'ABSENT_PRESENT_CHOICES', 
             'null_meaning': None}}
+
 
     if coded_value in ['instability_event']:
         return render(request, 'core/generic_templates/generic_list_llm.html', context)

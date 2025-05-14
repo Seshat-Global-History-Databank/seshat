@@ -123,7 +123,7 @@ from .views.crisisdb import (
     USViolenceViewSet,
     CrisisConsequenceViewSet,
     #PowerTransitionViewSet,
-    #HumanSacrificeViewSet,
+    HumanSacrificeViewSet,
     ExternalConflictViewSet,
     ExternalConflictSideViewSet,
     AgriculturalPopulationViewSet,
@@ -168,11 +168,7 @@ router.register(
 #     basename="api_power-transition",
 # )
 
-# router.register(
-#     r"crisisdb/human-sacrifices",
-#     HumanSacrificeViewSet,
-#     basename="api_human-sacrifice",
-# )
+
 # router.register(
 #     r"crisisdb/external-conflicts",
 #     ExternalConflictViewSet,
@@ -504,9 +500,9 @@ router.register(
     basename="api_government-pressure-to-converts",
 )
 router.register(
-    r"rt/government-restrictions-on-property-ownership-for-adherents-of-and-religious-groups",
+    r"rt/government-restrictions-on-property-ownership-for-adherents-of-any-religious-groups",
     GovResPropOwnForRelGrpViewSet,
-    basename="api_government-restrictions-on-property-ownership-for-adherents-of-and-religious-groups",
+    basename="api_government-restrictions-on-property-ownership-for-adherents-of-any-religious-groups",
 )
 router.register(
     r"rt/taxes-based-on-religious-adherence-or-on-religious-activities-and-institutions",
@@ -618,6 +614,12 @@ router.register(
     r"rt/moralizing-enforcement-is-agentic",
     MoralizingEnforcementIsAgenticViewSet,
     basename="api_moralizing-enforcement-is-agentic",
+)
+
+router.register(
+    r"rt/human-sacrifices",
+    HumanSacrificeViewSet,
+    basename="api_human-sacrifice",
 )
 
 
@@ -1145,8 +1147,82 @@ router.register(
     ModernFortificationViewSet,
     basename="api_modern-fortification",
 )
-router.register(r"wf/chainmails", ChainmailViewSet, basename="api_chainmail")
+router.register(
+    r"wf/chainmails",
+    ChainmailViewSet,
+    basename="api_chainmail",
+)
 
+
+from .views.ec import (
+    LuxPreciousMetalViewSet,
+    LuxuryFabricsViewSet,
+    LuxuryManufacturedGoodsViewSet,
+    LuxurySpicesIncenseAndDyesViewSet,
+    LuxuryDrinkAlcoholViewSet,
+    LuxuryGlassGoodsViewSet,
+    LuxFineCeramicWaresViewSet,
+    LuxPreciousStoneViewSet,
+    LuxStatuaryViewSet,
+    LuxuryFoodViewSet,
+    OtherLuxuryPersonalItemsViewSet,
+)
+
+router.register(
+    r"ec/lux-precious-metal",
+    LuxPreciousMetalViewSet,
+    basename="api_lux-precious-metal",
+)
+router.register(
+    r"ec/luxury-fabrics",
+    LuxuryFabricsViewSet,
+    basename="api_luxury-fabrics",
+)
+router.register(
+    r"ec/luxury-manufactured-goods",
+    LuxuryManufacturedGoodsViewSet,
+    basename="api_luxury-manufactured-goods",
+)
+router.register(
+    r"ec/luxury-spices-incense-and-dyes",
+    LuxurySpicesIncenseAndDyesViewSet,
+    basename="api_luxury-spices-incense-and-dyes",
+)
+router.register(
+    r"ec/luxury-drink-alcohol",
+    LuxuryDrinkAlcoholViewSet,
+    basename="api_luxury-drink-alcohol",
+)
+router.register(
+    r"ec/luxury-glass-goods",
+    LuxuryGlassGoodsViewSet,
+    basename="api_luxury-glass-goods",
+)
+router.register(
+    r"ec/lux-fine-ceramic-wares",
+    LuxFineCeramicWaresViewSet,
+    basename="api_lux-fine-ceramic-wares",
+)
+router.register(
+    r"ec/lux-precious-stone",
+    LuxPreciousStoneViewSet,
+    basename="api_lux-precious-stone",
+)
+router.register(
+    r"ec/lux-statuary",
+    LuxStatuaryViewSet,
+    basename="api_lux-statuary",
+)
+router.register(
+    r"ec/luxury-food",
+    LuxuryFoodViewSet,
+    basename="api_luxury-food",
+)
+router.register(
+    r"ec/other-luxury-personal-items",
+    OtherLuxuryPersonalItemsViewSet,
+    basename="api_other-luxury-personal-items",
+)
 
 # Register all the views with the router
 

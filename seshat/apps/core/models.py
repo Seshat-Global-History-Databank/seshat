@@ -138,6 +138,13 @@ Tags = (
     ('UND', 'Undecided'),
 )
 
+DataTypes = (
+    ('A/P/U/~', 'A/P/U/~'),
+    ('RANGE', 'RANGE'),
+    ('TEXT', 'TEXT'),
+    ('COMPLEX', 'COMPLEX'),
+)
+
 CityTags = (
     ('1', '1'),
     ('2', '2'),
@@ -847,6 +854,10 @@ class Variablehierarchy(models.Model):
         Subsection, on_delete=models.SET_NULL, null=True, blank=True,)
     is_verified = models.BooleanField(default=False)
     explanation = models.TextField(blank=True, null=True,)
+    data_unit = models.TextField(blank=True, null=True,)
+    data_type =models.CharField(max_length=50, choices=DataTypes, default="A/P/U/~", blank=True, null=True,)
+    data_type_defintion = models.TextField(blank=True, null=True,)
+    api_endpoint = models.TextField(blank=True, null=True,)
     who_can_access = models.CharField(max_length=50, choices=ACCESS_TYPES, default='private')
 
     def __str__(self) -> str:

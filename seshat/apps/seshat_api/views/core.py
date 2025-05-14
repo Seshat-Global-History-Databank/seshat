@@ -5,7 +5,9 @@ from ._permissions import ONLY_ADMIN_PERMISSIONS
 from ._mixins import (
     FilterBackends,
     MixinSeshatAPIAuth,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPISerializer,
+    MixinSeshatPolity,
     SeshatAPIPagination,
     SeshatAPIRestrictedPagination
 )
@@ -59,10 +61,9 @@ from ..models import (
     GADMProvinces,
 )
 
-
 # class PrivateCommentsViewSet(
 #     FilterBackends,
-#     MixinSeshatAPISerializer,
+#     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
 #     viewsets.ModelViewSet,
 # ):
@@ -78,7 +79,7 @@ from ..models import (
 
 # class PrivateCommentsPartsViewSet(
 #     FilterBackends,
-#     MixinSeshatAPISerializer,
+#     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
 #     viewsets.ModelViewSet,
 # ):
@@ -94,7 +95,7 @@ from ..models import (
 
 class MacroRegionViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -109,7 +110,7 @@ class MacroRegionViewSet(
 
 class RegionViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -124,7 +125,7 @@ class RegionViewSet(
 
 class NGAViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -139,7 +140,7 @@ class NGAViewSet(
 
 class PolityViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatPolity,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -155,7 +156,7 @@ class PolityViewSet(
 
 class CapitalViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -170,7 +171,7 @@ class CapitalViewSet(
 
 class NGAPolityRelationsViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -185,7 +186,7 @@ class NGAPolityRelationsViewSet(
 
 class CountryViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -200,7 +201,7 @@ class CountryViewSet(
 
 class SectionViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -215,7 +216,7 @@ class SectionViewSet(
 
 class SubsectionViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -230,7 +231,7 @@ class SubsectionViewSet(
 
 class VariableHierarchyViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -245,7 +246,7 @@ class VariableHierarchyViewSet(
 
 class ReferenceViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -260,7 +261,7 @@ class ReferenceViewSet(
 
 class CitationViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -275,7 +276,7 @@ class CitationViewSet(
 
 class SeshatCommentViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -291,7 +292,7 @@ class SeshatCommentViewSet(
 
 class SeshatCommentPartViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -307,7 +308,7 @@ class SeshatCommentPartViewSet(
 
 class ScpThroughCtnViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -324,7 +325,7 @@ class ScpThroughCtnViewSet(
 
 class ReligionViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -339,7 +340,7 @@ class ReligionViewSet(
 
 class CliopatriaViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -354,7 +355,7 @@ class CliopatriaViewSet(
 
 # class GADMShapefileViewSet(
 #     FilterBackends,
-#     MixinSeshatAPISerializer,
+#     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
 #     viewsets.ModelViewSet,
 # ):
@@ -369,7 +370,7 @@ class CliopatriaViewSet(
 
 class GADMCountriesViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -386,7 +387,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 
 class GADMProvincesViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):

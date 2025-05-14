@@ -59,7 +59,7 @@ class RestrictedPolityFilter(SeshatCommonFilter, django_filters.FilterSet):
         # Otherwise, apply filtering
         return queryset.filter(polity__new_name__in=self.ALLOWED_POLITIES)
 
-class WidespreadReligionFilter(RestrictedPolityFilter):
+class WidespreadReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
 
     class Meta:
         model = Widespread_religion
@@ -69,7 +69,7 @@ class WidespreadReligionFilter(RestrictedPolityFilter):
         }
 
 
-class OfficialReligionFilter(RestrictedPolityFilter):
+class OfficialReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
 
     class Meta:
         model = Official_religion
@@ -77,14 +77,14 @@ class OfficialReligionFilter(RestrictedPolityFilter):
         }
 
 
-class ElitesReligionFilter(RestrictedPolityFilter):
+class ElitesReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
 
     class Meta:
         model = Elites_religion
         fields = {}
 
 
-class TheoSyncDifRelFilter(RestrictedPolityFilter):
+class TheoSyncDifRelFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
         model = Theo_sync_dif_rel
         fields = {
@@ -92,7 +92,7 @@ class TheoSyncDifRelFilter(RestrictedPolityFilter):
         }
 
 
-class SyncRelPraIndBeliFilter(RestrictedPolityFilter):
+class SyncRelPraIndBeliFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
         model = Sync_rel_pra_ind_beli
         fields = {
@@ -100,9 +100,7 @@ class SyncRelPraIndBeliFilter(RestrictedPolityFilter):
         }
 
 
-class ReligiousFragmentationFilter(
-    RestrictedPolityFilter
-):
+class ReligiousFragmentationFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
         model = Religious_fragmentation
         fields = {
@@ -150,9 +148,7 @@ class GovPressConvFilter(RestrictedPolityFilter):
         }
 
 
-class GovResPropOwnForRelGrpFilter(
-    RestrictedPolityFilter
-):
+class GovResPropOwnForRelGrpFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_prop_own_for_rel_grp
         fields = {
