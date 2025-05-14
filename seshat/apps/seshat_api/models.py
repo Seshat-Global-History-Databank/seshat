@@ -246,6 +246,20 @@ from ..wf.models import (
     Chainmail,
 )
 
+from ..ec.models import (
+    Lux_precious_metal,
+    Luxury_fabrics,
+    Luxury_manufactured_goods,
+    Luxury_spices_incense_and_dyes,
+    Luxury_drink_alcohol,
+    Luxury_glass_goods,
+    Lux_fine_ceramic_wares,
+    Lux_precious_stone,
+    Lux_statuary,
+    Luxury_food,
+    Other_luxury_personal_items,
+)
+
 
 __all__ = [
     #"SeshatPrivateComment",
@@ -276,7 +290,7 @@ __all__ = [
     "Us_violence",
     "Crisis_consequence",
     #"Power_transition",
-    #"Human_sacrifice",
+    "Human_sacrifice",
     "External_conflict",
     "Internal_conflict",
     "External_conflict_side",
@@ -482,4 +496,16 @@ __all__ = [
     "Complex_fortification",
     "Modern_fortification",
     "Chainmail",
+    # EC
+    "Lux_precious_metal",
+    "Luxury_fabrics",
+    "Luxury_manufactured_goods",
+    "Luxury_spices_incense_and_dyes",
+    "Luxury_drink_alcohol",
+    "Luxury_glass_goods",
+    "Lux_fine_ceramic_wares",
+    "Lux_precious_stone",
+    "Lux_statuary",
+    "Luxury_food",
+    "Other_luxury_personal_items",
 ]

@@ -66,6 +66,8 @@ def rtvars(request):
 
     #all_human_sacrifice_data = Human_sacrifice.objects.all()
     all_vars_grouped = {}
+    all_vars_types = {}
+
 
     all_sect_download_links = {}
 
@@ -205,6 +207,7 @@ def rtvars(request):
                 ]
 
 
+        all_vars_types[model_name.lower()] = (var_type, subsection_value, sub_subsection_value)
 
         if sub_subsection_value:
             all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
@@ -217,7 +220,9 @@ def rtvars(request):
     context["all_sect_download_links"] = all_sect_download_links
     context["all_polities"] = len(unique_politys)
     context["number_of_all_rows"] = number_of_all_rows
-
+    print('----------------')
+    print(all_vars_types)
+    print('-----------------')
     context["number_of_variables"] = number_of_variables
 
     return render(request, 'rt/rtvars.html', context=context)

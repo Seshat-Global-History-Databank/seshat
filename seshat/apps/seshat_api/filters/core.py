@@ -116,8 +116,8 @@ class PolityFilter(django_filters.FilterSet):
             "polity_tag": ["exact"],
             "general_description": ["icontains"],
             "shapefile_name": ["icontains"],
-            "created_date": ["range", "date__exact", "date__gt", "date__lt"],
-            "modified_date": ["range", "date__exact", "date__gt", "date__lt"],
+            #"created_date": ["range", "date__exact", "date__gt", "date__lt"],
+            #"modified_date": ["range", "date__exact", "date__gt", "date__lt"],
         }
 
 

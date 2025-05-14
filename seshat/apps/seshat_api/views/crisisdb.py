@@ -6,6 +6,8 @@ from ._mixins import (
     MixinSeshatAPISerializer,
     SeshatAPIPagination,
 )
+
+
 from ..filters.crisisdb import (
     USLocationFilter,
     USViolenceSubtypeFilter,
@@ -157,19 +159,19 @@ class CrisisConsequenceViewSet(
 #     filterset_class = PowerTransitionFilter
 
 
-# class HumanSacrificeViewSet(
-#     FilterBackends,
-#     MixinSeshatAPISerializer,
-#     MixinSeshatAPIAuth,
-#     viewsets.ModelViewSet,
-# ):
-#     """
-#     A viewset for viewing and editing Human Sacrifices.
-#     """
+class HumanSacrificeViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
+    """
+    A viewset for viewing and editing Human Sacrifices.
+    """
 
-#     model = Human_sacrifice
-#     pagination_class = SeshatAPIPagination
-#     filterset_class = HumanSacrificeFilter
+    model = Human_sacrifice
+    pagination_class = SeshatAPIPagination
+    filterset_class = HumanSacrificeFilter
 
 
 class ExternalConflictViewSet(

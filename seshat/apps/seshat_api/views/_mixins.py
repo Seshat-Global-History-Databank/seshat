@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from ..serializers import GeneralSerializer
+from ..serializers import PolityAPISerializer ,GeneralSerializer, GeneralAllFieldsSerializer
 
 STANDARD_API_PERMISSION = {
     "HEAD": [AllowAny],
@@ -92,16 +92,36 @@ class MixinSeshatAPISerializer:
         GeneralSerializer.Meta.model = self.model
 
         # Set fields to self.fields
-        try:
-            GeneralSerializer.Meta.fields = self.fields
-        except AttributeError:
-            GeneralSerializer.Meta.fields = "__all__"
+        # try:
+        #     print(GeneralSerializer.Meta.exclude_fields
+
+        #     GeneralSerializer.Meta.fields = self.fields
+        # except AttributeError:
+        #     GeneralSerializer.Meta.fields = "__all__"
 
         return GeneralSerializer
 
     def get_queryset(self):
         return self.model.objects.all()
+    
+class MixinSeshatAPISerializerAllFields:
+    def get_serializer_class(self):
+        # Set model to self.model
+        GeneralAllFieldsSerializer.Meta.model = self.model
 
+        return GeneralAllFieldsSerializer
+
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+class MixinSeshatPolity:
+    def get_serializer_class(self):
+        PolityAPISerializer.Meta.model = self.model
+
+        return PolityAPISerializer
+    def get_queryset(self):
+        return self.model.objects.all()
+    
 
 class FilterBackends:
     filter_backends = [
