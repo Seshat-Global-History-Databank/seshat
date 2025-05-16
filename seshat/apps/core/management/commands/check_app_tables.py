@@ -135,50 +135,50 @@ WF_VARIABLES = {'long_wall': ('RANGE', 'Fortifications', 'None'),
 'chainmail': ('A/P/U/~', 'Armor', 'None')}
 
 
-GENERAL_VARIABLES = {'polity_original_name': ('TEXT+', 'Identity and Location', 'None'),
-'polity_alternative_name': ('TEXT+', 'Identity and Location', 'None'),
+GENERAL_VARIABLES = {'polity_original_name': ('TEXT', 'Identity and Location', 'None'),
+'polity_alternative_name': ('TEXT', 'Identity and Location', 'None'),
 'polity_duration': ('RANGE', 'Temporal Bounds', 'None'),
 'polity_peak_years': ('RANGE', 'Temporal Bounds', 'None'),
-'polity_degree_of_centralization': ('TEXT+', 'Political and Cultural Relations', 'None'),
-'polity_suprapolity_relations': ('TEXT+', 'Political and Cultural Relations', 'None'),
-'polity_utm_zone': ('TEXT+', 'Identity and Location', 'None'),
-'polity_capital': ('TEXT+', 'Identity and Location', 'None'),
-'polity_language': ('TEXT+', 'Language', 'None'),
-'polity_linguistic_family': ('TEXT+', 'Language', 'None'),
-'polity_language_genus': ('TEXT+', 'Language', 'None'),
-'polity_religion_genus': ('TEXT+', 'Religion', 'None'),
-'polity_religion_family': ('TEXT+', 'Religion', 'None'),
-'polity_religion': ('TEXT+', 'Religion', 'None'),
-'polity_preceding_entity': ('TEXT+', 'Political and Cultural Relations', 'None'),
-'polity_supracultural_entity': ('TEXT+', 'Political and Cultural Relations', 'None'),
+'polity_degree_of_centralization': ('TEXT', 'Political and Cultural Relations', 'None'),
+'polity_suprapolity_relations': ('TEXT', 'Political and Cultural Relations', 'None'),
+'polity_utm_zone': ('TEXT', 'Identity and Location', 'None'),
+'polity_capital': ('TEXT', 'Identity and Location', 'None'),
+'polity_language': ('TEXT', 'Language', 'None'),
+'polity_linguistic_family': ('TEXT', 'Language', 'None'),
+'polity_language_genus': ('TEXT', 'Language', 'None'),
+'polity_religion_genus': ('TEXT', 'Religion', 'None'),
+'polity_religion_family': ('TEXT', 'Religion', 'None'),
+'polity_religion': ('TEXT', 'Religion', 'None'),
+'polity_preceding_entity': ('TEXT', 'Political and Cultural Relations', 'None'),
+'polity_supracultural_entity': ('TEXT', 'Political and Cultural Relations', 'None'),
 'polity_scale_of_supracultural_interaction': ('RANGE', 'Political and Cultural Relations', 'None'),
-'polity_alternate_religion_genus': ('TEXT+', 'Religion', 'None'),
-'polity_alternate_religion_family': ('TEXT+', 'Religion', 'None'),
-'polity_alternate_religion': ('TEXT+', 'Religion', 'None'),
-'polity_religious_tradition': ('TEXT+', 'Religion', 'None')}
+'polity_alternate_religion_genus': ('TEXT', 'Religion', 'None'),
+'polity_alternate_religion_family': ('TEXT', 'Religion', 'None'),
+'polity_alternate_religion': ('TEXT', 'Religion', 'None'),
+'polity_religious_tradition': ('TEXT', 'Religion', 'None')}
 
 
-RT_VARIABLES = {'widespread_religion': ('TEXT+', 'Religious Demography', 'None'),
-'official_religion': ('TEXT+', 'Religious Demography', 'None'),
-'elites_religion': ('TEXT+', 'Religious Demography', 'None'),
-'theo_sync_dif_rel': ('A/P/U/~', 'Religious Demography', 'None'),
-'sync_rel_pra_ind_beli': ('A/P/U/~', 'Religious Demography', 'None'),
+RT_VARIABLES = {'widespread_religion': ('TEXT', 'Religious Demography', 'None'),
+'official_religion': ('TEXT', 'Religious Demography', 'None'),
+'elites_religion': ('TEXT', 'Religious Demography', 'None'),
+#'theo_sync_dif_rel': ('A/P/U/~', 'Religious Demography', 'None'),
+#'sync_rel_pra_ind_beli': ('A/P/U/~', 'Religious Demography', 'None'),
 'religious_fragmentation': ('A/P/U/~', 'Religious Demography', 'None'),
-'gov_vio_freq_rel_grp': ('TEXT+', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_pub_wor': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_pub_pros': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_conv': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_press_conv': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_prop_own_for_rel_grp': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'tax_rel_adh_act_ins': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_obl_rel_grp_ofc_reco': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_cons_rel_buil': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_rel_edu': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_res_cir_rel_lit': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'gov_dis_rel_grp_occ_fun': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
-'soc_vio_freq_rel_grp': ('TEXT+', 'Religious Tolerance', 'Societal Restrictions'),
-'soc_dis_rel_grp_occ_fun': ('A/P/U/~', 'Religious Tolerance', 'Societal Restrictions'),
-'gov_press_conv_for_aga': ('A/P/U/~', 'Religious Tolerance', 'Societal Restrictions'),
+# 'gov_vio_freq_rel_grp': ('TEXT', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_pub_wor': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_pub_pros': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_conv': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_press_conv': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_prop_own_for_rel_grp': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'tax_rel_adh_act_ins': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_obl_rel_grp_ofc_reco': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_cons_rel_buil': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_rel_edu': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_res_cir_rel_lit': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'gov_dis_rel_grp_occ_fun': ('A/P/U/~', 'Religious Tolerance', 'Government Restrictions'),
+# 'soc_vio_freq_rel_grp': ('TEXT', 'Religious Tolerance', 'Societal Restrictions'),
+# 'soc_dis_rel_grp_occ_fun': ('A/P/U/~', 'Religious Tolerance', 'Societal Restrictions'),
+# 'gov_press_conv_for_aga': ('A/P/U/~', 'Religious Tolerance', 'Societal Restrictions'),
 'moralizing_supernatural_punishment_and_reward': ('A/P/U/~', 'Moralizing Supernatural Punishment and Reward', 'None'),
 'moralizing_supernatural_concern_is_primary': ('A/P/U/~', 'Moralizing Supernatural Punishment and Reward', 'None'),
 'moralizing_enforcement_is_certain': ('A/P/U/~', 'Moralizing Supernatural Punishment and Reward', 'None'),
@@ -221,16 +221,20 @@ class Command(BaseCommand):
         missing_tables = []
 
         key_mapper = {
-            'luxury_drink_alcohol': 'luxury_drink / alcohol'
+            'luxury_drink_alcohol': 'Luxury Drink/Alcohol'
         }
 
         all_var_groups = [SC_VARIABLES, WF_VARIABLES, GENERAL_VARIABLES, EC_VARIABLES, RT_VARIABLES, SC_VARIABLES]
 
         for sect in all_var_groups:
             for key, values in sect.items():
-                if key.startswith('lux_'):
+                if key in key_mapper:
+                    ggod_key = key_mapper[key]
+                elif key.startswith('lux_'):
                     key = key[4:]
-                ggod_key = key.replace("_", ' ').title()
+                    ggod_key = key.replace("_", ' ').title()
+                else:
+                    ggod_key = key.replace("_", ' ').title()
                 if sect == SC_VARIABLES:
                     table_name = f"sc_{key}"
                 elif sect == WF_VARIABLES:
@@ -258,7 +262,7 @@ class Command(BaseCommand):
                 if my_v:
                     my_v.data_type = values[0]
                     if values[0] == "A/P/U/~":
-                        my_v.data_type_defintion = f"{key.replace('_', ' ').title()} must be assigned one of the following values: <br> [Present, Absent, Unknown, Transitional (Absent → Present), or Transitional (Present → Absent)]. <br>These may be optionally tagged as Confident, Inferred, or Suspected. <br>Values can also be marked as Disputed or Uncertain.<br>If the value has a description but lacks proper coding, it will be considered 'Uncoded'." #f"One of the following choices is selected for {my_v}: [Present, Uncoded, Absent, Unknown, Transitional (Absent -> Present), Transitional (Present -> Absent)], potentially augmented with one of the tags [Confident, Inferred, Suspected], Values may also be flagged as Disputed or Uncertain."
+                        my_v.data_type_defintion = None;# f"{key.replace('_', ' ').title()} must be assigned one of the following values: <br> [Present, Absent, Unknown, Transitional (Absent → Present), or Transitional (Present → Absent)]. <br>These may be optionally tagged as Confident, Inferred, or Suspected. <br>Values can also be marked as Disputed or Uncertain.<br>If the value has a description but lacks proper coding, it will be considered 'Uncoded'." #f"One of the following choices is selected for {my_v}: [Present, Uncoded, Absent, Unknown, Transitional (Absent -> Present), Transitional (Present -> Absent)], potentially augmented with one of the tags [Confident, Inferred, Suspected], Values may also be flagged as Disputed or Uncertain."
                     #my_v.data_unit = values[0]
                     my_v.save()
                     self.stdout.write(self.style.SUCCESS(f"✅✅✅ Found var: {my_v}"))

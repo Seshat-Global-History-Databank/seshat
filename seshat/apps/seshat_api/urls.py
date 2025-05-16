@@ -1169,9 +1169,9 @@ from .views.ec import (
 )
 
 router.register(
-    r"ec/lux-precious-metal",
+    r"ec/luxury-precious-metal",
     LuxPreciousMetalViewSet,
-    basename="api_lux-precious-metal",
+    basename="api_luxury-precious-metal",
 )
 router.register(
     r"ec/luxury-fabrics",
@@ -1199,19 +1199,19 @@ router.register(
     basename="api_luxury-glass-goods",
 )
 router.register(
-    r"ec/lux-fine-ceramic-wares",
+    r"ec/luxury-fine-ceramic-wares",
     LuxFineCeramicWaresViewSet,
-    basename="api_lux-fine-ceramic-wares",
+    basename="api_luxury-fine-ceramic-wares",
 )
 router.register(
-    r"ec/lux-precious-stone",
+    r"ec/luxury-precious-stone",
     LuxPreciousStoneViewSet,
-    basename="api_lux-precious-stone",
+    basename="api_luxury-precious-stone",
 )
 router.register(
-    r"ec/lux-statuary",
+    r"ec/luxury-statuary",
     LuxStatuaryViewSet,
-    basename="api_lux-statuary",
+    basename="api_luxury-statuary",
 )
 router.register(
     r"ec/luxury-food",

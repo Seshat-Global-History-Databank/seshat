@@ -6291,7 +6291,7 @@ def territory_plot_view(request):
     return render(request, 'core/polity/ter_analytics.html', context)
 
 
-def variable_hierarchy_view(request):
+def variable_hierarchy_view_old(request):
     hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
     # Gather and organize the variable hierarchy
@@ -6317,5 +6317,56 @@ def variable_hierarchy_view(request):
 
     context = {
         'hierarchy_tree': hierarchy_tree_clean,
+    }
+    return render(request, 'core/polity/var_hier.html', context)
+
+
+def variable_hierarchy_view(request):
+    from collections import OrderedDict
+    hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+    variables = Variablehierarchy.objects.select_related('section', 'subsection',)
+
+    # Helper function to recursively convert defaultdicts to dicts
+    def convert_defaultdict_to_dict(d):
+        if isinstance(d, defaultdict):
+            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+        elif isinstance(d, dict):
+            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+        return d
+
+    for var in variables:
+        db_section = var.section.seshat_db_section if var.section and var.section.seshat_db_section else "Uncategorized"
+        section_name = var.section.name if var.section else "No Section"
+        subsection_name = var.subsection.name if var.subsection else "No Subsection"
+
+        hierarchy_tree[db_section][section_name][subsection_name].append(var)
+
+    # Define your custom sort order
+    predefined_order = [
+        "General",
+        "Social Complexity",
+        "Warfare",
+        "Economy",
+        "Religion",
+    ]
+
+    # Sort the top-level keys according to predefined order
+    def sort_hierarchy(hierarchy, order):
+        sorted_hierarchy = OrderedDict()
+        for key in order:
+            if key in hierarchy:
+                sorted_hierarchy[key] = hierarchy[key]
+        # Add any extra keys not in predefined order
+        for key in hierarchy:
+            if key not in sorted_hierarchy:
+                sorted_hierarchy[key] = hierarchy[key]
+        return sorted_hierarchy
+
+    hierarchy_tree_clean = sort_hierarchy(hierarchy_tree, predefined_order)
+    hierarchy_tree_clean_sorted = convert_defaultdict_to_dict(hierarchy_tree_clean)
+
+    context = {
+        'hierarchy_tree': hierarchy_tree_clean_sorted,
     }
     return render(request, 'core/polity/var_hier.html', context)
