@@ -4,6 +4,7 @@ from ._mixins import (
     FilterBackends,
     MixinSeshatAPIAuth,
     MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     SeshatAPIPagination,
 )
 
@@ -38,7 +39,7 @@ from ..models import (
 
 class LuxPreciousMetalViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -49,7 +50,7 @@ class LuxPreciousMetalViewSet(
 
 class LuxuryFabricsViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -60,7 +61,7 @@ class LuxuryFabricsViewSet(
 
 class LuxuryManufacturedGoodsViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -71,7 +72,7 @@ class LuxuryManufacturedGoodsViewSet(
 
 class LuxurySpicesIncenseAndDyesViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -82,7 +83,7 @@ class LuxurySpicesIncenseAndDyesViewSet(
 
 class LuxuryDrinkAlcoholViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -93,7 +94,7 @@ class LuxuryDrinkAlcoholViewSet(
 
 class LuxuryGlassGoodsViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -104,7 +105,7 @@ class LuxuryGlassGoodsViewSet(
 
 class LuxFineCeramicWaresViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -115,7 +116,7 @@ class LuxFineCeramicWaresViewSet(
 
 class LuxPreciousStoneViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -126,7 +127,7 @@ class LuxPreciousStoneViewSet(
 
 class LuxStatuaryViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -137,7 +138,7 @@ class LuxStatuaryViewSet(
 
 class LuxuryFoodViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
@@ -148,7 +149,7 @@ class LuxuryFoodViewSet(
 
 class OtherLuxuryPersonalItemsViewSet(
     FilterBackends,
-    MixinSeshatAPISerializer,
+    MixinLuxuryGoodsSeshatAPISerializer,
     MixinSeshatAPIAuth,
     viewsets.ModelViewSet,
 ):
