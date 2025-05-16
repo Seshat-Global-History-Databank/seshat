@@ -6289,3 +6289,33 @@ def territory_plot_view(request):
         'territory_segments_data': json.dumps(plot_segments, cls=DjangoJSONEncoder),
     }
     return render(request, 'core/polity/ter_analytics.html', context)
+
+
+def variable_hierarchy_view(request):
+    hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+    # Gather and organize the variable hierarchy
+    variables = Variablehierarchy.objects.select_related('section', 'subsection',)
+
+
+    # Helper function to recursively convert defaultdicts to dicts
+    def convert_defaultdict_to_dict(d):
+        if isinstance(d, defaultdict):
+            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+        elif isinstance(d, dict):
+            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+        return d
+
+    for var in variables:
+        db_section = var.section.seshat_db_section if var.section and var.section.seshat_db_section else "Uncategorized"
+        section_name = var.section.name if var.section else "No Section"
+        subsection_name = var.subsection.name if var.subsection else "No Subsection"
+
+        hierarchy_tree[db_section][section_name][subsection_name].append(var)
+
+    hierarchy_tree_clean = convert_defaultdict_to_dict(hierarchy_tree)
+
+    context = {
+        'hierarchy_tree': hierarchy_tree_clean,
+    }
+    return render(request, 'core/polity/var_hier.html', context)

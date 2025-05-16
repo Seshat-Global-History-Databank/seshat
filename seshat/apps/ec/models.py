@@ -304,7 +304,7 @@ class LuxAttributes(models.Model):
 
 
 class Precious_metal(SeshatCommon):
-    name = models.CharField(max_length=100, default="precious_metal")
+    name = models.CharField(max_length=100, default="Precious_metal")
     # this will use the normal tag for confidence
     coded_value = models.CharField(max_length=50, choices=ABSENT_PRESENT_CHOICES)
     #which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
@@ -414,7 +414,7 @@ class Precious_metal(SeshatCommon):
     
 
 class Lux_precious_metal(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="lux_precious_metal")
+    name = models.CharField(max_length=100, default="Lux_precious_metal")
     which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
 
     def get_absolute_url(self):
@@ -429,7 +429,7 @@ class Lux_precious_metal(SeshatCommon, LuxAttributes):
 
 
 class Luxury_fabrics(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_fabrics")
+    name = models.CharField(max_length=100, default="Luxury_fabrics")
 
     def get_absolute_url(self):
         return reverse('luxury_fabrics-detail', args=[str(self.id)])
@@ -442,7 +442,7 @@ class Luxury_fabrics(SeshatCommon, LuxAttributes):
 
 
 class Luxury_manufactured_goods(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_manufactured_goods")
+    name = models.CharField(max_length=100, default="Luxury_manufactured_goods")
 
     def get_absolute_url(self):
         return reverse('luxury_manufactured_goods-detail', args=[str(self.id)])
@@ -455,7 +455,7 @@ class Luxury_manufactured_goods(SeshatCommon, LuxAttributes):
 
 
 class Luxury_spices_incense_and_dyes(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_spices_incense_and_dyes")
+    name = models.CharField(max_length=100, default="Luxury_spices_incense_and_dyes")
 
     def get_absolute_url(self):
         return reverse('luxury_spices_incense_and_dyes-detail', args=[str(self.id)])
@@ -468,7 +468,7 @@ class Luxury_spices_incense_and_dyes(SeshatCommon, LuxAttributes):
 
 
 class Luxury_drink_alcohol(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_drink_alcohol")
+    name = models.CharField(max_length=100, default="Luxury_drink_alcohol")
 
     def get_absolute_url(self):
         return reverse('luxury_drink_alcohol-detail', args=[str(self.id)])
@@ -481,7 +481,7 @@ class Luxury_drink_alcohol(SeshatCommon, LuxAttributes):
 
 
 class Luxury_glass_goods(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_glass_goods")
+    name = models.CharField(max_length=100, default="Luxury_glass_goods")
 
     def get_absolute_url(self):
         return reverse('luxury_glass_goods-detail', args=[str(self.id)])
@@ -494,7 +494,7 @@ class Luxury_glass_goods(SeshatCommon, LuxAttributes):
 
 
 class Lux_fine_ceramic_wares(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="lux_fine_ceramic_wares")
+    name = models.CharField(max_length=100, default="Lux_fine_ceramic_wares")
 
     def get_absolute_url(self):
         return reverse('lux_fine_ceramic_wares-detail', args=[str(self.id)])
@@ -507,7 +507,7 @@ class Lux_fine_ceramic_wares(SeshatCommon, LuxAttributes):
 
 
 class Lux_precious_stone(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="lux_precious_stone")
+    name = models.CharField(max_length=100, default="Lux_precious_stone")
 
     def get_absolute_url(self):
         return reverse('lux_precious_stone-detail', args=[str(self.id)])
@@ -520,7 +520,7 @@ class Lux_precious_stone(SeshatCommon, LuxAttributes):
 
 
 class Lux_statuary(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="lux_statuary")
+    name = models.CharField(max_length=100, default="Lux_statuary")
 
     def get_absolute_url(self):
         return reverse('lux_statuary-detail', args=[str(self.id)])
@@ -533,7 +533,7 @@ class Lux_statuary(SeshatCommon, LuxAttributes):
 
 
 class Luxury_food(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="luxury_food")
+    name = models.CharField(max_length=100, default="Luxury_food")
 
     def get_absolute_url(self):
         return reverse('luxury_food-detail', args=[str(self.id)])
@@ -546,7 +546,7 @@ class Luxury_food(SeshatCommon, LuxAttributes):
 
 
 class Other_luxury_personal_items(SeshatCommon, LuxAttributes):
-    name = models.CharField(max_length=100, default="other_luxury_personal_items")
+    name = models.CharField(max_length=100, default="Other_luxury_personal_items")
 
     def get_absolute_url(self):
         return reverse('other_luxury_personal_items-detail', args=[str(self.id)])
