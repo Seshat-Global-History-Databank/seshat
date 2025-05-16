@@ -258,7 +258,7 @@ class Command(BaseCommand):
                 if my_v:
                     my_v.data_type = values[0]
                     if values[0] == "A/P/U/~":
-                        my_v.data_type_defintion = f"{key.replace('_', ' ').title()} must be assigned one of the following values: Present, Uncoded, Absent, Unknown, Transitional (Absent → Present), or Transitional (Present → Absent). These may be optionally tagged as Confident, Inferred, or Suspected. Values can also be marked as Disputed or Uncertain." #f"One of the following choices is selected for {my_v}: [Present, Uncoded, Absent, Unknown, Transitional (Absent -> Present), Transitional (Present -> Absent)], potentially augmented with one of the tags [Confident, Inferred, Suspected], Values may also be flagged as Disputed or Uncertain."
+                        my_v.data_type_defintion = f"{key.replace('_', ' ').title()} must be assigned one of the following values: <br> [Present, Absent, Unknown, Transitional (Absent → Present), or Transitional (Present → Absent)]. <br>These may be optionally tagged as Confident, Inferred, or Suspected. <br>Values can also be marked as Disputed or Uncertain.<br>If the value has a description but lacks proper coding, it will be considered 'Uncoded'." #f"One of the following choices is selected for {my_v}: [Present, Uncoded, Absent, Unknown, Transitional (Absent -> Present), Transitional (Present -> Absent)], potentially augmented with one of the tags [Confident, Inferred, Suspected], Values may also be flagged as Disputed or Uncertain."
                     #my_v.data_unit = values[0]
                     my_v.save()
                     self.stdout.write(self.style.SUCCESS(f"✅✅✅ Found var: {my_v}"))

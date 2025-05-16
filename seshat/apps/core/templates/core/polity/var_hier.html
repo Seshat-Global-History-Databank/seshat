@@ -1,0 +1,84 @@
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+
+{% block content %}
+<style>
+    .bg-teal-light {
+        background: rgba(0, 128, 128, 0.238);
+    }
+</style>
+
+<div class="container">
+    <h1 class="pt-3">Variable Hierarchy</h1>
+
+    {% for db_section, section_dict in hierarchy_tree.items %}
+
+        {% for section_name, subsection_dict in section_dict.items %}
+
+            {% for subsection_name, variable_list in subsection_dict.items %}
+
+            <span class="h2">{{ db_section }}</span> 
+            {% if  section_name != 'No Section' %}
+            <span class="h4 text-secondary">&nbsp;&nbsp;>&nbsp;&nbsp; {{ section_name }}</span>
+            {% endif %}
+            {% if  subsection_name != 'No Subsection' %}
+            <span class="h6">&nbsp;&nbsp;>&nbsp;&nbsp; {{ subsection_name }}</span>
+            {% endif %}
+
+
+
+                <table class="table table-bordered table-striped mb-5">
+                    <caption><strong>Variables under "{{ section_name }}"</strong></caption>
+                    <thead>
+                        <tr>
+                            <th>Variable Name</th>
+                            <th>DataType</th>
+                            <th>Explanation</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            {% for var in variable_list %}
+                                <tr>
+                                    <td class="fw-bold">{{ var.name }}</td>
+
+                                    <td> <span class="bg-teal-light px-1 rounded">{{ var.data_type }} </span> &nbsp; 
+                                        {% if var.data_type_defintion %}
+
+                                            {% autoescape off %}
+                                            {{ var.data_type_defintion|make_references_look_nicer }}
+                                            {% endautoescape off %}
+                                        {% endif %}
+
+
+                                    </td>
+                                    <td>
+                                        {% if var.explanation %}
+                                            {% autoescape off %}
+                                            {{ var.explanation|make_references_look_nicer }}
+                                            {% endautoescape off %}
+                                        {% endif %}
+
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                    </tbody>
+                </table>
+
+            {% endfor %}
+
+        {% endfor %}
+    {% endfor %}
+</div>
+
+
+
+{% endblock content%}
