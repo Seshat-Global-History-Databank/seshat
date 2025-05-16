@@ -14,7 +14,19 @@
 </style>
 
 <div class="container">
-    <h1 class="pt-3">Variable Hierarchy</h1>
+    <div class="d-flex justify-content-between align-items-center pt-3">
+        <h1 class="m-0">Variable Hierarchy</h1>
+
+        <a class="btn btn-outline-secondary fw-bold" href="{% url 'seshat-codebook' %}">
+            <i class="fa-solid fa-feather text-secondary"></i> &nbsp; Legacy Codebook (Equinox)
+        </a>
+    </div>
+    
+    <div>
+        <h4 class="text-secondary fw-normal">
+            The New Canonical Codebook of Seshat
+        </h4>
+    </div>
 
     {% for db_section, section_dict in hierarchy_tree.items %}
 
@@ -36,9 +48,8 @@
                     <caption><strong>Variables under "{{ section_name }}"</strong></caption>
                     <thead>
                         <tr>
-                            <th>Variable Name</th>
-                            <th>DataType</th>
-                            <th>Explanation</th>
+                            <th style="width:25%;">Variable Name</th>
+                            <th style="width:5%;">Explanation</th>
 
                         </tr>
                     </thead>
@@ -46,19 +57,27 @@
 
                             {% for var in variable_list %}
                                 <tr>
-                                    <td class="fw-bold">{{ var.name }}</td>
-
-                                    <td> <span class="bg-teal-light px-1 rounded">{{ var.data_type }} </span> &nbsp; 
-                                        {% if var.data_type_defintion %}
-
-                                            {% autoescape off %}
-                                            {{ var.data_type_defintion|make_references_look_nicer }}
-                                            {% endautoescape off %}
-                                        {% endif %}
+                                    <td style="width:25%;"> 
+                                        <span class="fw-bold">{{ var.name }} </span> <br> 
+                                        <span>
+                                            <small class="bg-teal-light px-1 rounded fw-normal" style="padding-top:2px;">{{ var.data_type }} </small> &nbsp; 
+                                            {% if var.data_type_defintion %}
+    
+                                                {% autoescape off %}
+                                                {{ var.data_type_defintion|make_references_look_nicer }}
+                                                {% endautoescape off %}
+                                            {% endif %}
+                                        </span> <br>
+                                        <small>
+                                            <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}" target="_blank" rel="noopener noreferrer">
+                                              {{ var.api_endpoint }}
+                                            </a>
+                                          </small>
+                                          
 
 
                                     </td>
-                                    <td>
+                                    <td style="width:75%; font-size:0.9rem;" class="fw-light">
                                         {% if var.explanation %}
                                             {% autoescape off %}
                                             {{ var.explanation|make_references_look_nicer }}
