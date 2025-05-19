@@ -812,6 +812,13 @@ class Section(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def augmented_str(self) -> str:
+        if self.seshat_db_section and self.name:
+            return self.seshat_db_section + '_' + self.name
+        else:
+            return self.name
+
+    
     class Meta:
         """
         :noindex:
@@ -848,6 +855,8 @@ class Variablehierarchy(models.Model):
     ]
     name = models.CharField(
         max_length=200)
+    canonical_name = models.CharField(
+        max_length=200, null=True, blank=True,)
     section = models.ForeignKey(
         Section, on_delete=models.SET_NULL, null=True, blank=True,)
     subsection = models.ForeignKey(
@@ -856,9 +865,10 @@ class Variablehierarchy(models.Model):
     explanation = models.TextField(blank=True, null=True,)
     data_unit = models.TextField(blank=True, null=True,)
     data_type =models.CharField(max_length=50, choices=DataTypes, default="A/P/U/~", blank=True, null=True,)
-    data_type_defintion = models.TextField(blank=True, null=True,)
+    data_type_definition = models.TextField(blank=True, null=True,)
     api_endpoint = models.TextField(blank=True, null=True,)
     who_can_access = models.CharField(max_length=50, choices=ACCESS_TYPES, default='private')
+    private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name

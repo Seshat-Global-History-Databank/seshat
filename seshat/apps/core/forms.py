@@ -16,7 +16,55 @@ from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 
 
-#from .models import Religion
+class SectionModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.augmented_str()  # Call your custom method here
+
+
+class VariableHierarchyForm(forms.ModelForm):
+    class Meta:
+        model = Variablehierarchy
+        fields = '__all__'
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter variable name'}),
+            'canonical_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter canonical name'}),
+            'api_endpoint': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter API Endpoint'}),
+            'data_unit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Data Unit'}),
+            'data_type_definition': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 100px',}),
+            'explanation': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 100px',}),
+            'subsection': forms.Select(attrs={'class': 'form-control form-select' ,}),
+            'data_type': forms.Select(attrs={'class': 'form-control form-select' ,}),
+            'who_can_access': forms.Select(attrs={'class': 'form-control form-select' ,}),
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Override the section field with the custom label
+        self.fields['section'] = SectionModelChoiceField(
+            queryset=Section.objects.all(),
+            required=False,
+            widget=forms.Select(attrs={'class': 'form-control'})
+        )
+
+        self.fields['subsection'].queryset = Subsection.objects.none()
+
+        if 'section' in self.data:
+            try:
+                section_id = int(self.data.get('section'))
+                self.fields['subsection'].queryset = Subsection.objects.filter(section_id=section_id).order_by('name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['subsection'].queryset = self.instance.section.subsections.order_by('name')
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.add_input(Submit('submit', 'Save'))
+
+
 
 class ReligionForm(forms.ModelForm):
     """

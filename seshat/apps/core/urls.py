@@ -99,8 +99,13 @@ urlpatterns += [
          views.activate, name='activate'),
      #path('variablehierarchy/', views.variablehierarchysetting,
      #    name='variablehierarchysetting'),
+     path('variable/create/', views.create_variable, name='create_variable'),
+     path('variable/<int:pk>/update/', views.update_variable, name='update_variable'),
+     path('ajax/load-subsections/', views.load_subsections, name='ajax_load_subsections'),
      path('variable-hierarchy/', views.variable_hierarchy_view, name='variable_hierarchy'),
-
+     # Modal create URLs
+     path('ajax/create-section/', views.create_section_ajax, name='ajax_create_section'),
+     path('ajax/create-subsection/', views.create_subsection_ajax, name='ajax_create_subsection'),
      path('synczotero/', views.synczotero, name='synczotero'),
      path('synczoteromanually/', views.synczoteromanually, name='synczoteromanually'),
      path('synczotero100/', views.synczotero100, name='synczotero100'),
@@ -173,6 +178,8 @@ urlpatterns += [
          views.SeshatPrivateCommentUpdate.as_view(), name="seshatprivatecomment-update"),
      path('core/seshatprivatecommentparts/create2/<int:private_com_id>/', views.seshat_private_comment_part_create_from_null_view,
          name="seshatprivatecommentpart-create2"),
+     path('comment/new/<int:private_com_id>/<slug:app_name>/<slug:model_name>/<int:instance_id>/', views.seshat_private_comment_part_create_from_null_view_for_a_model, name='private-comment-create-from-model'),
+
 
     path('core/seshatprivatecommentparts/<int:pk>/update/<int:private_com_id>/',
          views.SeshatPrivateCommentPartUpdate.as_view(), name="seshatprivatecommentpart-update"),
