@@ -4,7 +4,7 @@
 {% load custom_filters %}
 
 <div class="card-body" style="max-height: 400px; overflow-y: auto; padding:10px; font-size:0.8rem;">
-    {% if form.instance.private_comment %}
+{% if form.instance.private_comment %}
     <div class="col-sm-12">
 
     <form action="{% url 'xxyyzz' com_id=form.instance.private_comment.id %}" method="post">
@@ -82,16 +82,13 @@
 
     
     </form>
-</div>
+    </div>
 
     <div class="col-sm-12">
 
         {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
         <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=form.instance.private_comment.id %}">
             {% csrf_token %}
-
-
-            
                 <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
                     {% if user.full_name %}
                     {{user.full_name}}
@@ -99,25 +96,17 @@
                     {{user}}
                     {% endif %}
                     :</span>  
-
                 {{ another_form.private_comment_part_text }}
-        
                     <div class="row d-flex align-items-end" >
                         <div class="col-md-8">
                             <small class="fw-normal">Researchers or Experts to be informed:</small>  
                             <br>
                             {{ another_form.private_comment_reader }}
                         </div>
-    
-    
                         <div class="col-md-4 pb-1">
                             <input type="submit" class="btn btn-sm border border-dark bg-colorful fw-bold"   value="Insert Your Comment">
                         </div>
-    
                     </div>
-              
-                                
-        
         </form>
         {% endif %}
     </div>
@@ -128,44 +117,28 @@
 {% else %}
 
 
-
-<a class="p-0 m-0"  
-style="overflow: hidden;" 
-href="{% url 'create_private_subcomment_new' app_name='crisisdb' model_name='instability_event' instance_id=form.instance.id %}">
-    <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c" data-bs-toggle="popover" title="Add Private Comment" >
-        <i class="fa-regular fa-comment"></i>
-
-    </span>
-</a>
-
-
-{% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-<form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=0 %}">
-    {% csrf_token %}
-    <div class="row mt-3">
-
-        <div class="col-md-9 my-1 ps-3">
-
-        
-        <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
-            {% if user.full_name %}
-            {{user.full_name}}
-            {% else %}
-            {{user}}
-            {% endif %}
-            :</span>  
-
-        {{ another_form.private_comment_part_text }}
-
-        </div>
-        <div class="col-md-3 my-1">
-        <span class="fw-bold">Researchers or Experts to be informed:</span>  
-        {{ another_form.private_comment_reader }}
-            <input type="submit" class="btn mt-5 border border-dark bg-colorful fw-bold px-4"  value="Insert the New Private Comment">
-        </div>
-
-    </div>
-    </form>
+    {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+    <form method="post" action="{% url 'private-comment-create-from-model' app_name='core' model_name='variablehierarchy' instance_id=form.instance.id private_com_id=0 %}">
+        {% csrf_token %}
+                <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
+                    {% if user.full_name %}
+                    {{user.full_name}}
+                    {% else %}
+                    {{user}}
+                    {% endif %}
+                    :</span>  
+                {{ another_form.private_comment_part_text }}
+                    <div class="row d-flex align-items-end" >
+                        <div class="col-md-8">
+                            <small class="fw-normal">Researchers or Experts to be informed:</small>  
+                            <br>
+                            {{ another_form.private_comment_reader }}
+                        </div>
+                        <div class="col-md-4 pb-1">
+                            <input type="submit" class="btn btn-sm border border-dark bg-colorful fw-bold"   value="Insert Your Comment">
+                        </div>
+                    </div>
+        </form>
     {% endif %}
 {% endif %}  
 

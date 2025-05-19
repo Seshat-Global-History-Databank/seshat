@@ -26,6 +26,13 @@
         <h4 class="text-secondary fw-normal">
             The New Canonical Codebook of Seshat
         </h4>
+
+        <h6>
+            <a class="btn btn-outline-secondary fw-bold" href="{% url 'create_variable' %}">
+                <i class="fa-solid fa-feather text-secondary"></i> Create NEW Variable
+            </a>
+            
+        </h6>
     </div>
 
     {% for db_section, section_dict in hierarchy_tree.items %}
@@ -50,6 +57,7 @@
                         <tr>
                             <th style="width:25%;">Variable Name</th>
                             <th style="width:5%;">Explanation</th>
+                            <th>Edit</th>
 
                         </tr>
                     </thead>
@@ -61,10 +69,10 @@
                                         <span class="fw-bold">{{ var.name }} </span> <br> 
                                         <span>
                                             <small class="bg-teal-light px-1 rounded fw-normal" style="padding-top:2px;">{{ var.data_type }} </small> &nbsp; 
-                                            {% if var.data_type_defintion %}
+                                            {% if var.data_type_definition %}
     
                                                 {% autoescape off %}
-                                                {{ var.data_type_defintion|make_references_look_nicer }}
+                                                {{ var.data_type_definition|make_references_look_nicer }}
                                                 {% endautoescape off %}
                                             {% endif %}
                                         </span> <br>
@@ -85,6 +93,11 @@
                                         {% endif %}
 
 
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-secondary fw-bold py-0 px-1" href="{% url 'update_variable' var.id %}">
+                                            <i class="fa-solid fa-pen fa-sm"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}

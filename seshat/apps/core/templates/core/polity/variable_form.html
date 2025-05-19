@@ -1,0 +1,623 @@
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+<style>
+
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: darkred;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 20px;
+
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(2, 57, 2);
+            padding-left: 20px;
+            width:100%;
+
+    }
+
+
+    .select2-container--default .select2-selection--multiple .select2-selection__clear {
+        cursor: pointer;
+        font-weight: bold;
+        height: 20px;
+        margin-right: 10px;
+        margin-top: 5px;
+        position: absolute;
+        right: 0;
+        padding: 1px;
+        display:none;
+    }
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        background: white;
+        border: none;
+        outline: 0;
+        cursor:text;
+        box-shadow: none;
+        padding-right: 1px;
+        margin-top:10px;
+
+
+    }
+
+    /* Style the dropdown */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px;
+    }
+
+    .select2-container .select2-results__option:hover {
+        background-color: #782823;
+        color: beige;
+
+      }
+
+      .select2-container .select2-selection--multiple {
+        box-sizing: border-box;
+        cursor: pointer;
+        display: block;
+        min-height: 32px;
+        user-select: none;
+        -webkit-user-select: none;
+        width: 300px;
+
+    }
+
+
+      .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #782823;
+        color: beige;
+        width:100%;
+
+      }
+
+      .goodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border:2px solid seagreen;
+      }
+
+      .halfgoodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+        border:2px solid gray;
+      }
+
+      .goodsubmit:hover{
+        font-weight: bold;
+        color:darkcyan;
+      }
+
+      .halfgoodsubmit:hover{
+        font-weight: bold;
+        color:gray;
+      }
+  
+  
+    /* Style the dropdown arrow */
+    .select2-container .select2-selection__arrow {
+      height: 36px;
+      margin-top: 4px; /* Adjust the margin-top as needed */
+      width:100%;
+
+    }
+
+    .form-check-inline {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Center vertically */
+        margin-right: 10px; /* Add some spacing between radio buttons */
+    }
+    .form-check-label {
+        display: inline-block;
+        align-items: center;
+        margin-right: 15px; /* Add spacing between radio buttons */
+    }
+    
+    .form-check-label input[type="radio"] {
+        margin-right: 5px; /* Add spacing between radio circle and label */
+    }
+
+
+    /* Hide the up and down arrows */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"] {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .checkboxinput {
+        width: 18px;  /* Increase the width of the checkbox */
+        height: 18px; /* Increase the height of the checkbox */
+        cursor: pointer; /* Change the cursor to indicate interactivity */
+    }
+
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .tab a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
+    
+    .tab:hover {
+        background-color: #d1d1d1;
+    }
+    
+    .tab.active {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #4CAF50;
+    }
+
+    .tab.done {
+        background-color: #782823;
+        color: lightgray;
+        border-color: #782823;
+    }
+    
+    .tab.waiting {
+        color: gray;
+        border-color: darkgray;
+    }
+
+    .tab.active a {
+        color: white;
+    }
+    
+    .arrow {
+        font-size: 24px;
+        margin: 0 10px;
+        color: #4CAF50;
+    }
+
+    
+    .mainform {
+        background:#fffdf2; 
+        border: 0px #78292366 solid;
+        border-radius: 5px;
+        box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
+    }
+    
+    .scrollable-box {
+        width: 100%; /* You can adjust this value */
+        height: 200px; /* Adjust this to set the box height */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Hides horizontal overflow */
+        border: 1px solid #ddd; /* Optional: Adds a border for aesthetics */
+        padding: 10px; /* Optional: Adds some padding inside the box */
+        background-color: #f9f9f9; /* Optional: Sets background color */
+        border-radius: 5px; /* Optional: Rounds the box corners */
+    }
+
+        
+    .bg-info-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: dodgerblue;
+        border: 1px solid rgba(30, 143, 255, 0.178);   
+        background: rgba(30, 143, 255, 0.06);   
+
+       }
+    
+       .bg-danger-light {
+        background: lightpink;
+    
+       }
+    
+        .my_small_link:hover {
+          color:navajowhite;
+        }
+    
+       .bg-success-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: teal;
+        border: 1px solid rgba(0, 128, 128, 0.18);   
+        background: rgba(0, 128, 128, 0.08);   
+
+        }
+    
+       .bg-warning-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkorange;
+        border: 1px solid goldenrod;   
+       }
+    
+       .bg-uncoded-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkred;
+        border: 1px solid rosybrown;
+       }
+       
+       .bg-trans-light {
+        background: cadetblue;
+    
+       }
+       
+       .custom-right-align {
+        margin-left: auto !important; /* Pushes the column to the right */
+        text-align: right !important; /* Aligns inner content to the right */
+    }
+    
+       .bg-unknown-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: hotpink;
+        border: 1px solid hotpink;
+        }
+    
+       .bg-secondary-light {
+        background: #fffdf2;
+        color: crimson;
+        border: 1px solid rgba(220, 20, 60, 0.18);
+        background: rgba(220, 20, 60, 0.06);
+
+    
+       }
+    
+       .bg-absent-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: gray;
+        border: 1px solid lightgray;   
+    
+       }
+       .highlighted-value-title-full {
+        padding: 1px; 
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 5px;
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.076),rgb(242, 199, 119, 0.076),rgb(151, 230, 151, 0.076));
+    }
+       .highlighted-value-title {
+        display: inline-block; 
+        padding: 1px; 
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 5px;
+        margin:0px;
+        font-family: 'Roboto Mono', monospace;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    }
+
+    .highlighted-value-title-empty {
+        display: inline-block; 
+        border: 1px solid rgba(78, 28, 23, 0.25);
+        padding: 1px; 
+
+        border-radius: 5px;
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to left, rgb(246, 127, 127, 0.156),rgb(242, 199, 119, 0.156),rgb(151, 230, 151, 0.156));
+    }
+
+    .highlighted-value-title-pred {
+        display: inline-block; 
+        border: 1px solid rgba(208, 154, 149, 0.639);
+        padding: 1px; 
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 5px;
+        margin:0px;
+        font-family: 'Roboto Mono', monospace;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+    }
+
+        .row {
+            --bs-gutter-x: 0.5rem;
+        }    
+
+        .expert_name {
+            border-radius: 5px;
+        }
+        .comment-box {
+          padding: 5px;
+          margin-top: 0px;
+          border: 1px solid gray;
+          display: inline-block; /* Adjusts width based on content */
+          border-radius: 0 5px 10px 10px; /* Sharp top-left, rounded others */
+      }
+      .extra-small {
+        font-size: 12px; /* Adjust to desired size */
+        color: gray; /* Optional: makes it less prominent */
+      }
+
+      .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    
+      }
+
+      
+      .ref-dropdown {
+        max-width: 20%;  /* Ensures it doesn't exceed its container */
+        width: 300px; /* Set a fixed width, adjust as needed */
+        white-space: nowrap; /* Prevents wrapping */
+        overflow: hidden; /* Hides overflow text */
+        text-overflow: ellipsis; /* Adds '...' for long items */
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        width: 500px;
+    }
+    
+</style>
+
+<div class="container pt-3">
+
+  <h2>{{ action }} Variable Hierarchy</h2>
+
+
+
+<form method="post" id="varhier-form">{% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row">
+        <div class="mb-1 p-2 col-md-6">
+            {{ form.name|as_crispy_field }}
+          </div>
+          <div class="mb-1 p-2 col-md-6">
+            {{ form.canonical_name|as_crispy_field }}
+          </div>
+
+          <div class="mb-1 p-2 col-md-4" style="display:none;">
+            {{ form.is_verified|as_crispy_field }}
+          </div>
+          <div class="row col-md-6" >
+
+              <div class="mb-1 p-2 col-md-12">
+                {{ form.explanation|as_crispy_field }}
+            </div>
+              <div class="mb-1 p-2 col-md-12">
+                {{ form.api_endpoint|as_crispy_field }}
+            </div>
+
+            <div class="mb-1 p-2 col-md-12">
+                <button type="submit" class="btn btn-outline-primary mt-3 px-5 fw-bold">Save</button>
+                <a href="{% url 'variable_hierarchy' %}" class="btn btn-outline-secondary mt-3 px-3 fw-bold">Cancel</a>
+
+            </div>
+
+          </div>
+
+          <div class="row col-md-6" >
+            <div class="mb-1 p-2 col-md-8">
+                {{ form.section|as_crispy_field }}
+                <!-- <button type="button" class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#addSectionModal">+ Section</button> -->
+              </div>
+              <div class="mb-1 p-2 col-md-4">
+                {{ form.subsection|as_crispy_field }}
+                <!-- <button type="button" class="btn btn-sm text-secondary" data-bs-toggle="modal" data-bs-target="#addSubsectionModal">+ Subsection</button> -->
+              </div>
+            <div class="mb-1 p-2 col-md-4">
+                {{ form.data_unit|as_crispy_field }}
+              </div>
+              <div class="mb-1 p-2 col-md-4">
+                {{ form.data_type|as_crispy_field }}
+              </div>
+              <div class="mb-1 p-2 col-md-4">
+                {{ form.who_can_access|as_crispy_field }}
+              </div>
+              <div class="mb-1 p-2 col-md-12">
+                {{ form.data_type_definition|as_crispy_field }}
+              </div>
+          </div>
+
+        
+    </div>
+
+
+ 
+
+</form>
+
+<!-- Section Modal -->
+<div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="addSectionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" id="section-form">{% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Add Section</h5></div>
+        <div class="modal-body">
+          <input type="text" name="name" placeholder="Section name" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add</button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Subsection Modal -->
+<div class="modal fade" id="addSubsectionModal" tabindex="-1" aria-labelledby="addSubsectionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" id="subsection-form">{% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Add Subsection</h5></div>
+        <div class="modal-body">
+          <select name="section_id" class="form-select" required>
+            {% for section in sections %}
+              <option value="{{ section.id }}">{{ section.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" name="name" placeholder="Subsection name" class="form-control mt-2" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% if form.instance.private_comment.inner_private_comments_related.all %}
+<div class="pt-3">
+    <span>
+        <button class="btn btn-success rounded-circle p-3 shadow highlighted-value-title text-dark" onclick="toggleChat()" title="Private Comments">
+            <i class="fa-solid fa-comments fa-lg"></i> 
+        </button>
+    </span>
+    <span>
+        There are Private Comments for this variable.         
+    </span> 
+</div>
+
+
+{% endif %}
+</div>
+
+
+
+<!-- Floating Chat Button -->
+<div id="chat-toggle" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+">
+ 
+
+    {% if form.instance.private_comment.inner_private_comments_related.all|length != 0 %}
+        <button class="btn btn-success rounded-circle p-3 shadow highlighted-value-title text-dark" onclick="toggleChat()" title="Private Comments">
+            <i class="fa-solid fa-comments fa-lg"></i>
+        </button>
+    {% else %}
+    <button class="btn btn-secondary rounded-circle p-3 shadow highlighted-value-title text-dark" onclick="toggleChat()" title="Private Comments">
+        <i class="fa-solid fa-comment fa-lg"></i>
+    </button>
+    {% endif %}
+
+</div>
+
+<!-- Chat Box (Initially hidden) -->
+<div id="chat-box" class="card shadow" style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 40%;
+    display: none;
+    z-index: 1050;
+">
+  <div class="card-header highlighted-value-title text-dark d-flex justify-content-between align-items-center">
+    <span><i class="fa-solid fa-comments"></i> Private Comments</span>
+    <button type="button" class="btn-close btn-close-darl btn-sm" onclick="toggleChat()"></button>
+  </div>
+  {% include "core/partials/_private_comment_inline_absolute.html" %}
+
+
+</div>
+
+
+<script>
+
+    $(document).ready(function() {
+        // Initialize Select2 with an empty dataset
+        $(".js-example-basic-single").select2({
+            width: 'resolve',  // Keeps it within the initial width
+            dropdownAutoWidth: true,  // Ensures it doesn’t resize
+        });    
+        $('.js-example-basic-multiple').select2({
+            allowClear: true,
+        });
+    });
+
+  $('#id_section').change(function () {
+    const url = '{% url "ajax_load_subsections" %}';
+    const sectionId = $(this).val();
+    $.ajax({
+      url: url,
+      data: {'section': sectionId},
+      success: function (data) {
+        let $subsection = $('#id_subsection');
+        $subsection.html('');
+        data.forEach(function (item) {
+          $subsection.append(`<option value="${item.id}">${item.name}</option>`);
+        });
+      }
+    });
+  });
+
+  $('#section-form').submit(function (e) {
+    e.preventDefault();
+    const name = $(this).find('[name="name"]').val();
+    $.post('{% url "ajax_create_section" %}', {
+      name: name,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    }, function (data) {
+      $('#addSectionModal').modal('hide');
+      $('#id_section').append(`<option value="${data.id}" selected>${data.name}</option>`).change();
+    });
+  });
+
+  $('#subsection-form').submit(function (e) {
+    e.preventDefault();
+    const name = $(this).find('[name="name"]').val();
+    const section_id = $(this).find('[name="section_id"]').val();
+    $.post('{% url "ajax_create_subsection" %}', {
+      name: name,
+      section_id: section_id,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    }, function (data) {
+      $('#addSubsectionModal').modal('hide');
+      $('#id_subsection').append(`<option value="${data.id}" selected>${data.name}</option>`);
+    });
+  });
+
+  function toggleChat() {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+  }
+</script>
+
+{% endblock %}

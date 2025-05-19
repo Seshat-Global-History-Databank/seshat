@@ -11,7 +11,9 @@ from seshat.apps.stlm.models import Settlement_population
  
 
 from django.contrib.sites.shortcuts import get_current_site
-from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
+from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, VariableHierarchyForm, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
+
+from .models import Variablehierarchy
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render
@@ -1675,6 +1677,65 @@ def seshat_comment_part_create_from_null_view_inline(request, app_name, model_na
     }
     return render(request, 'core/seshatcomments/seshatcommentpart_create2.html', context)
 
+
+# Function based NEW:
+@permission_required('core.add_seshatprivatecommentpart')
+def seshat_private_comment_part_create_from_null_view_for_a_model(request, private_com_id, app_name=None, model_name=None, instance_id=None):
+    if request.method == 'POST':
+        form = SeshatPrivateCommentPartForm(request.POST)
+        oopsi = request.POST.getlist('selected_items')
+        #print("ooopsiiiiiiiiiiiiiiii,", oopsi)
+        if private_com_id == 0:
+            big_father = SeshatPrivateComment.objects.create()
+
+            # Attach it to the calling model if model_name and instance_id are given
+            if model_name and instance_id:
+                try:
+                    model = apps.get_model(app_label=app_name, model_name=model_name)
+                    instance = model.objects.get(pk=instance_id)
+                    if hasattr(instance, 'private_comment'):
+                        instance.private_comment = big_father
+                        instance.save()
+                    else:
+                        raise AttributeError(f"{model_name} has no 'private_comment' field.")
+                except Exception as e:
+                    raise Http404(f"Model assignment failed: {e}")        
+        else:
+            big_father = SeshatPrivateComment.objects.get(id=private_com_id)
+
+        big_father_id = big_father.id
+        #print(big_father_id)
+
+        if form.is_valid():
+            private_comment_part_text = form.cleaned_data['private_comment_part_text']
+            my_private_comment_readers = form.cleaned_data['private_comment_reader']
+            user_logged_in = request.user
+
+            try:
+                seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+            except:
+                seshat_expert_instance = None
+
+            seshat_private_comment_part = SeshatPrivateCommentPart(private_comment_part_text=private_comment_part_text, private_comment_owner=seshat_expert_instance, private_comment= big_father)
+
+            seshat_private_comment_part.save()
+
+            seshat_private_comment_part.private_comment_reader.add(*my_private_comment_readers) 
+
+            return redirect(request.META.get('HTTP_REFERER', reverse('seshatprivatecomment-update', kwargs={'pk': big_father_id})))
+            #return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id}))
+
+    else:
+        form = SeshatPrivateCommentPartForm()
+        #print('5555555555555555555555555555555')
+
+    context = {
+        'form': form,
+        'private_com_id': private_com_id,
+    }
+
+    #print("333333333333333333333333333333")
+    return render(request, 'core/seshatcomments/seshatprivatecommentpart_create2.html', context)
 
 # Function based NEW:
 @permission_required('core.add_seshatprivatecommentpart')
@@ -5584,11 +5645,17 @@ def create_a_private_comment_with_a_private_subcomment_new(request, app_name, mo
     model_instance = get_object_or_404(model_class, id=instance_id)
 
     # Create a new comment instance and save it to the database
-    if str(app_name) == 'core':
+    if str(app_name) == 'core' and model_name != 'variablehierarchy':
         if model_instance.private_comment_n and model_instance.private_comment_n.id > 1:
             private_comment_instance = model_instance.private_comment_n
         else:
             private_comment_instance = SeshatPrivateComment.objects.create(text='a new_private_comment_text new approach for polity')
+    # elif str(app_name) == 'core' and model_instance.name != 'variablehierarchy':
+    #     if model_instance.private_comment and model_instance.private_comment.id > 1:
+    #         private_comment_instance = model_instance.private_comment
+    #     else:
+    #         private_comment_instance = SeshatPrivateComment.objects.create(text='a new_private_comment_text new approach for polity')
+
     else:
         if model_instance.private_comment and model_instance.private_comment.id > 1:
             private_comment_instance = model_instance.private_comment
@@ -5611,7 +5678,7 @@ def create_a_private_comment_with_a_private_subcomment_new(request, app_name, mo
     # )
 
     # Assign the comment to the model instance
-    if app_name == 'core':
+    if app_name == 'core' and model_name != 'variablehierarchy':
         model_instance.private_comment_n = private_comment_instance
     else:
         model_instance.private_comment = private_comment_instance
@@ -6370,3 +6437,48 @@ def variable_hierarchy_view(request):
         'hierarchy_tree': hierarchy_tree_clean_sorted,
     }
     return render(request, 'core/polity/var_hier.html', context)
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def create_variable(request):
+    sections = Section.objects.all()
+    if request.method == 'POST':
+        form = VariableHierarchyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('variable_hierarchy')  # or redirect to detail page
+    else:
+        form = VariableHierarchyForm()
+    return render(request, 'core/polity//variable_form.html', {'form': form, 'action': 'Create', 'sections': sections})
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def update_variable(request, pk):
+    sections = Section.objects.all()
+    instance = get_object_or_404(Variablehierarchy, pk=pk)
+    another_form = SeshatPrivateCommentPartForm(request.POST)
+    if request.method == 'POST':
+        form = VariableHierarchyForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('variable_hierarchy')  # or redirect to detail page
+    else:
+        form = VariableHierarchyForm(instance=instance)
+    return render(request, 'core/polity/variable_form.html', {'form': form, 'action': 'Update', 'sections': sections, 'another_form': another_form,})
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def load_subsections(request):
+    section_id = request.GET.get('section')
+    subsections = Subsection.objects.filter(section_id=section_id).order_by('name')
+    return JsonResponse(list(subsections.values('id', 'name')), safe=False)
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def create_section_ajax(request):
+    name = request.POST.get('name')
+    section = Section.objects.create(name=name)
+    return JsonResponse({'id': section.id, 'name': section.name})
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def create_subsection_ajax(request):
+    name = request.POST.get('name')
+    section_id = request.POST.get('section_id')
+    subsection = Subsection.objects.create(name=name, section_id=section_id)
+    return JsonResponse({'id': subsection.id, 'name': subsection.name,})
