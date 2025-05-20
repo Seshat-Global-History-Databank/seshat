@@ -3,7 +3,7 @@ import importlib
 import random
 import numpy as np
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from seshat.apps.crisisdb.models import Human_sacrifice
@@ -6388,20 +6388,73 @@ def variable_hierarchy_view_old(request):
     return render(request, 'core/polity/var_hier.html', context)
 
 
+# def variable_hierarchy_view_backup(request):
+#     from collections import OrderedDict
+#     hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+#     variables = Variablehierarchy.objects.select_related('section', 'subsection',)
+
+#     # Helper function to recursively convert defaultdicts to dicts
+#     def convert_defaultdict_to_dict(d):
+#         if isinstance(d, defaultdict):
+#             d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+#         elif isinstance(d, dict):
+#             d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
+#         return d
+
+#     for var in variables:
+#         db_section = var.section.seshat_db_section if var.section and var.section.seshat_db_section else "Uncategorized"
+#         section_name = var.section.name if var.section else "No Section"
+#         subsection_name = var.subsection.name if var.subsection else "No Subsection"
+
+#         hierarchy_tree[db_section][section_name][subsection_name].append(var)
+
+#     # Define your custom sort order
+#     predefined_order = [
+#         "General",
+#         "Social Complexity",
+#         "Warfare",
+#         "Economy",
+#         "Religion",
+#     ]
+
+#     # Sort the top-level keys according to predefined order
+#     def sort_hierarchy(hierarchy, order):
+#         sorted_hierarchy = OrderedDict()
+#         for key in order:
+#             if key in hierarchy:
+#                 sorted_hierarchy[key] = hierarchy[key]
+#         # Add any extra keys not in predefined order
+#         for key in hierarchy:
+#             if key not in sorted_hierarchy:
+#                 sorted_hierarchy[key] = hierarchy[key]
+#         return sorted_hierarchy
+
+#     hierarchy_tree_clean = sort_hierarchy(hierarchy_tree, predefined_order)
+#     hierarchy_tree_clean_sorted = convert_defaultdict_to_dict(hierarchy_tree_clean)
+
+#     context = {
+#         'hierarchy_tree': hierarchy_tree_clean_sorted,
+#     }
+#     return render(request, 'core/polity/var_hier.html', context)
+
 def variable_hierarchy_view(request):
-    from collections import OrderedDict
     hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
-    variables = Variablehierarchy.objects.select_related('section', 'subsection',)
+    variables = Variablehierarchy.objects.select_related('section', 'subsection')
 
-    # Helper function to recursively convert defaultdicts to dicts
-    def convert_defaultdict_to_dict(d):
-        if isinstance(d, defaultdict):
-            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
-        elif isinstance(d, dict):
-            d = {k: convert_defaultdict_to_dict(v) for k, v in d.items()}
-        return d
+    # Predefined seshat_db_section order
+    predefined_section_order = [
+        "General",
+        "Social Complexity",
+        "Warfare",
+        "Economy",
+        "Religion",
+        "Crisisdb"
+    ]
+    db_section_order = {name: i for i, name in enumerate(predefined_section_order)}
 
+    # Step 1: Build the nested structure
     for var in variables:
         db_section = var.section.seshat_db_section if var.section and var.section.seshat_db_section else "Uncategorized"
         section_name = var.section.name if var.section else "No Section"
@@ -6409,34 +6462,70 @@ def variable_hierarchy_view(request):
 
         hierarchy_tree[db_section][section_name][subsection_name].append(var)
 
-    # Define your custom sort order
-    predefined_order = [
-        "General",
-        "Social Complexity",
-        "Warfare",
-        "Economy",
-        "Religion",
-    ]
+    # Step 2: Sort the tree
+    def sort_hierarchy(tree):
+        sorted_tree = OrderedDict()
 
-    # Sort the top-level keys according to predefined order
-    def sort_hierarchy(hierarchy, order):
-        sorted_hierarchy = OrderedDict()
-        for key in order:
-            if key in hierarchy:
-                sorted_hierarchy[key] = hierarchy[key]
-        # Add any extra keys not in predefined order
-        for key in hierarchy:
-            if key not in sorted_hierarchy:
-                sorted_hierarchy[key] = hierarchy[key]
-        return sorted_hierarchy
+        sorted_db_sections = sorted(
+            tree.keys(),
+            key=lambda x: (db_section_order.get(x, 999), x)
+        )
 
-    hierarchy_tree_clean = sort_hierarchy(hierarchy_tree, predefined_order)
-    hierarchy_tree_clean_sorted = convert_defaultdict_to_dict(hierarchy_tree_clean)
+        for db_section in sorted_db_sections:
+            section_dict = tree[db_section]
+            sorted_sections = sorted(
+                section_dict.items(),
+                key=lambda item: (
+                    # Get the first variable in the first subsection to extract sort_order
+                    next(
+                        (
+                            v.section.sort_order
+                            for sublist in item[1].values()
+                            for v in sublist
+                            if v.section
+                        ),
+                        9999
+                    ),
+                    item[0]  # section name fallback
+                )
+            )
+
+            sorted_tree[db_section] = OrderedDict()
+
+            for section_name, subsection_dict in sorted_sections:
+                sorted_subsections = sorted(
+                    subsection_dict.items(),
+                    key=lambda item: (
+                        next(
+                            (
+                                v.subsection.sort_order
+                                for v in item[1]
+                                if v.subsection
+                            ),
+                            9999
+                        ),
+                        item[0]  # subsection name fallback
+                    )
+                )
+
+                sorted_tree[db_section][section_name] = OrderedDict()
+
+                for subsection_name, var_list in sorted_subsections:
+                    sorted_vars = sorted(
+                        var_list,
+                        key=lambda v: (v.sort_order, v.name)
+                    )
+                    sorted_tree[db_section][section_name][subsection_name] = sorted_vars
+
+        return sorted_tree
+
+    sorted_hierarchy_tree = sort_hierarchy(hierarchy_tree)
 
     context = {
-        'hierarchy_tree': hierarchy_tree_clean_sorted,
+        'hierarchy_tree': sorted_hierarchy_tree,
     }
-    return render(request, 'core/polity/var_hier.html', context)
+    return render(request, 'core/polity/var_hier_tree.html', context)
+
 
 @user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
 def create_variable(request):

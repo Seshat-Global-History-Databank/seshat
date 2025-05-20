@@ -807,6 +807,8 @@ class Section(models.Model):
     name = models.CharField(max_length=200)
     seshat_db_section = models.CharField(max_length=200, null=True, blank=True,)
     db_table_name = models.CharField(max_length=100, null=True, blank=True,)
+    sort_order = models.PositiveIntegerField(default=0)
+
 
 
     def __str__(self) -> str:
@@ -824,6 +826,8 @@ class Section(models.Model):
         :noindex:
         """
         unique_together = ("name", 'seshat_db_section')
+        ordering = ['sort_order']
+
 
 
 class Subsection(models.Model):
@@ -833,6 +837,8 @@ class Subsection(models.Model):
     name = models.CharField(max_length=200)
     section = models.ForeignKey(
         Section, on_delete=models.SET_NULL, null=True, related_name="subsections")
+    sort_order = models.PositiveIntegerField(default=0)
+
 
     def __str__(self) -> str:
         return self.name
@@ -842,6 +848,8 @@ class Subsection(models.Model):
         :noindex:
         """
         unique_together = ("name", "section")
+        ordering = ['sort_order']
+
 
 
 class Variablehierarchy(models.Model):
@@ -869,6 +877,8 @@ class Variablehierarchy(models.Model):
     api_endpoint = models.TextField(blank=True, null=True,)
     who_can_access = models.CharField(max_length=50, choices=ACCESS_TYPES, default='private')
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
 
     def __str__(self) -> str:
         return self.name
@@ -878,6 +888,7 @@ class Variablehierarchy(models.Model):
         :noindex:
         """
         unique_together = ("name", "section", "subsection")
+        ordering = ['sort_order']
 
 
 class Reference(models.Model):

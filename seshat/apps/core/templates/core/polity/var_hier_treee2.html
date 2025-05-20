@@ -1,0 +1,189 @@
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+{% block content %}
+<style>
+    .bg-teal-light {
+        background: rgba(0, 128, 128, 0.238);
+    }
+
+    .bg-orange-light {
+        background: rgba(186, 89, 5, 0.238);
+    }
+
+    .tree-indent {
+        margin-left: 1.5rem;
+    }
+
+    .tree-subindent {
+        margin-left: 3rem;
+    }
+
+    .variable-card {
+        margin-bottom: 0.5rem;
+    }
+
+    .toggle-link {
+        cursor: pointer;
+        color: teal;
+        display: inline-block;
+        width: auto;
+    }
+
+    .collapse.show + .card-body .collapse-icon::before {
+        content: "▼";
+    }
+
+    .tree-node {
+        position: relative;
+        padding-left: 20px;
+        margin-left: 15px;
+        border-left: 2px solid #ccc;
+    }
+
+    .tree-branch {
+        position: relative;
+        margin: 5px 0;
+    }
+
+    .tree-branch::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 0.75em;
+        width: 20px;
+        height: 1px;
+        background-color: #ccc;
+    }
+
+    .tree-label {
+        font-weight: bold;
+        font-size: 1.1rem;
+        padding-left: 5px;
+    }
+
+    
+
+</style>
+
+<div class="container pt-2">
+    <div class="d-flex justify-content-between align-items-center pt-2 pb-3">
+        <h1 class="m-0">Variable Hierarchy</h1>
+        <div class="form-check form-switch py-2" style="transform: scale(1.5); transform-origin: left;">
+            <input class="form-check-input" type="checkbox" id="toggleAllAccordion">
+            <label class="form-check-label ms-1 fs-6 fw-light" for="toggleAllAccordion">
+              <span id="accordionState" class="text-teal fw-normal">Collapsed</span>
+    
+            </label>
+          </div>
+        <a class="btn btn-outline-secondary fw-bold" href="{% url 'seshat-codebook' %}">
+            <i class="fa-solid fa-feather text-secondary"></i> &nbsp; Legacy Codebook (Equinox)
+        </a>
+    </div>
+
+      
+      
+      
+
+    <div class="mb-4">
+        <h4 class="text-secondary fw-normal">The New Canonical Codebook of Seshat</h4>
+        <a class="btn fw-light mt-2" href="{% url 'create_variable' %}">
+            <i class="fa-solid fa-plus"></i> Create New Variable
+        </a>
+    </div>
+
+    {% for db_section, section_dict in hierarchy_tree.items %}
+        <h3 class="mt-4">{{ db_section }}</h3>
+        {% for section_name, subsection_dict in section_dict.items %}
+            {% if section_name != 'No Section' %}
+                <h5 class="tree-indent mt-3">{{ section_name }}</h5>
+            {% endif %}
+            {% for subsection_name, variable_list in subsection_dict.items %}
+                {% if subsection_name != 'No Subsection' %}
+                    <h6 class="tree-subindent text-muted">{{ subsection_name }}</h6>
+                {% endif %}
+                <div class="tree-subindent">
+                    {% for var in variable_list %}
+                        <div class="card variable-card">
+                            <span class="card-header p-2">
+                                <a class="toggle-link fw-bold" data-bs-toggle="collapse" href="#var-{{ var.id }}" role="button"
+                                   aria-expanded="false" aria-controls="var-{{ var.id }}">
+                                    {{ var.name }}
+
+                                </a>
+                                <small class="bg-teal-light px-1 rounded fw-normal">{{ var.data_type }}</small>   <span class="bg-orange-light px-1 rounded fw-light">{{ var.who_can_access }}</span>
+                            </span>
+                            <div class="collapse variable-collapse" id="var-{{ var.id }}">
+                                <div class="card-body" style="font-size: 0.9rem;">
+                                    <p>
+                                        <small class="bg-teal-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                        {% if var.data_type_definition %}
+                                            <br>
+                                            {% autoescape off %}
+                                                {{ var.data_type_definition|make_references_look_nicer }}
+                                            {% endautoescape off %}
+                                        {% endif %}
+                                    </p>
+                                    <p>
+                                        <small><strong>API Endpoint:</strong>
+                                            {% if var.api_endpoint %}
+                                                <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}"
+                                                   target="_blank" rel="noopener noreferrer">{{ var.api_endpoint }}</a>
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                    <p><small><strong>Canonical Name:</strong> {{ var.canonical_name }}</small></p>
+                                    <p><small><strong>Who can access?</strong>
+                                        <span class="bg-orange-light px-1 rounded">{{ var.who_can_access }}</span>
+                                    </small></p>
+                                    {% if var.explanation %}
+                                        <hr>
+                                        <p>
+                                            {% autoescape off %}
+                                                {{ var.explanation|make_references_look_nicer }}
+                                            {% endautoescape off %}
+                                        </p>
+                                    {% endif %}
+                                    <a class="btn btn-outline-secondary fw-bold btn-sm"
+                                       href="{% url 'update_variable' var.id %}">
+                                        <i class="fa-solid fa-pen fa-sm"></i> Edit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleSwitch = document.getElementById("toggleAllAccordion");
+      const collapsibles = document.querySelectorAll(".variable-collapse");
+      const accordionButtons = document.querySelectorAll(".accordion-button");
+      const accordionBodies = document.querySelectorAll(".accordion-collapse");
+      const accordionState = document.getElementById("accordionState");
+  
+      toggleSwitch.addEventListener("change", function () {
+        collapsibles.forEach(collapse => {
+          const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapse);
+          if (toggleSwitch.checked) {
+            bsCollapse.show();
+          } else {
+            bsCollapse.hide();
+          }
+        });
+        accordionState.textContent = toggleSwitch.checked ? "Expanded" : "Collapsed";
+      });
+    });
+  </script>
+  
+{% endblock content %}
