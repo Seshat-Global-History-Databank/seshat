@@ -142,6 +142,7 @@ DataTypes = (
     ('A/P/U/~', 'A/P/U/~'),
     ('RANGE', 'RANGE'),
     ('TEXT', 'TEXT'),
+    ('CHOICES', 'CHOICES'),
     ('COMPLEX', 'COMPLEX'),
 )
 
