@@ -69,7 +69,10 @@
         padding-left: 5px;
     }
 
-    
+    .card-body {
+        flex: 1 1 auto;
+        padding: 0.2rem 0.5rem;
+    }
 
 </style>
 
@@ -111,11 +114,11 @@
                 {% endif %}
                 <div class="tree-subindent">
                     {% for var in variable_list %}
-                        <div class="card variable-card">
+                        <div class="card variable-card" style="border-left:5px solid rgba(0, 128, 128, 0.238);">
                             <span class="card-header p-2 m-0">
                                 <a class="toggle-link fw-bold" data-bs-toggle="collapse" href="#var-{{ var.id }}" role="button"
                                    aria-expanded="false" aria-controls="var-{{ var.id }}">
-                                   <i class="fa-solid fa-circle fa-2xs"></i>&nbsp;
+                                   
                                     {{ var.name }}
 
                                 </a>  &nbsp;&nbsp;&nbsp;
