@@ -11,6 +11,10 @@
     .bg-teal-light {
         background: rgba(0, 128, 128, 0.238);
     }
+
+    .bg-orange-light {
+        background: rgba(186, 89, 5, 0.238);
+    }
 </style>
 
 <div class="container">
@@ -52,11 +56,10 @@
 
 
                 <table class="table table-bordered table-striped mb-5">
-                    <caption><strong>Variables under "{{ section_name }}"</strong></caption>
                     <thead>
                         <tr>
-                            <th style="width:25%;">Variable Name</th>
-                            <th style="width:5%;">Explanation</th>
+                            <th style="width:35%;">Variable Name</th>
+                            <th style="width:65%;">Explanation</th>
                             <th>Edit</th>
 
                         </tr>
@@ -65,10 +68,11 @@
 
                             {% for var in variable_list %}
                                 <tr>
-                                    <td style="width:25%;"> 
-                                        <span class="fw-bold">{{ var.name }} </span> <br> 
+                                    <td style="width:35%;"> 
+                                        <span class="fw-bold fs-5">{{ var.name }} </span> <br> 
                                         <span>
-                                            <small class="bg-teal-light px-1 rounded fw-normal" style="padding-top:2px;">{{ var.data_type }} </small> &nbsp; 
+                                            <small class="bg-teal-light px-1 rounded fw-normal" style="padding-top:2px;">
+                                                {{ var.data_type }} </small> &nbsp; 
                                             {% if var.data_type_definition %}
     
                                                 {% autoescape off %}
@@ -77,15 +81,30 @@
                                             {% endif %}
                                         </span> <br>
                                         <small>
+                                            API Endpoint: 
+                                            {% if  var.api_endpoint %}
+
                                             <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}" target="_blank" rel="noopener noreferrer">
                                               {{ var.api_endpoint }}
                                             </a>
-                                          </small>
-                                          
+                                            {% else %}
+                                            -
+                                            {% endif %}
 
+                                          </small>
+                                          <br>
+                                          <small>
+                                            Canonical Name: 
+                                            <b>{{ var.canonical_name }}</b>  
+                                          </small>
+                                          <br>
+                                          <small>
+                                            Who can access? 
+                                            <span class="bg-orange-light px-1 rounded fw-normal" style="padding-top:2px;">{{ var.who_can_access }}</span>  
+                                          </small>
 
                                     </td>
-                                    <td style="width:75%; font-size:0.9rem;" class="fw-light">
+                                    <td style="width:65%; font-size:0.9rem;" class="fw-light">
                                         {% if var.explanation %}
                                             {% autoescape off %}
                                             {{ var.explanation|make_references_look_nicer }}

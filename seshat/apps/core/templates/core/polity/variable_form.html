@@ -549,11 +549,13 @@
     display: none;
     z-index: 1050;
 ">
+{% if form.instance.id %}
   <div class="card-header highlighted-value-title text-dark d-flex justify-content-between align-items-center">
     <span><i class="fa-solid fa-comments"></i> Private Comments</span>
     <button type="button" class="btn-close btn-close-darl btn-sm" onclick="toggleChat()"></button>
   </div>
   {% include "core/partials/_private_comment_inline_absolute.html" %}
+  {% endif %}
 
 
 </div>

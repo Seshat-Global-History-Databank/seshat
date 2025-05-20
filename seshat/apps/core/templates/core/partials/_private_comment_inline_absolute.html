@@ -117,7 +117,7 @@
 {% else %}
 
 
-    {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+    {% if user.is_authenticated  and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
     <form method="post" action="{% url 'private-comment-create-from-model' app_name='core' model_name='variablehierarchy' instance_id=form.instance.id private_com_id=0 %}">
         {% csrf_token %}
                 <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
