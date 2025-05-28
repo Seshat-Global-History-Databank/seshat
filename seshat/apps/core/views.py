@@ -6441,7 +6441,7 @@ def variable_hierarchy_view_old(request):
 def variable_hierarchy_view(request):
     hierarchy_tree = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
-    variables = Variablehierarchy.objects.select_related('section', 'subsection')
+    variables = Variablehierarchy.objects.select_related('section', 'subsection').exclude(name__in=["Polity Relationship To Preceding Entity", "Polity Succeeding Entity"])
 
     # Predefined seshat_db_section order
     predefined_section_order = [

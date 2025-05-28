@@ -57,6 +57,25 @@
     color: red;
     /* You can add more styling here, like font-weight, background-color, etc. */
   }
+
+      
+  .checkboxinput {
+    width: 18px;  /* Increase the width of the checkbox */
+    height: 18px; /* Increase the height of the checkbox */
+    cursor: pointer; /* Change the cursor to indicate interactivity */
+}
+
+.checkbox {
+
+  font-size: 1.25em;
+  background: lightpink;
+  color:#782823;
+  padding-left:15px;
+  padding-right:15px;
+  padding-top:8px;
+  border-radius: 5px;
+
+}
   
 </style>
 
@@ -68,7 +87,7 @@
         <legend>
             <div class="row d-flex align-items-center">
                 <div class="col-md-2">
-                    <h6 class="lead-2 text-secondary">Enter the info for:</h6>
+                    <h6 class="lead-2 text-secondary">Enter the information for:</h6>
                     <h5><span>Polity</span></h5>
                 </div>
                 <div class="col-md-10">
@@ -129,50 +148,29 @@
             </div>
           </div>
         </div>
+
         
         <div class="row">
           {% polity_map pk %}
         </div>
 
-        <div class="row">
-          <div class="col-md-12 row">
-            <div class="col-md-12 pb-2">
-              {{ form.shapefile_name|as_crispy_field }}
-            </div>
+        <div class="row align-items-center" style="min-height: 120px;">  <!-- adjust min-height as needed -->
 
+          <div class="col-md-6 d-flex flex-column justify-content-center">
+            {{ form.shapefile_name|as_crispy_field }}
           </div>
-
-        </div>
-
-        <div class="row">
-          <div class="col-md-9 row">
-            <div class="col-md-12 pb-2">
-              {{ form.private_comment|as_crispy_field }}
-            </div>
-
+      
+          <div class="col-md-3 d-flex flex-column justify-content-center">
+            {{ form.unreliable_instability_events|as_crispy_field }}
           </div>
-          <div class="col-md-3 row">
-            <div class="col-md-12 pb-2 d-flex flex-column mt-auto">
-              <button type="submit" class="btn btn-outline-primary my-auto btn-block btn-lg">Submit for Review*</button>            </div>
+      
+          <div class="col-md-3 d-flex flex-column justify-content-center">
+            <button type="submit" class="btn btn-outline-primary btn-lg">Submit</button>  
           </div>
-        </div>
-
-
-
-
-        <!-- {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <div class="text-danger"><h3> {{ error }} </h3></div>
-            {% endfor %}
-        {% endfor %}
-        {% endif %} -->
+      </div>
+      
           </form>
 
-        <div class="col-md-12">
-          <hr class="bg-colorful">
-          <h6>* Your entered data will soon be checked by a Seshat Expert.</h6>
-        </div>
 
 </div>
 <script>

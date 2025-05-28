@@ -9,11 +9,110 @@
 <style>
     .bg-teal-light {
         background: rgba(0, 128, 128, 0.238);
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
     }
 
     .bg-orange-light {
         background: rgba(186, 89, 5, 0.238);
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
     }
+
+    .bg-gray-light {
+        background: rgba(167, 166, 166, 0.238);
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-blue-light {
+        background: rgba(30, 144, 255, 0.238); /* Dodger Blue */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-green-light {
+        background: rgba(34, 139, 34, 0.238); /* Forest Green */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-purple-light {
+        background: rgba(128, 0, 128, 0.238); /* Purple */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-red-light {
+        background: rgba(220, 20, 60, 0.238); /* Crimson */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-yellow-light {
+        background: rgba(255, 215, 0, 0.238); /* Gold */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-brown-light {
+        background: rgba(139, 69, 19, 0.238); /* SaddleBrown */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-pink-light {
+        background: rgba(255, 105, 180, 0.238); /* Hot Pink */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-cyan-light {
+        background: rgba(3, 201, 201, 0.238); /* Cyan */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-lime-light {
+        background: rgba(50, 205, 50, 0.238); /* Lime Green */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-indigo-light {
+        background: rgba(75, 0, 130, 0.238); /* Indigo */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-salmon-light {
+        background: rgba(250, 128, 114, 0.238); /* Salmon */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-skyblue-light {
+        background: rgba(135, 206, 235, 0.238); /* Sky Blue */
+        font-family: 'Courier New', Courier, monospace;
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+
 
     .tree-indent {
         margin-left: 1.5rem;
@@ -118,16 +217,34 @@
                             <span class="card-header p-2 m-0">
                                 <a class="toggle-link fw-bold" data-bs-toggle="collapse" href="#var-{{ var.id }}" role="button"
                                    aria-expanded="false" aria-controls="var-{{ var.id }}">
-                                   
                                     {{ var.name }}
+                                </a>
+                                    {% if var.data_type == "A/P/U/~" %}
+                                        <small class="bg-teal-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                    {% elif var.data_type == "RANGE" %}
+                                        <small class="bg-salmon-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                    {% elif var.data_type == "COMPLEX" %}
+                                        <small class="bg-orange-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                    {% elif var.data_type == "CHOICES" %}
+                                        <small class="bg-blue-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                    {% elif var.data_type == "TEXT" %}
+                                        <small class="bg-yellow-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                    {% else %}
+                                        <small class="bg-yellow-light px-1 rounded fw-normal">-</small>
+                                    {% endif %}
 
-                                </a>  &nbsp;&nbsp;&nbsp;
-                                <small class="bg-teal-light ps-1 pt-1 rounded fw-normal">
-                                    {{ var.data_type }}
-                                </small>   &nbsp;
-                                <small class="bg-orange-light ps-1 rounded fw-normal">
-                                    {{ var.who_can_access }}
-                                </small>   &nbsp;
+
+                                    {% if var.who_can_access == "public" %}
+                                        <small class="bg-green-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                    {% elif var.who_can_access == "some_polities_are_public" %}
+                                        <small class="bg-skyblue-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                    {% elif var.who_can_access == "private" %}
+                                        <small class="bg-pink-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                    {% else %}
+                                        <small class="bg-brown-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                    {% endif %}
+
+                        
                                 <a class="btn btn-outline-secondary fw-bold btn-sm float-end px-1 py-0 m-0"
                                 href="{% url 'update_variable' var.id %}">
                                  <i class="fa-solid fa-pen fa-sm"></i> Edit
@@ -137,26 +254,45 @@
                                 <div class="card-body" >
                                     <div class="row">
                                         <div class="col-md-8">
+                                            {% if var.data_unit %}
+                                                <div>
+                                                    <small class="bg-gray-light rounded fw-normal">Unit</small>
+                                                    <small class="text-secondary fw-normal">
+                                                        {% autoescape off %}
+                                                        {{ var.data_unit|make_references_look_nicer }}
+                                                    {% endautoescape off %}
+                                                    </small>
+                                    
+                                                </div>
+                                            {% endif %}
+                                            {% if var.data_type_definition %}
+                                                <div>
+                                                    <small class="bg-gray-light rounded fw-normal">Data Type Definition</small>
+                                                    <small class="text-secondary fw-normal">
+                                                        {% autoescape off %}
+                                                        {{ var.data_type_definition|make_references_look_nicer }}
+                                                    {% endautoescape off %}
+                                                    </small>
+                                       
+                                                </div>
+                                            {% endif %}
+
                                             {% if var.explanation %}
                                             <div>
                                                 {% autoescape off %}
-                                                    {{ var.explanation|make_references_look_nicer }}
+
+                                                <small class="bg-gray-light rounded fw-normal">Explanation</small>
+                                                {{ var.explanation|make_references_look_nicer }}
                                                 {% endautoescape off %}
                                             </div>
-                                        {% endif %}
-                                        <div>
-                    
-                                            {% if var.data_type_definition %}
-                                                <br>
-                                                {% autoescape off %}
-                                                    {{ var.data_type_definition|make_references_look_nicer }}
-                                                {% endautoescape off %}
                                             {% endif %}
-                                        </div>
+                                    
+                               
+
                                         </div>
                                         <div class="col-md-4">
                                             <div>
-                                                <small><strong>API Endpoint:</strong>
+                                                <small>   <small class="bg-gray-light rounded fw-normal">API</small>
                                                     {% if var.api_endpoint %}
                                                         <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}"
                                                            target="_blank" rel="noopener noreferrer">{{ var.api_endpoint }}</a>
@@ -165,7 +301,9 @@
                                                     {% endif %}
                                                 </small>
                                             </div>
-                                            <div><small><strong>Canonical Name:</strong> {{ var.canonical_name }}</small></div>
+                                            <div><small>
+                                                <small class="bg-gray-light rounded fw-normal">Canonical Name</small>
+                                                {{ var.canonical_name }}</small></div>
                                         </div>
                                     </div>
            
