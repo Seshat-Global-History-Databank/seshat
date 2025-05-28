@@ -285,10 +285,32 @@
             <h5 class="mb-3"><span class="text-secondary text-end">Variable:</span> <span>{{myvar}}</span> <span class="h6 text-secondary">
                 (All coded records)
             </span></h5>
+            <div class="text-secondary mb-2">
+              {% if unreliable_polities %}
+                <span>
+                    Unreliable Polities Removed From the List ({{ unreliable_polities|length }}):
+                </span>
+
+                <span>
+                    <span>
+                    {% for polity in unreliable_polities %}
+                        <span class="px-2 rounded bg-secondary-light me-2">{{ polity.long_name }} 
+                        </span>
+                    {% endfor %}
+                    </span>
+                </span>
+
+            {% endif %}
+            </div>
           </div>
+  
+          
+
 
         </div>
+
           <div class="col-md-3 my-2">
+            
             {% if inner_vars %}
                  {% block download_button %}
                  {% endblock download_button %}
@@ -301,6 +323,9 @@
                 </h6>
           </div>
       </div>
+
+
+  
     {% block main_description %}
     {% endblock main_description %}
     {% block secondary_description %}

@@ -9124,9 +9124,12 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
             setattr(polity, 'batch_list', batch_list)
             my_polities.append(polity)
             context['polities'] = my_polities
+            context['unreliable_polities'] = Polity.objects.filter(unreliable_instability_events=True).order_by('new_name')
 
     else:
         context['polities'] = polities
+        context['unreliable_polities'] = None
+
 
     context["inner_vars"] = {
         var_name_display: {
