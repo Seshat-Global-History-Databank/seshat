@@ -11,7 +11,7 @@ from seshat.apps.crisisdb.models import Instability_event, Instability_type, Ins
 
 #from seshat.apps.crisisdb.instability_events_dic_list import ultimate_dics_list
 #from seshat.apps.crisisdb.instability_events_dic_list_2 import ultimate_dics_list
-from seshat.apps.crisisdb.instability_events_dic_list_batch_3_3 import ultimate_dics_list
+from seshat.apps.crisisdb.instability_events_dic_list_batch_3_4 import ultimate_dics_list
 
 from django.db import transaction
 

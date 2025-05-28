@@ -547,6 +547,7 @@ class Polity(models.Model):
     shapefile_name = models.CharField(max_length=300, blank=True, null=True)
     private_comment = models.TextField(blank=True, null=True,)
     private_comment_n = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    unreliable_instability_events = models.BooleanField(default=False, blank=True, null=True)
 
     created_date = models.DateTimeField(
         auto_now_add=True, blank=True, null=True)

@@ -892,7 +892,10 @@ def get_all_power_transitions_data_for_a_polity(polity_id):
 
 def get_all_instability_data_for_a_polity(polity_id):
     a_data_dic = {}
-    my_data = Instability_event.objects.filter(polity = polity_id)
+    my_data = Instability_event.objects.filter(
+        polity__id=polity_id,
+        polity__unreliable_instability_events=False
+    )
     if my_data:
         #a_data_dic["power_transitions"] = my_data
         a_data_dic["instability_event"] = my_data
@@ -1024,7 +1027,6 @@ def time_it(func):
         return result
     return wrapper
 
-@time_it
 def give_polity_app_data(my_tag=None):
     contain_dic = {}
     freq_dic = {
@@ -1063,7 +1065,8 @@ def give_polity_app_data(my_tag=None):
     hs_ids = set(Human_sacrifice.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
     cc_ids = set(Crisis_consequence.objects.filter(Q(polity__in=all_polity_ids) | Q(other_polity__in=all_polity_ids)).values_list('polity_id', flat=True))
     pt_ids = set(Power_transition.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
-    in_ids = set(Instability_event.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
+    in_ids = set(Instability_event.objects.filter(polity__in=all_polity_ids,         polity__unreliable_instability_events=False).values_list('polity_id', flat=True))
+
 
     for polity_id in all_polity_ids:
         contain_dic[polity_id] = {
@@ -1081,7 +1084,6 @@ def give_polity_app_data(my_tag=None):
     return contain_dic, freq_dic
 
 
-@time_it
 def give_polity_app_data_xxx(my_tag=None):
     from django.apps import apps
 

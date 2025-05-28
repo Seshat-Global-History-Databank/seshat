@@ -7391,7 +7391,8 @@ def generalvars(request):
                 elif obj.show_value() == ' - ' or obj.tag == "UND":
                     filtered_queryset_unc +=1
                 else:
-                    print(obj.id, " ", obj.show_value())
+                    pass
+                    #print(obj.id, " ", obj.show_value())
 
             dif_count = pols_count - polities_for_this_var
             number_of_variables += 1
@@ -7520,9 +7521,9 @@ def generalvars(request):
 
     context["number_of_variables"] = number_of_variables
 
-    print('----------------')
-    print(all_vars_types)
-    print('-----------------')
+    #print('----------------')
+    #print(all_vars_types)
+    #print('-----------------')
 
     return render(request, 'general/generalvars.html', context=context)
 
@@ -7972,7 +7973,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
 
             if suggested_experts:
                 if new_object.private_comment and new_object.private_comment.id != 1:
-                    print('##### ID ######', new_object.private_comment.id)
+                    #print('##### ID ######', new_object.private_comment.id)
                     father_private_comment = new_object.private_comment
                 else:
                 # create a Prvate Comment to attach parts to it:
@@ -8251,7 +8252,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     # Handle POST request
     if request.method == 'POST':
         my_form = form_class(request.POST, instance=my_object)
-        print('zzzzzzzzzzzzzzzz', my_object.id)
+        #print('zzzzzzzzzzzzzzzz', my_object.id)
 
         # if "submit_with_formset" in request.POST:
         #     form_inline_new = SeshatCommentPartForm2(request.POST)
@@ -8271,7 +8272,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             all_ra_checks_names = []
             for aa in all_ra_checks:
                 all_ra_checks_names.append(aa.name)
-            print('fffffffffffffffffffff', '; '.join(all_ra_checks_names))
+            #print('fffffffffffffffffffff', '; '.join(all_ra_checks_names))
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
                 logged_in_staff = Seshat_Expert.objects.get(user=logged_in_user)
@@ -8284,7 +8285,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
             if suggested_experts:
                 if new_object.private_comment and new_object.private_comment.id != 1:
-                    print('##### ID ######', new_object.private_comment.id)
+                    #print('##### ID ######', new_object.private_comment.id)
                     father_private_comment = new_object.private_comment
                 else:
                 # create a Prvate Comment to attach parts to it:
@@ -8316,13 +8317,13 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             new_object.save()  # Save the object to persist the association
 
             #new_object.curator.set([logged_in_staff]) 
-            print(logged_in_staff)
+            #print(logged_in_staff)
             existing_curators = list(new_object.curator.all())  # Get current curators as a list
             existing_ra_checks = list(new_object.ra_check.all())  # Get current ra_checks as a list
             all_ra_checks_names_2 = []
             for aa in existing_ra_checks:
                 all_ra_checks_names_2.append(aa.name)
-            print('gggggggggggggggg', '; '.join(all_ra_checks_names_2))
+            #print('gggggggggggggggg', '; '.join(all_ra_checks_names_2))
 
             new_object.save()  # Save the object to persist the association
 
@@ -8352,12 +8353,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             action = request.POST.get('action')
             if action == 'redirect_one':
                 url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
-                print('qqqqqqqqqqqq')
+                #print('qqqqqqqqqqqq')
 
                 return redirect(url)
                 #return redirect("polity-detail-main", pk=new_object.polity.id) + "#{x_name}"
             elif action == 'redirect_two':
-                print('3333333333333333')
+                #print('3333333333333333')
                 # if the object has some description already
                 if new_object.comment:
                     return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
@@ -8381,8 +8382,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 
 #################################   
-        print('yyyyyyyyyyyyyy ', coded_value)
-        print('yyyyyyyyyyyyyy ', my_object.comment)
+        #print('yyyyyyyyyyyyyy ', coded_value)
+        #print('yyyyyyyyyyyyyy ', my_object.comment)
         if coded_value in ['instability_event'] and not my_object.comment:
 
             # if "submit_with_formset" in request.POST:
@@ -8497,17 +8498,17 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                     # Check which button was clicked
                     action = request.POST.get('action_comment')
                     if action == 'redirect_one':
-                        print('11111111111111')
+                        #print('11111111111111')
                         return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
                         #return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': 2}))
                         # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
                         #return redirect('your_first_url_name')  # Replace with your actual URL
                     elif action == 'redirect_two':
-                        print('222222222222222222222')
+                        #print('222222222222222222222')
 
                         #return redirect('your_second_url_name')  # Replace with yours
                         return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
-            print('555555555555')
+            #print('555555555555')
             url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
             return redirect(url)
             #return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
@@ -8845,6 +8846,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
+    elif var_name in ["instability_event",]:
+        object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
     else:
         object_list = model_class.objects.all()
 
@@ -9051,8 +9054,12 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
 
 
-    all_object_list = model_class.objects.all()
-    polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
+    if var_name in ['instability_event',]:
+        all_object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
+        polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
+    else:
+        all_object_list = model_class.objects.all()
+        polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
 
     if var_name in ['instability_event',]:
         paginator = Paginator(object_list, 100)  # Show 100 items per page
@@ -9190,7 +9197,12 @@ def delete_object_view(request, model_class, pk, var_name):
 
 def generic_download(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
-    items = model_class.objects.all()
+    #items = model_class.objects.all()
+
+    if var_name in ["instability_event",]:
+        items = model_class.objects.filter(polity__unreliable_instability_events=False)
+    else:
+        items = model_class.objects.all()
 
     # special case of RT:
     rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
@@ -9458,8 +9470,12 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
 
 
 def generic_json_download(request, model_class, var_name, x_name, var_section, var_subsection, coded_value, db_section):
-    items = model_class.objects.all()
+    #items = model_class.objects.all()
 
+    if var_name in ["instability_event",]:
+        items = model_class.objects.filter(polity__unreliable_instability_events=False)
+    else:
+        items = model_class.objects.all()
     # Special case of RT filtering
     rt_allowed_polities = [
         "kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", 
@@ -9564,7 +9580,12 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
 
 def generic_json_download_simple(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
-    items = model_class.objects.all()
+    #items = model_class.objects.all()
+
+    if var_name in ["instability_event",]:
+        items = model_class.objects.filter(polity__unreliable_instability_events=False)
+    else:
+        items = model_class.objects.all()
 
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"social_complexity_{var_name}_{current_datetime}.json"
