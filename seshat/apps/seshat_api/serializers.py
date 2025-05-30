@@ -23,7 +23,14 @@ class PolityShortAPISerializer(serializers.ModelSerializer):
         #exclude = ['created_date', 'modified_date', 'private_comment_n', 'private_comment', 'new_name']  # Exclude this field
         depth = 1
 
+class OtherPolityShortAPISerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='new_name')  # maps new_name -> name
 
+    class Meta:
+        model = Polity
+        fields = ['id', 'name', 'long_name', 'start_year', 'end_year'] # '__all__'
+        #exclude = ['created_date', 'modified_date', 'private_comment_n', 'private_comment', 'new_name']  # Exclude this field
+        depth = 1
 
 class GeneralSerializer(serializers.ModelSerializer):
     """
@@ -47,6 +54,11 @@ class GeneralSerializer(serializers.ModelSerializer):
         polity_data = rep.pop('polity', None)
         comment_data = rep.pop('comment', None)
         description_data = rep.pop('description', None)
+
+        # Check if instance has an 'other_polity' field
+        if hasattr(instance, 'other_polity') and instance.other_polity:
+            rep['other_polity'] = OtherPolityShortAPISerializer(instance.other_polity).data
+
 
         reordered = {}
         for key, value in rep.items():

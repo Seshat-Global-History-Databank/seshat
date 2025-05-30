@@ -3424,6 +3424,14 @@ def nlp_datapoints_2(request):
     """
     return render(request, 'core/nlp_datapoints_2.html')
 
+# NLP Room 1
+def all_datatypes(request):
+    """
+    Render the NLP data points page.
+    """
+    return render(request, 'core/all_datatypes.html')
+
+
 def account_activation_sent(request):
     """
     Render the account activation sent page.

@@ -1,0 +1,517 @@
+
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+
+
+
+{% block content %}
+
+<style>
+    .bg-teal-light {
+        background: rgba(0, 128, 128, 0.238);
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-orange-light {
+        background: rgba(186, 89, 5, 0.238);
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-gray-light {
+        background: rgba(167, 166, 166, 0.238);
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-blue-light {
+        background: rgba(30, 144, 255, 0.238); /* Dodger Blue */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-green-light {
+        background: rgba(34, 139, 34, 0.238); /* Forest Green */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-purple-light {
+        background: rgba(128, 0, 128, 0.238); /* Purple */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-red-light {
+        background: rgba(220, 20, 60, 0.238); /* Crimson */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-yellow-light {
+        background: rgba(255, 215, 0, 0.238); /* Gold */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-brown-light {
+        background: rgba(139, 69, 19, 0.238); /* SaddleBrown */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+
+    .bg-pink-light {
+        background: rgba(255, 105, 180, 0.238); /* Hot Pink */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-cyan-light {
+        background: rgba(3, 201, 201, 0.238); /* Cyan */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-lime-light {
+        background: rgba(50, 205, 50, 0.238); /* Lime Green */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-indigo-light {
+        background: rgba(75, 0, 130, 0.238); /* Indigo */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-salmon-light {
+        background: rgba(250, 128, 114, 0.238); /* Salmon */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+    .bg-skyblue-light {
+        background: rgba(135, 206, 235, 0.238); /* Sky Blue */
+        padding: 3px 5px 0px 5px;
+        margin: 0 3px;
+    }
+    
+</style>
+<div class="container">
+
+
+      <h2 class="pt-3">Seshat Data Coding Protocols</h2>
+    
+
+        
+
+
+      <p>There are several data types in the Seshat database. </p>
+
+
+      <table class="table table-bordered table-sm" style="width:50%">
+        <thead class="thead-light">
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>A/P/U/~</code></td>
+            <td>Absent/Present/Unknown/Transitional</td>
+          </tr>
+          <tr>
+            <td><code>RANGE</code></td>
+            <td>Numeric Range</td>
+          </tr>
+          <tr>
+            <td><code>TEXT</code></td>
+            <td>Free Text</td>
+          </tr>
+          <tr>
+            <td><code>CHOICES</code></td>
+            <td>Fixed Choice List</td>
+          </tr>
+          <tr>
+            <td><code>COMPLEX</code></td>
+            <td>Multi-Field / Structured Input</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <br>
+      <span class="h4 bg-blue-light rounded px-2">Data Type: <code>A/P/U/~</code></span>
+      <p>The most common data type is the <code>A/P/U/~</code> used across domains such as social complexity, warfare, religion, etc. Coding these variables means choosing one of the options from the <code>A/P/U/~</code> list (see Table 2. below), and a separate <strong>confidence tag</strong> (see Table 3. below):</p>
+      <div class="row py-2">
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <table class="table table-bordered table-sm">
+                <caption>Table 2: Valid Codes for <code>absent_present</code> Variables</caption>
+        
+        
+                <thead class="thead-light bg-teal">
+                  <tr>
+                    <th>Code in SQL</th>
+                    <th>Code in HTML</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>present</code></td>
+                    <td>Present</td>
+                  </tr>
+                  <tr>
+                    <td><code>absent</code></td>
+                    <td>Absent</td>
+                  </tr>
+                  <tr>
+                    <td><code>A~P</code></td>
+                    <td>Transitional (Absent → Present)</td>
+                  </tr>
+                  <tr>
+                    <td><code>P~A</code></td>
+                    <td>Transitional (Present → Absent)</td>
+                  </tr>
+                  <tr>
+                    <td><code>unknown</code></td>
+                    <td>Unknown</td>
+                  </tr>
+                  <tr>
+                    <td><code>uncoded</code></td>
+                    <td>Uncoded</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <table class="table table-bordered table-sm">
+                <caption>Table 3: Valid Tags for all Variables</caption>
+
+                <thead class="thead-light bg-teal">
+                  <tr>
+                    <th>Tag in SQL</th>
+                    <th>Tag in HTML</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>TRS</code></td>
+                    <td>Confident</td>
+                  </tr>
+                  <tr>
+                    <td><code>SSP</code></td>
+                    <td>Suspected</td>
+                  </tr>
+                  <tr>
+                    <td><code>IFR</code></td>
+                    <td>Inferred</td>
+                  </tr>
+                  <tr>
+                    <td><code>UND</code></td>
+                    <td>Undecided</td>
+                  </tr>
+                </tbody>
+              </table>
+        
+        </div>
+        <div class="col-md-1"></div>
+
+      </div>
+      <p>We’ve separated the tag from the value to keep the structure clean and extensible. This allows for easy transformation into combined formats such as “inferred present” or “inferred absent” during export or analysis. As Peter mentioned, it’s straightforward to map between this structure and merged tag-value formats in scripts or external outputs.</p>
+
+    
+      <p><strong>Note on the tag <code>SSP</code> (Suspected):</strong><br>
+        This tag can only be assigned to rows coded as <code>unknown</code>. It acts as a temporary flag to signal uncertainty — typically raised by a Research Assistant for review by a senior researcher, who may confirm or revise the entry.
+      </p>
+      <p>
+        <strong>Note on the tag <code>UND</code> (Undecided):</strong><br>
+        In the current database structure for <code>A/P/U/~</code> variables, no variable should have an empty coded value. During earlier stages of coding (particularly on the old website), there were cases where a value was left uncoded. These cases normally contained a decent description or references, but lacked a definitive value (e.g., <code>present</code>, <code>absent</code>, etc.). Such records have been transformed to the SQL database and are now explicitly marked with the code <code>uncoded</code> and tagged with <code>UND</code> (Undecided) tag. From the front-end, it is no longer possible to leave dropdown selections for <code>A/P/U/~</code> empty — ensuring that going forward, such phantom cases cannot be introduced.
+      </p>
+
+      <div class="pb-2">
+        See the example below for more clarity:
+      </div>
+
+      <div class="py-0 px-2 m-0 rounded" style="display:inline-block; background: #f0f8ff; border-left: 6px solid #0d6efd;">
+        Old File: <code>KzChion.html</code>
+    </div>
+
+    <div class="row pb-2">
+        <div class="col-md-6">
+            <div class="alert alert-info mb-1" role="alert" style="border-left: 6px solid #0d6efd; background-color: #f0f8ff; padding: 1rem;">
+
+
+
+            <strong> ♠ Script ♣ ♥ </strong> "the early steppe peoples would not have been a promising vehicle for the diffusion of complicated, textually based knowledge; according to the Northern Wei dynastic history, the Rouran were illiterates whose leaders at first kept records of their troop numbers by piling up sheep turds as counters but eventually graduated to scratching simple marks onto pieces of wood. Not surprisingly, there is no evidence of the transmission of Chinese military theories and texts to the West by way of the Avars, other steppe nomads, Silk Road caravans, or any other channel prior to the activities of the Jesuit missionaries in the seventeenth and eighteenth centuries."<sup>[52]</sup> 
+    
+              </div>
+              <div class="text-secondary pb-2 pt-0 mt-0">
+                The value has not been coded, although there is a good description and a reference.
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="py-0 px-2 m-0 bg-teal-light" style="display:inline-block;  border-left: 6px solid teal;">
+                SQL Database
+            </div>
+            <table class='table' style="border-collapse: collapse; width: 100%; text-align: left; border-left: 6px solid teal;">
+                <thead class="bg-teal-light">
+                  <tr>
+                    <th>polity_id</th>
+                    <th>script</th>
+                    <th>tag</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>277</td>
+                    <td style="color: gray;">uncoded</td>
+                    <td><code>UND</code> </td>
+                  </tr>
+
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    
+      <span class="h4 bg-blue-light rounded px-2">Data Type: <code>RANGE</code></span>
+
+      <ul>
+        <li>
+          <strong>Range variables</strong> (e.g., <code>polity_population</code>): These are typically represented by two numeric fields — <code>value_from</code> and <code>value_to</code>. 
+          <ul>
+            <li>If a precise value is known rather than a range, both fields should be set to the same number, or alternatively, <code>value_to</code> may be left empty.</li>
+            <li>From the front-end, both <code>value_from</code> and <code>value_to</code> can be left blank. This explicitly indicates that the value is <strong>unknown</strong>.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Use of tags</strong>: As with absent/present-type variables, range variables may also be accompanied by confidence tags:
+          <code>TRS</code> (Confident), <code>IFR</code> (Inferred), <code>SSP</code> (Suspected), or <code>UND</code> (Undecided).
+          <ul>
+            <li>The tag <code>SSP</code> (Suspected) is only appropriate for entries that are left blank, i.e., unknown. It flags them for further review by a senior researcher.</li>
+            <li>The tag <code>UND</code> (Undecided) is used when the coder could not determine a value at the time of entry, even if descriptive information or references are present.</li>
+            <li>The tag <code>TRS</code> (Confident) is used when the coder is sure the value is unknown. Although based on experience, these codes normally need some review as well.</li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <div class="pb-2">
+        See examples below for more clarity:
+      </div>
+   
+      <div class="py-0 px-2 m-0 rounded" style="display:inline-block; background: #f0f8ff; border-left: 6px solid #0d6efd;">
+        Old File: <code>IqUbaid.html</code>
+    </div>
+
+    <div class="row pb-2">
+        <div class="col-md-6">
+            <div class="alert alert-info mb-1" role="alert" style="border-left: 6px solid #0d6efd; background-color: #f0f8ff; padding: 1rem;">
+                <strong>♠ Polity Population ♣ suspected unknown ♥ </strong>People. The researchers deeply believed that the north Ubaid was more populated than southern regions of Ubaid. <sup>[23], [24]</sup> There are known some calculation regarding the size of populations inhabited some particular sites such as Tell al-Hawa (1500-4000 people, area of the site - 15-20 ha), Site 118 (500-1200 people; area of the site- 5-6 ha) and Khanijdal East (100-200 people, area of the site- 1ha). There are based on a range of on-site population densities of 100 to 200 people per ha. <sup>[25]</sup> 
+              </div>
+              <div class="text-secondary pb-2 pt-0 mt-0">
+                The value has been coded suspected unknown.
+              </div>
+        </div>
+        <div class="col-md-6">
+            <div class="py-0 px-2 m-0 bg-teal-light" style="display:inline-block;  border-left: 6px solid teal;">
+                SQL Database
+            </div>
+            <table class='table' style="border-collapse: collapse; width: 100%; text-align: left; border-left: 6px solid teal;">
+                <thead class="bg-teal-light">
+                  <tr>
+                    <th>polity_id</th>
+                    <th>polity_population_from</th>
+                    <th>polity_population_to</th>
+                    <th>tag</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>473</td>
+                    <td style="color: lightgray;"> (empty) </td>
+                    <td style="color: lightgray;"> (empty) </td>
+                    <td><code>SSP</code> </td>
+                  </tr>
+
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+
+      <div class="py-0 px-2 m-0 rounded" style="display:inline-block; background: #f0f8ff; border-left: 6px solid #0d6efd;">
+            Old File: <code>IqIsinL.html</code>
+        </div>
+        <div class="row pb-2">
+            <div class="col-md-6">
+                <div class="alert alert-info mb-1" role="alert" style="border-left: 6px solid #0d6efd; background-color: #f0f8ff; padding: 1rem;">
+       
+                    <strong>♠ Polity Population ♣ ♥ People:</strong> "Despite these changes, the total number of inhabitants and the relations between cities and villages remained roughly the same [as in the Ur III period]."<sup>[11]</sup>
+                  </div>
+                  <div class="text-secondary pb-2">
+                    The value has not been coded, although there is a good description and a reference.
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="py-0 px-2 m-0 bg-teal-light" style="display:inline-block;  border-left: 6px solid teal;">
+                    SQL Database
+                </div>
+                <table class='table' style="border-collapse: collapse; width: 100%; text-align: left; border-left: 6px solid teal;">
+                    <thead class="bg-teal-light">
+                      <tr>
+                        <th>polity_id</th>
+                        <th>polity_population_from</th>
+                        <th>polity_population_to</th>
+                        <th>tag</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>478</td>
+                        <td style="color: lightgray;"> (empty) </td>
+                        <td style="color: lightgray;"> (empty) </td>
+                        <td><code>UND</code> </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+        <div class="py-0 px-2 m-0 rounded" style="display:inline-block; background: #f0f8ff; border-left: 6px solid #0d6efd;">
+            Old File: <code>YeNeoL*.html</code>
+        </div>
+
+        <div class="row pb-2">
+            <div class="col-md-6">
+                <div class="alert alert-info mb-1" role="alert" style="border-left: 6px solid #0d6efd; background-color: #f0f8ff; padding: 1rem;">
+                    <strong>♠ Polity Population ♣ unknown ♥ </strong>                     <sup>[41]</sup> 
+
+                    "Fig. 4.2. Qotakalli sites in the Cusco Basin (after AD 400)" redrawn from Bauer.                     <sup>[42]</sup> 
+                    Qotakalli sites in the Cuzco Basin
+
+1-5 ha sites: 16
+0.25-1 ha sites: 35
+If the 16 largest sites average 2.5 ha, and the 35 smallest sites averaged 0.625 ha Qotakalli sites cover a total of 61.875 ha.
+
+"Strong population growth occurred during this period" as revealed by settlement pattern data.[43]
+                    <sup>[43]</sup> 
+                  </div>
+                  <div class="text-secondary pb-2 pt-0 mt-0">
+                    The value has been coded unknown, hence the tag <code>TRS</code>.
+                  </div>
+            </div>
+            <div class="col-md-6">
+                <div class="py-0 px-2 m-0 bg-teal-light" style="display:inline-block;  border-left: 6px solid teal;">
+                    SQL Database
+                </div>
+                <table class='table' style="border-collapse: collapse; width: 100%; text-align: left; border-left: 6px solid teal;">
+                    <thead class="bg-teal-light">
+                      <tr>
+                        <th>polity_id</th>
+                        <th>polity_population_from</th>
+                        <th>polity_population_to</th>
+                        <th>tag</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>79</td>
+                        <td style="color: lightgray;"> (empty) </td>
+                        <td style="color: lightgray;"> (empty) </td>
+                        <td><code>TRS</code> </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+
+    
+      <span class="h4 bg-blue-light rounded px-2">Data Type: <code>COMPLEX</code>  </span>
+        <p>
+            Each variable classified as having the data type <code>COMPLEX</code> requires special handling, as its structure differs significantly from the traditional data formats used in Seshat.
+        </p>
+      <h5 class="pt-1">Power Transitions & Crisis Consequences</h5>
+      <p>These datasets were originally created before the database schema was formalized. Because each row contains <strong>multiple binary-coded variables</strong>, we merged the value and confidence tag into a single dropdown. The standardized options are:</p>
+    
+      <table class="table table-bordered table-sm" style="width:50%">
+        <thead class="thead-light bg-teal">
+            <tr>
+            <th>Original Code</th>
+            <th>Code in SQL</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td class="fw-bold">A</td>
+            <td>Absent</td>
+          </tr>
+          <tr>
+            <td>P</td>
+            <td class="fw-bold">P</td>
+            <td>Present</td>
+          </tr>
+          <tr>
+            <td>A*</td>
+            <td  class="fw-bold">IA</td>
+            <td>Inferred Absent</td>
+          </tr>
+          <tr>
+            <td>P*</td>
+            <td class="fw-bold">IP</td>
+            <td>Inferred Present</td>
+          </tr>
+          <tr>
+            <td>U*</td>
+            <td  class="fw-bold">U</td>
+            <td>Unknown</td>
+          </tr>
+          <tr>
+            <td>SU*</td>
+            <td  class="fw-bold">SU</td>
+            <td>Suspected Unknown</td>
+          </tr>
+        </tbody>
+      </table>
+    
+      <p class="text-secondary">
+        Blank spreadsheet cells or unselected dropdown options during front-end coding will result in the value being stored as <code>NULL</code> or <code>None</code>.
+      </p>
+      
+    
+      <p><strong>Note on <code>year_from</code> / <code>year_to</code>:</strong><br>
+        In the <code>power_transition</code> dataset, both <code>year_to</code> and <code>year_from</code> were originally coded, but going forward only <code>year_to</code> should be used. <code>year_from</code> can be safely ignored in new data or analyses.
+      </p>
+
+    
+    </body>
+    </html>
+    
+
+
+
+
+
+</div>
+
+
+
+
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+</script>
+{% endblock %}

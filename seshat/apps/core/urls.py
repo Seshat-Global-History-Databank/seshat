@@ -194,6 +194,8 @@ urlpatterns += [
 urlpatterns += [path('core/discussion_room/', views.discussion_room, name="discussion_room"),]
 urlpatterns += [path('core/nlp_datapoints/', views.nlp_datapoints, name="nlp_datapoints"),]
 urlpatterns += [path('core/nlp_datapoints_2/', views.nlp_datapoints_2, name="nlp_datapoints_2"),]
+urlpatterns += [path('core/all_datatypes/', views.all_datatypes, name="all_datatypes"),]
+
 
 urlpatterns += [
      path('core/not_found_404', views.four_o_four,
