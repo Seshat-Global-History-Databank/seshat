@@ -506,7 +506,7 @@
                 <div class="h6 pb-4">
                     {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
  
-                    <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger"><i class="fa-solid fa-pen-to-square"></i></a> 
+                    <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger"><i class="fa-solid fa-pen-to-square"></i> &nbsp; Edit Polity </a> 
                     {% endif %}
 
                     {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
@@ -2034,9 +2034,16 @@
                                         <!-- Tag tag (Disputed/Suspected etc.) -->
                                         {% endif %}
                                         <td style="text-align: right; vertical-align: center; border-width:0;">
-                                            {% with my_app_name='rt' %}
-                                                {% include "core/partials/_abc_obj.html" %}
-                                            {% endwith %}
+                                            {% if key == 'Human_sacrifice' %}
+                                                {% with my_app_name='crisisdb' %}
+                                                    {% include "core/partials/_abc_obj.html" %}
+                                                {% endwith %}
+                                            {% else %}
+                                                {% with my_app_name='rt' %}
+                                                    {% include "core/partials/_abc_obj.html" %}
+                                                {% endwith %}
+                                            {% endif %}
+
                                         </td>
                                     </span>
                                     </span>
