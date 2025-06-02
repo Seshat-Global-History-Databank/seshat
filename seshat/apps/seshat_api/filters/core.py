@@ -57,8 +57,8 @@ class SeshatRegionFilter(django_filters.FilterSet):
     class Meta:
         model = Seshat_region
         fields = {
-            "name": ["icontains", "exact"],
-            "subregions_list": ["icontains", "exact"],
+            "name": ["icontains", ],
+            "subregions_list": ["icontains",],
         }
 
 
@@ -78,39 +78,16 @@ class NGAFilter(django_filters.FilterSet):
 
 
 class PolityFilter(django_filters.FilterSet):
-    home_seshat_region_contains = django_filters.CharFilter(
-        field_name="home_seshat_region__name", lookup_expr="icontains"
-    )
-    home_nga_name_contains = django_filters.CharFilter(
-        field_name="home_nga__name", lookup_expr="icontains"
-    )
-    home_nga_code = django_filters.CharFilter(
-        field_name="home_nga__nga_code", lookup_expr="exact"
-    )
-    # general_description_contains = django_filters.CharFilter(
-    #     field_name="general_description", lookup_expr="icontains"
-    # )
-    min_nga_longitude = django_filters.NumberFilter(
-        field_name="home_nga__longitude", lookup_expr="gte"
-    )
-    min_nga_latitude = django_filters.NumberFilter(
-        field_name="home_nga__latitude", lookup_expr="gte"
-    )
-    max_nga_longitude = django_filters.NumberFilter(
-        field_name="home_nga__longitude", lookup_expr="lte"
-    )
-    max_nga_latitude = django_filters.NumberFilter(
-        field_name="home_nga__latitude", lookup_expr="lte"
-    )
+
 
     class Meta:
         model = Polity
         # fields = "__all__"  # Generally not considered safe
 
         fields = {
-            "name": ["icontains"],
-            "start_year": ["exact", "gt", "lt"],
-            "end_year": ["exact", "gt", "lt"],
+            #"name": ["icontains"],
+            "start_year": ["range"],
+            "end_year": ["range"],
             "long_name": ["icontains"],
             "new_name": ["icontains"],
             "polity_tag": ["exact"],
@@ -125,15 +102,13 @@ class CapitalFilter(django_filters.FilterSet):
     class Meta:
         model = Capital
         fields = {
-            "name": ["icontains", "exact"],
-            "alternative_names": ["icontains", "exact"],
-            "current_country": ["icontains", "exact"],
-            "latitude": ["lte", "gte", "exact"],
-            "longitude": ["lte", "gte", "exact"],
-            "year_from": ["lte", "gte", "exact"],
-            "year_to": ["lte", "gte", "exact"],
-            "url_on_the_map": ["icontains", "exact"],
-            "is_verified": ["exact"],
+            "name": ["icontains", ],
+            "alternative_names": ["icontains", ],
+            "current_country": ["icontains", ],
+            "latitude": ["lte", "gte", ],
+            "longitude": ["lte", "gte", ],
+            "year_from": ["range", ],
+            "year_to": ["range", ],
         }
 
 
@@ -151,9 +126,9 @@ class NGAPolityRelationsFilter(django_filters.FilterSet):
     class Meta:
         model = Ngapolityrel
         fields = {
-            "name": ["icontains", "exact"],
-            "year_from": ["lte", "gte", "exact"],
-            "year_to": ["lte", "gte", "exact"],
+            "name": ["icontains",],
+            "year_from": ["range",],
+            "year_to": ["range",],
             "is_home_nga": ["exact"],
         }
 
@@ -205,14 +180,14 @@ class ReferenceFilter(django_filters.FilterSet):
     class Meta:
         model = Reference
         fields = {
-            "title": ["icontains", "exact"],
-            "year": ["lte", "gte", "exact"],
-            "creator": ["icontains", "exact"],
-            "zotero_link": ["icontains", "exact"],
-            "long_name": ["icontains", "exact"],
-            "url_link": ["icontains", "exact"],
-            "created_date": ["range", "date__lte", "date__gte", "date__exact"],
-            "modified_date": ["range", "date__lte", "date__gte", "date__exact"],
+            "title": ["icontains",],
+            "year": ["lte", "gte",],
+            "creator": ["icontains",],
+            "zotero_link": ["icontains",],
+            "long_name": ["icontains",],
+            "url_link": ["icontains",],
+            #"created_date": ["range", "date__lte", "date__gte", "date__exact"],
+            #"modified_date": ["range", "date__lte", "date__gte", "date__exact"],
         }
 
 
@@ -233,10 +208,10 @@ class CitationFilter(django_filters.FilterSet):
     class Meta:
         model = Citation
         fields = {
-            "page_from": ["lte", "gte", "exact"],
-            "page_to": ["lte", "gte", "exact"],
-            "created_date": ["range", "date__lte", "date__gte", "date__exact"],
-            "modified_date": ["range", "date__lte", "date__gte", "date__exact"],
+            "page_from": ["exact"],
+            "page_to": ["exact"],
+            #"created_date": ["range", "date__lte", "date__gte", "date__exact"],
+            #"modified_date": ["range", "date__lte", "date__gte", "date__exact"],
         }
 
 

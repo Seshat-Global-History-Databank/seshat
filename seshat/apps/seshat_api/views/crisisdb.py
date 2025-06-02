@@ -73,7 +73,7 @@ class USLocationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing US Locations.
@@ -88,7 +88,7 @@ class USViolenceSubtypeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing US Violence Subtypes.
@@ -103,7 +103,7 @@ class USViolenceDataSourceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing US Violence Data Sources.
@@ -118,7 +118,7 @@ class USViolenceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing US Violence.
@@ -133,7 +133,7 @@ class CrisisConsequenceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Crisis Consequences.
@@ -148,7 +148,7 @@ class CrisisConsequenceViewSet(
 #     FilterBackends,
 #     MixinSeshatAPISerializer,
 #     MixinSeshatAPIAuth,
-#     viewsets.ModelViewSet,
+#     viewsets.ReadOnlyModelViewSet,
 # ):
 #     """
 #     A viewset for viewing and editing Power Transitions.
@@ -163,7 +163,7 @@ class HumanSacrificeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Human Sacrifices.
@@ -178,7 +178,7 @@ class ExternalConflictViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing External Conflicts.
@@ -193,7 +193,7 @@ class InternalConflictViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Internal Conflicts.
@@ -208,7 +208,7 @@ class ExternalConflictSideViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing External Conflict Sides.
@@ -223,7 +223,7 @@ class AgriculturalPopulationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Agricultural Populations.
@@ -238,7 +238,7 @@ class ArableLandViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Arable Lands.
@@ -253,7 +253,7 @@ class ArableLandPerFarmerViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Arable Land Per Farmers.
@@ -268,7 +268,7 @@ class GrossGrainSharedPerAgriculturalPopulationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Gross Grain Shared Per Agricultural Populations.
@@ -283,7 +283,7 @@ class NetGrainSharedPerAgriculturalPopulationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Net Grain Shared Per Agricultural Populations.
@@ -298,7 +298,7 @@ class SurplusViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Surpluses.
@@ -313,7 +313,7 @@ class MilitaryExpenseViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Military Expenses.
@@ -328,7 +328,7 @@ class SilverInflowViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Silver Inflows.
@@ -343,7 +343,7 @@ class SilverStockViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Silver Stocks.
@@ -358,7 +358,7 @@ class TotalPopulationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Total Populations.
@@ -373,7 +373,7 @@ class GDPPerCapitaViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing GDP Per Capitas.
@@ -388,7 +388,7 @@ class DroughtEventViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Drought Events.
@@ -403,7 +403,7 @@ class LocustEventViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Locust Events.
@@ -418,7 +418,7 @@ class SocioeconomicTurmoilEventViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Socioeconomic Turmoil Events.
@@ -433,7 +433,7 @@ class CropFailureEventViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Crop Failure Events.
@@ -448,7 +448,7 @@ class FamineEventViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Famine Events.
@@ -463,7 +463,7 @@ class DiseaseOutbreakViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Disease Outbreaks.

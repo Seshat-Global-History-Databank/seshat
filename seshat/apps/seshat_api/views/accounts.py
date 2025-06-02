@@ -24,7 +24,7 @@ class ProfileViewSet(
 
 
 class SeshatExpertViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ReadOnlyModelViewSet
 ):
     """
     A viewset for viewing and editing Seshat Experts.

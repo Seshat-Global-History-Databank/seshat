@@ -68,8 +68,8 @@ class PolityPeakYearsFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
         model = Polity_peak_years
         fields = {
-            "peak_year_from": ["exact", "lte", "gte"],
-            "peak_year_to": ["exact", "lte", "gte"],
+            "peak_year_from": ["range"],
+            "peak_year_to": ["range"],
         }
 
 

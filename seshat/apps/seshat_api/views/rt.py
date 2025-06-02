@@ -85,7 +85,7 @@ class WidespreadReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Widespread Religions.
@@ -100,7 +100,7 @@ class OfficialReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Official Religions.
@@ -115,7 +115,7 @@ class ElitesReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Elites Religions.
@@ -130,7 +130,7 @@ class TheoSyncDifRelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Theological Syncretism of Different Religions.
@@ -145,7 +145,7 @@ class SyncRelPraIndBeliViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Syncretism of Religious Practices at the Level of Individual Believers.
@@ -160,7 +160,7 @@ class ReligiousFragmentationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Religious Fragmentations.
@@ -175,7 +175,7 @@ class GovVioFreqRelGrpViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Frequency of Governmental Violence Against Religious Groups.
@@ -190,7 +190,7 @@ class GovResPubWorViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Public Worships.
@@ -205,7 +205,7 @@ class GovResPubProsViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Public Proselytizings.
@@ -220,7 +220,7 @@ class GovResConvViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Conversions.
@@ -235,7 +235,7 @@ class GovPressConvViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Pressures to Converts.
@@ -250,7 +250,7 @@ class GovResPropOwnForRelGrpViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Property Ownership for Adherents of and Religious Groups.
@@ -265,7 +265,7 @@ class TaxRelAdhActInsViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Taxes Based on Religious Adherence or on Religious Activities and Institutions.
@@ -280,7 +280,7 @@ class GovOblRelGrpOfcRecoViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Governmental Obligations for Religious Groups to Apply for Official Recognitions.
@@ -295,7 +295,7 @@ class GovResConsRelBuilViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Construction of Religious Buildings.
@@ -310,7 +310,7 @@ class GovResRelEduViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Religious Education.
@@ -325,7 +325,7 @@ class GovResCirRelLitViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Restrictions on Circulation of Religious Literature.
@@ -340,7 +340,7 @@ class GovDisRelGrpOccFunViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Government Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.
@@ -355,7 +355,7 @@ class SocVioFreqRelGrpViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Social Violence Against Religious Groups.
@@ -370,7 +370,7 @@ class SocDisRelGrpOccFunViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Social Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.
@@ -385,7 +385,7 @@ class GovPressConvForAgaViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Societal Pressure to Convert or Against Conversions.
@@ -400,7 +400,7 @@ class MoralizingSupernaturalPunishmentAndRewardViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_supernatural_punishment_and_reward
     pagination_class = SeshatAPIPagination
@@ -411,7 +411,7 @@ class MoralizingSupernaturalConcernIsPrimaryViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_supernatural_concern_is_primary
     pagination_class = SeshatAPIPagination
@@ -422,7 +422,7 @@ class MoralizingEnforcementIsCertainViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_is_certain
     pagination_class = SeshatAPIPagination
@@ -433,7 +433,7 @@ class MoralizingEnforcementIsBroadViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_is_broad
     pagination_class = SeshatAPIPagination
@@ -444,7 +444,7 @@ class MoralizingEnforcementIsTargetedViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_is_targeted
     pagination_class = SeshatAPIPagination
@@ -455,7 +455,7 @@ class MoralizingEnforcementOfRulersViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_of_rulers
     pagination_class = SeshatAPIPagination
@@ -466,7 +466,7 @@ class MoralizingReligionAdoptedByElitesViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_religion_adopted_by_elites
     pagination_class = SeshatAPIPagination
@@ -477,7 +477,7 @@ class MoralizingReligionAdoptedByCommonersViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_religion_adopted_by_commoners
     pagination_class = SeshatAPIPagination
@@ -488,7 +488,7 @@ class MoralizingEnforcementInAfterlifeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_in_afterlife
     pagination_class = SeshatAPIPagination
@@ -499,7 +499,7 @@ class MoralizingEnforcementInThisLifeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_in_this_life
     pagination_class = SeshatAPIPagination
@@ -510,7 +510,7 @@ class MoralizingEnforcementIsAgenticViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     model = Moralizing_enforcement_is_agentic
     pagination_class = SeshatAPIPagination
