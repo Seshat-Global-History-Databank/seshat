@@ -65,7 +65,7 @@ from ..models import (
 #     FilterBackends,
 #     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
-#     viewsets.ModelViewSet,
+#     viewsets.ReadOnlyModelViewSet,
 # ):
 #     """
 #     A viewset for viewing and editing Seshat Private Comments.
@@ -81,7 +81,7 @@ from ..models import (
 #     FilterBackends,
 #     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
-#     viewsets.ModelViewSet,
+#     viewsets.ReadOnlyModelViewSet,
 # ):
 #     """
 #     A viewset for viewing and editing Seshat Private Comment Parts.
@@ -97,7 +97,7 @@ class MacroRegionViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Macro Regions.
@@ -112,7 +112,7 @@ class RegionViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Regions.
@@ -127,7 +127,7 @@ class NGAViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing NGAs, Natural Geographic Areas.
@@ -142,7 +142,7 @@ class PolityViewSet(
     FilterBackends,
     MixinSeshatPolity,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polities.
@@ -151,14 +151,14 @@ class PolityViewSet(
     model = Polity
     pagination_class = SeshatAPIPagination
     filterset_class = PolityFilter
-    search_fields = ["@long_name", "@new_name"]
+    #search_fields = ["@long_name", "@new_name"]
 
 
 class CapitalViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Capitals.
@@ -173,7 +173,7 @@ class NGAPolityRelationsViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing NGA Polity Relations.
@@ -188,7 +188,7 @@ class CountryViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Countries.
@@ -203,7 +203,7 @@ class SectionViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Sections.
@@ -218,7 +218,7 @@ class SubsectionViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Subsections.
@@ -233,7 +233,7 @@ class VariableHierarchyViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Variable Hierarchies.
@@ -248,7 +248,7 @@ class ReferenceViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing References.
@@ -263,7 +263,7 @@ class CitationViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Citations.
@@ -278,7 +278,7 @@ class SeshatCommentViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comments.
@@ -294,7 +294,7 @@ class SeshatCommentPartViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comment Parts.
@@ -310,7 +310,7 @@ class ScpThroughCtnViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comment Parts' relations to
@@ -327,7 +327,7 @@ class ReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Religions.
@@ -342,7 +342,7 @@ class CliopatriaViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Cliopatria Shapefiles.
@@ -357,7 +357,7 @@ class CliopatriaViewSet(
 #     FilterBackends,
 #     MixinSeshatAPISerializerAllFields,
 #     MixinSeshatAPIAuth,
-#     viewsets.ModelViewSet,
+#     viewsets.ReadOnlyModelViewSet,
 # ):
 #     """
 #     A viewset for viewing and editing GADM Shapefiles.
@@ -372,7 +372,7 @@ class GADMCountriesViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing GADM Countries.
@@ -389,7 +389,7 @@ class GADMProvincesViewSet(
     FilterBackends,
     MixinSeshatAPISerializerAllFields,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing GADM Provinces.

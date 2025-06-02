@@ -71,7 +71,7 @@ class PolityResearchAssistantViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Research Assistants.
@@ -86,7 +86,7 @@ class PolityOriginalNameViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Original Names.
@@ -101,7 +101,7 @@ class PolityAlternativeNameViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternative Names.
@@ -116,7 +116,7 @@ class PolityDurationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Durations.
@@ -131,7 +131,7 @@ class PolityPeakYearsViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Peak Years.
@@ -146,7 +146,7 @@ class PolityDegreeOfCentralizationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Degrees of Centralization.
@@ -161,7 +161,7 @@ class PolitySuprapolityRelationsViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Suprapolity Relations.
@@ -176,7 +176,7 @@ class PolityUTMZoneViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity UTM Zones.
@@ -191,7 +191,7 @@ class PolityCapitalViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Capitals.
@@ -206,7 +206,7 @@ class PolityLanguageViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Languages.
@@ -221,7 +221,7 @@ class PolityLinguisticFamilyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Linguistic Families.
@@ -236,7 +236,7 @@ class PolityLanguageGenusViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Language Genuses.
@@ -251,7 +251,7 @@ class PolityReligionGenusViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religion Genuses.
@@ -266,7 +266,7 @@ class PolityReligionFamilyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religion Families.
@@ -281,7 +281,7 @@ class PolityReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religions.
@@ -296,7 +296,7 @@ class PolityRelationshipToPrecedingEntityViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Relationships to Preceding Entities.
@@ -311,7 +311,7 @@ class PolityPrecedingEntityViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Preceding Entities.
@@ -326,7 +326,7 @@ class PolitySucceedingEntityViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Succeeding Entities.
@@ -341,7 +341,7 @@ class PolitySupraculturalEntityViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Supracultural Entities.
@@ -356,7 +356,7 @@ class PolityScaleOfSupraculturalInteractionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Scales of Supracultural Interaction.
@@ -371,7 +371,7 @@ class PolityAlternateReligionGenusViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religion Genuses.
@@ -386,7 +386,7 @@ class PolityAlternateReligionFamilyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religion Families.
@@ -401,7 +401,7 @@ class PolityAlternateReligionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religions.
@@ -416,7 +416,7 @@ class PolityExpertViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Experts.
@@ -432,7 +432,7 @@ class PolityEditorViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Editors.
@@ -448,7 +448,7 @@ class PolityReligiousTraditionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religious Traditions.

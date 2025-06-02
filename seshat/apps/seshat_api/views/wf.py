@@ -116,7 +116,7 @@ class LongWallViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Long Walls.
@@ -131,7 +131,7 @@ class CopperViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Coppers.
@@ -146,7 +146,7 @@ class BronzeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Bronzes.
@@ -161,7 +161,7 @@ class IronViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Irons.
@@ -176,7 +176,7 @@ class SteelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Steels.
@@ -191,7 +191,7 @@ class JavelinViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Javelins.
@@ -206,7 +206,7 @@ class AtlatlViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Atlatls.
@@ -221,7 +221,7 @@ class SlingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Slings.
@@ -236,7 +236,7 @@ class SelfBowViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Self Bows.
@@ -251,7 +251,7 @@ class CompositeBowViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Composite Bows.
@@ -266,7 +266,7 @@ class CrossbowViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Crossbows.
@@ -281,7 +281,7 @@ class TensionSiegeEngineViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Tension Siege Engines.
@@ -296,7 +296,7 @@ class SlingSiegeEngineViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Sling Siege Engines.
@@ -311,7 +311,7 @@ class GunpowderSiegeArtilleryViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Gunpowder Siege Artilleries.
@@ -326,7 +326,7 @@ class HandheldFirearmViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Handheld Firearms.
@@ -341,7 +341,7 @@ class WarClubViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing War Clubs.
@@ -356,7 +356,7 @@ class BattleAxeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Battle Axes.
@@ -371,7 +371,7 @@ class DaggerViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Daggers.
@@ -386,7 +386,7 @@ class SwordViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Swords.
@@ -401,7 +401,7 @@ class SpearViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Spears.
@@ -416,7 +416,7 @@ class PolearmViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polearms.
@@ -431,7 +431,7 @@ class DogViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Dogs.
@@ -446,7 +446,7 @@ class DonkeyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Donkeys.
@@ -461,7 +461,7 @@ class HorseViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Horses.
@@ -476,7 +476,7 @@ class CamelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Camels.
@@ -491,7 +491,7 @@ class ElephantViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Elephants.
@@ -506,7 +506,7 @@ class WoodBarkEtcViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Wood bark, etc.
@@ -521,7 +521,7 @@ class LeatherClothViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Leather Cloth.
@@ -536,7 +536,7 @@ class ShieldViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Shields.
@@ -551,7 +551,7 @@ class HelmetViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Helmets.
@@ -566,7 +566,7 @@ class BreastplateViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Breastplates.
@@ -581,7 +581,7 @@ class LimbProtectionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Limb Protections.
@@ -596,7 +596,7 @@ class ScaledArmorViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Scaled Armors.
@@ -611,7 +611,7 @@ class LaminarArmorViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Laminar Armors.
@@ -626,7 +626,7 @@ class PlateArmorViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Plate Armors.
@@ -641,7 +641,7 @@ class SmallVesselsCanoesEtcViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Small Vessels, Canoes, etc.
@@ -656,7 +656,7 @@ class MerchantShipPressedIntoServiceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Merchant Ships Pressed Into Services.
@@ -671,7 +671,7 @@ class SpecializedMilitaryVesselViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Specialized Military Vessels.
@@ -686,7 +686,7 @@ class SettlementInADefensivePositionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Settlements in a Defensive Position.
@@ -701,7 +701,7 @@ class WoodenPalisadeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Wooden Palisades.
@@ -716,7 +716,7 @@ class EarthRampartViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Earth Ramparts.
@@ -731,7 +731,7 @@ class DitchViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Ditches.
@@ -746,7 +746,7 @@ class MoatViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Moats.
@@ -761,7 +761,7 @@ class StoneWallsNonMortaredViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Stone Walls Non Mortared.
@@ -776,7 +776,7 @@ class StoneWallsMortaredViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Stone Walls Mortared.
@@ -791,7 +791,7 @@ class FortifiedCampViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Fortified Camps.
@@ -806,7 +806,7 @@ class ComplexFortificationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Complex Fortifications.
@@ -821,7 +821,7 @@ class ModernFortificationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Modern Fortifications.
@@ -836,7 +836,7 @@ class ChainmailViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Chainmails.

@@ -22,7 +22,7 @@ class SeshatAPIPagination(PageNumberPagination):
     Custom pagination class for the API.
     """
 
-    page_size = 10
+    page_size = 50
     page_size_query_param = "page_size"
     max_page_size = 100
 
@@ -136,7 +136,7 @@ class MixinSeshatPolity:
 class FilterBackends:
     filter_backends = [
         DjangoFilterBackend,
-        filters.OrderingFilter,
+        #filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    ordering_fields = "__all__"
+    #ordering_fields = ['id',]

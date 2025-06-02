@@ -176,7 +176,7 @@ class RAViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing RAs.
@@ -192,7 +192,7 @@ class PolityTerritoryViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Territories.
@@ -211,7 +211,7 @@ class PolityPopulationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Populations.
@@ -226,7 +226,7 @@ class PopulationOfTheLargestSettlementViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Population of the Largest Settlements.
@@ -241,7 +241,7 @@ class SettlementHierarchyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Settlement Hierarchies.
@@ -256,7 +256,7 @@ class AdministrativeLevelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Administrative Levels.
@@ -271,7 +271,7 @@ class ReligiousLevelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Religious Levels.
@@ -286,7 +286,7 @@ class MilitaryLevelViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Military Levels.
@@ -301,7 +301,7 @@ class ProfessionalMilitaryOfficerViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Professional Military Officers.
@@ -316,7 +316,7 @@ class ProfessionalSoldierViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Professional Soldiers.
@@ -331,7 +331,7 @@ class ProfessionalPriesthoodViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Professional Priesthoods.
@@ -346,7 +346,7 @@ class FullTimeBureaucratViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Full Time Bureaucrats.
@@ -361,7 +361,7 @@ class ExaminationSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Examination Systems.
@@ -376,7 +376,7 @@ class MeritPromotionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Merit Promotions.
@@ -391,7 +391,7 @@ class SpecializedGovernmentBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Specialized Government Buildings.
@@ -406,7 +406,7 @@ class FormalLegalCodeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Formal Legal Codes.
@@ -421,7 +421,7 @@ class JudgeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Judges.
@@ -436,7 +436,7 @@ class CourtViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Courts.
@@ -451,7 +451,7 @@ class ProfessionalLawyerViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Professional Lawyers.
@@ -466,7 +466,7 @@ class IrrigationSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Irrigation Systems.
@@ -481,7 +481,7 @@ class DrinkingWaterSupplySystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Drinking Water Supply Systems.
@@ -496,7 +496,7 @@ class MarketViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Markets.
@@ -511,7 +511,7 @@ class FoodStorageSiteViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Food Storage Sites.
@@ -526,7 +526,7 @@ class RoadViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Roads.
@@ -541,7 +541,7 @@ class BridgeViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Bridges.
@@ -556,7 +556,7 @@ class CanalViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Canals.
@@ -571,7 +571,7 @@ class PortViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Ports.
@@ -586,7 +586,7 @@ class MinesOrQuarryViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Mines or Quarries.
@@ -601,7 +601,7 @@ class MnemonicDeviceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Mnemonic Devices.
@@ -616,7 +616,7 @@ class NonwrittenRecordViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Nonwritten Records.
@@ -631,7 +631,7 @@ class WrittenRecordViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Written Records.
@@ -646,7 +646,7 @@ class ScriptViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Scripts.
@@ -661,7 +661,7 @@ class NonPhoneticWritingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Non-Phonetic Writings.
@@ -676,7 +676,7 @@ class PhoneticAlphabeticWritingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Phonetic Alphabetic Writings.
@@ -691,7 +691,7 @@ class ListsTablesAndClassificationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Lists, Tables, and Classifications.
@@ -706,7 +706,7 @@ class CalendarViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Calendars.
@@ -721,7 +721,7 @@ class SacredTextViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Sacred Texts.
@@ -736,7 +736,7 @@ class ReligiousLiteratureViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Religious Literatures.
@@ -751,7 +751,7 @@ class PracticalLiteratureViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Practical Literatures.
@@ -766,7 +766,7 @@ class HistoryViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Histories.
@@ -781,7 +781,7 @@ class PhilosophyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Philosophies.
@@ -796,7 +796,7 @@ class ScientificLiteratureViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Scientific Literatures.
@@ -811,7 +811,7 @@ class FictionViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Fictions.
@@ -826,7 +826,7 @@ class ArticleViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Articles.
@@ -841,7 +841,7 @@ class TokenViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Tokens.
@@ -856,7 +856,7 @@ class PreciousMetalViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Precious Metals.
@@ -871,7 +871,7 @@ class ForeignCoinViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Foreign Coins.
@@ -886,7 +886,7 @@ class IndigenousCoinViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Indigenous Coins.
@@ -901,7 +901,7 @@ class PaperCurrencyViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Paper Currencies.
@@ -916,7 +916,7 @@ class CourierViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Couriers.
@@ -931,7 +931,7 @@ class PostalStationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Postal Stations.
@@ -946,7 +946,7 @@ class GeneralPostalServiceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing General Postal Services.
@@ -961,7 +961,7 @@ class CommunalBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Communal Buildings.
@@ -976,7 +976,7 @@ class UtilitarianPublicBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Utilitarian Public Buildings.
@@ -991,7 +991,7 @@ class SymbolicBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Symbolic Buildings.
@@ -1006,7 +1006,7 @@ class EntertainmentBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Entertainment Buildings.
@@ -1021,7 +1021,7 @@ class KnowledgeOrInformationBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Knowledge or Information Buildings.
@@ -1036,7 +1036,7 @@ class OtherUtilitarianPublicBuildingViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Other Utilitarian Public Buildings.
@@ -1051,7 +1051,7 @@ class SpecialPurposeSiteViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Special Purpose Sites.
@@ -1066,7 +1066,7 @@ class CeremonialSiteViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Ceremonial Sites.
@@ -1081,7 +1081,7 @@ class BurialSiteViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Burial Sites.
@@ -1096,7 +1096,7 @@ class TradingEmporiaViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Trading Emporias.
@@ -1111,7 +1111,7 @@ class EnclosureViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Enclosures.
@@ -1126,7 +1126,7 @@ class LengthMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Length Measurement Systems.
@@ -1141,7 +1141,7 @@ class AreaMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Area Measurement Systems.
@@ -1156,7 +1156,7 @@ class VolumeMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Volume Measurement Systems.
@@ -1171,7 +1171,7 @@ class WeightMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Weight Measurement Systems.
@@ -1186,7 +1186,7 @@ class TimeMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Time Measurement Systems.
@@ -1201,7 +1201,7 @@ class GeometricalMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Geometrical Measurement Systems.
@@ -1216,7 +1216,7 @@ class OtherMeasurementSystemViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Other Measurement Systems.
@@ -1231,7 +1231,7 @@ class DebtAndCreditStructureViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Debt and Credit Structures.
@@ -1246,7 +1246,7 @@ class StoreOfWealthViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Stores of Wealth.
@@ -1261,7 +1261,7 @@ class SourceOfSupportViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Sources of Support.
@@ -1276,7 +1276,7 @@ class OccupationalComplexityViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Occupational Complexities.
@@ -1291,7 +1291,7 @@ class SpecialPurposeHouseViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Special Purpose Houses.
@@ -1306,7 +1306,7 @@ class OtherSpecialPurposeSiteViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Other Special Purpose Sites.
@@ -1321,7 +1321,7 @@ class LargestCommunicationDistanceViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Largest Communication Distances.
@@ -1336,7 +1336,7 @@ class FastestIndividualCommunicationViewSet(
     FilterBackends,
     MixinSeshatAPISerializer,
     MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
+    viewsets.ReadOnlyModelViewSet,
 ):
     """
     A viewset for viewing and editing Fastest Individual Communications.
