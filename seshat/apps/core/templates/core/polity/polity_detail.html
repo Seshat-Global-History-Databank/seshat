@@ -386,7 +386,13 @@
         gap: 0; /* ensures no space */
       }
       
-
+      .settlement-link {
+        color: #dd571c;
+        text-decoration: none;
+    }
+    .settlement-link:hover {
+        color: teal;
+    }
 
 </style>
 
@@ -719,7 +725,46 @@
 
 
             </div>
-              
+
+
+            <!-- Settlements -->
+                 
+            {% if polity_relations %}
+            <h4 class="pt-3 fw-light" style="color:#dd571c;">Associated Settlements:</h4>
+
+            <div class="row g-0 ps-2 pb-2">
+                {% for relation in polity_relations %}
+                    <div class="col-md-2 col-lg-2 ps-1 pe-2 py-1" style="border-top: 1px solid #dd571c11; border-left: 5px solid #dd571c51; border-right: 1px solid #dd571c11; border-bottom: 1px solid #dd571c11; border-radius:5px" >
+                        <div class="d-flex justify-content-between align-items-start ">
+                            <div>
+                                {% if relation.settlement.name %}
+                                    <div class="fw-bold">
+                                        <a href="{% url 'settlement-detail-main' relation.settlement.id %}" class="settlement-link">
+                                            {{ relation.settlement.name }}
+                                        </a>
+                                    </div>
+                               
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </div>
+                            <div class="text-end text-secondary small" style="white-space: nowrap;">
+                                ({{ relation.settlement.latitude|floatformat:2 }}, {{ relation.settlement.longitude|floatformat:2 }})
+                            </div>
+                        </div>
+                        <div class="pt-0">
+                            {% if relation.settlement.alternative_names %}
+                                <small class="text-muted">
+                                   <i>{{ relation.settlement.alternative_names }}</i> </small>
+                            {% else %}
+                                <small class="text-muted">&nbsp;</small>
+                            {% endif %}
+                        </div>
+                   
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
 
             
             {% if user.is_authenticated and object.private_comment_n  %}

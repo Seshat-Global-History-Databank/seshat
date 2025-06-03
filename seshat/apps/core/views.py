@@ -2678,13 +2678,15 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         return context
 
 
-class SettlementListView(SuccessMessageMixin, generic.ListView):
+class SettlementListView(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
     """
     List all polities.
     """
     model = HabitationSite
     template_name = "core/polity/settlement_list.html"
     context_object_name = "settlements"
+    permission_required = 'core.add_capital'
+
 
 
 
@@ -2728,12 +2730,14 @@ class SettlementListView(SuccessMessageMixin, generic.ListView):
         return context
 
 
-class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
+class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic.DetailView):
     """
     Show details of a Settlement.
     """
     model = HabitationSite
     template_name = "core/polity/settlement_detail.html"
+    permission_required = 'core.add_capital'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -3152,6 +3156,13 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         # Pass the data to the template
         context['preceding_data'] = preceding_data
         context['succeeding_data'] = succeeding_data
+
+
+        if self.request.user.has_perm('core.add_capital'):
+            context['polity_relations'] = CityPolityRelation.objects.filter(
+                polity=self.object
+            ).order_by('settlement__name')
+
 
         return context
 
