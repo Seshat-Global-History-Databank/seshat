@@ -17,7 +17,9 @@ urlpatterns += [
 ]
 urlpatterns += [path('download_oldcsv/<str:file_name>/', views.download_oldcsv, name='download_oldcsv'),]
 urlpatterns += [path('seshat-research-network/', views.SeshatExpertListView.as_view(), name='seshat-research-network'),]
-urlpatterns += [path('seshat-permission-discussion/', views.seshat_permission_discussion, name='seshat-permission-discussion'),]
+urlpatterns += [path('seshat-permission-discussion/', views.seshat_permission_discussion, name='seshat-permission-discussion'),
+               path('download-seshat-regions/', views.export_seshat_regions_csv, name='download_seshat_regions'),
+]
 
 urlpatterns += [path('code_book_new_1', views.seshatcodebooknew1, name='code_book_1'),]
 #urlpatterns += [path('code_book_new_2', views.download_oldcsv, name='code_book_2'),]
@@ -60,6 +62,10 @@ urlpatterns += [
 
      path('core/polities/<int:pk>/update/',
          views.PolityUpdate.as_view(), name="polity-update"),
+
+    path("core/polity-usage/<int:polity_id>", views.polity_usage_view, name="polity-usage"),
+    #path("core/polity-usages/", views.polity_usage_view_all, name="polity-usages"),
+
 
      # City/Settlement
     path('core/settlements/', views.SettlementListView.as_view(), name='settlements'),

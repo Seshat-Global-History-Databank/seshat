@@ -1,0 +1,42 @@
+<!-- templates/polity_usage.html -->
+
+
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+
+{% block content %}
+<div class="container py-3">
+    <h3>Usage for Politys: </h3>
+    <div class="row">
+
+    {% for new_name, usage in politys.items %}
+    <div class="col-md-6">
+
+      <div class="card my-1">
+        {{new_name}}
+
+            <div class="card-body pb-0 pt-1 px-2">
+                {{usage|length}}
+
+            <ul>
+                {% for v, my_use in usage.items %}
+                <li>{{ v }}: {{ my_use }}</li>
+                {% endfor %}
+            </ul>
+            </div>
+        </div>
+
+      </div>
+    {% endfor %}
+            
+</div>
+</div>
+
+
+{% endblock %}
+

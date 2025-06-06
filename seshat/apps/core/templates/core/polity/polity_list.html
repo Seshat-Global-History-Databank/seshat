@@ -117,6 +117,7 @@
         <div class="pb-3 text-right">
             <a href="{% url 'polity-create'  %}" class="btn btn-sm btn-outline-success me-1 my-1"><i class="fa-solid fa-plus"></i> &nbsp; New Polity</a>
             <a href="{% url 'download_csv_all_polities' %}" class="btn btn-sm btn-outline-danger me-1 my-1"><i class="fa-solid fa-file-arrow-down"></i> &nbsp; Download All <b>({{pol_count}})</b> Polities</a>
+            <a href="{% url 'download_seshat_regions' %}" class="btn btn-sm btn-outline-warning text-dark me-1 my-1 float-end"><i class="fa-solid fa-file-arrow-down"></i> &nbsp; Download Seshat Regions</b> </a>
             {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}            
             <a href="{% url 'polities-commented'  %}" class="btn btn-sm btn-outline-info me-1 my-1"> &nbsp; See Commented Polities</a>
             {% endif %}

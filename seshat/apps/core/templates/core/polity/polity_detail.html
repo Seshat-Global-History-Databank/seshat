@@ -7,7 +7,7 @@
 
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 <style>
     br {
@@ -730,40 +730,67 @@
             <!-- Settlements -->
                  
             {% if polity_relations %}
-            <h4 class="pt-3 fw-light" style="color:#dd571c;">Associated Settlements:</h4>
+            <h4 class="pt-3 ps-2" style="color:#dd571c;">Associated Settlements:</h4>
 
-            <div class="row g-0 ps-2 pb-2">
-                {% for relation in polity_relations %}
-                    <div class="col-md-2 col-lg-2 ps-1 pe-2 py-1" style="border-top: 1px solid #dd571c11; border-left: 5px solid #dd571c51; border-right: 1px solid #dd571c11; border-bottom: 1px solid #dd571c11; border-radius:5px" >
-                        <div class="d-flex justify-content-between align-items-start ">
-                            <div>
-                                {% if relation.settlement.name %}
-                                    <div class="fw-bold">
-                                        <a href="{% url 'settlement-detail-main' relation.settlement.id %}" class="settlement-link">
-                                            {{ relation.settlement.name }}
-                                        </a>
-                                    </div>
-                               
-                                {% else %}
-                                    <span class="text-muted">-</span>
-                                {% endif %}
-                            </div>
-                            <div class="text-end text-secondary small" style="white-space: nowrap;">
-                                ({{ relation.settlement.latitude|floatformat:2 }}, {{ relation.settlement.longitude|floatformat:2 }})
-                            </div>
-                        </div>
-                        <div class="pt-0">
-                            {% if relation.settlement.alternative_names %}
-                                <small class="text-muted">
-                                   <i>{{ relation.settlement.alternative_names }}</i> </small>
+            <div class="row">
+                <!-- Left: Settlement cards -->
+                <div class="col-md-8">
+                    <div class="row g-0 ps-2 pb-2">
+                        {% for relation in polity_relations %}
+                            <div class="
+                            {% if polity_relations|length < 13 %}
+                            col-md-12
+                            {% elif polity_relations|length < 26 %}
+                            col-md-6
                             {% else %}
-                                <small class="text-muted">&nbsp;</small>
-                            {% endif %}
-                        </div>
-                   
+                            col-md-4
+
+                            {% endif %} ps-1 pe-2 py-1"
+                                 style="border-top: 1px solid #dd571c11; border-left: 5px solid #dd571c51; border-right: 1px solid #dd571c11; border-bottom: 1px solid #dd571c11; border-radius:5px">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        {% if relation.settlement.name %}
+                                            <div class="fw-bold">
+                                                <a href="{% url 'settlement-detail-main' relation.settlement.id %}"
+                                                   class="settlement-link">
+                                                    {{ relation.settlement.name }}
+                                                </a>
+
+                                                {% if relation.settlement.alternative_names %}
+                                                <small class="text-muted fw-light">
+                                                    <i>{{ relation.settlement.alternative_names }}</i>
+                                                </small>
+                                            {% else %}
+                                                <small class="text-muted">&nbsp;</small>
+                                            {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+
+                               
+                                    </div>
+                                    <div class="text-end text-secondary small" style="white-space: nowrap;">
+                                        ({{ relation.settlement.latitude|floatformat:2 }},
+                                        {{ relation.settlement.longitude|floatformat:2 }})
+                                    </div>
+                                </div>
+  
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                </div>
+            
+                <!-- Right: Map -->
+                <div class="col-md-4 rounded">
+                    <div class="rounded" id="CityMap">
+                        <div id="map"
+                             style="height: 100%; min-height: 400px; width: 100%; border: 2px solid #dd571c51; border-radius:10px;">
+                        </div>
+                    </div>
+                </div>
             </div>
+            
             {% endif %}
 
             
@@ -2749,6 +2776,43 @@
             button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
         }
 }
+
+
+    const cityData = {{ city_data|safe }};
+  
+    if (cityData.length > 0) {
+      const map = L.map('map').setView([30, 0], 3);  // Default view
+  
+      // Base layers
+      const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      });
+  
+      const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; Esri, Maxar, Earthstar Geographics, and the GIS community'
+      });
+  
+      // Add default layer
+      osmLayer.addTo(map);
+  
+      // Add city markers
+      const bounds = [];
+      cityData.forEach(city => {
+        const marker = L.marker([city.lat, city.lng]).addTo(map);
+        marker.bindPopup(`<b>${city.name}</b>`);
+        bounds.push([city.lat, city.lng]);
+      });
+  
+      // Fit bounds to show all markers
+      map.fitBounds(bounds);
+  
+      // Layer control
+      L.control.layers({
+        "OpenStreetMap": osmLayer,
+        "Satellite": satelliteLayer
+      }).addTo(map);
+    }
+  
 
   </script>
   

@@ -184,7 +184,7 @@ class PolityForm(forms.ModelForm):
         :noindex:
         """
         model = Polity
-        fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag' , 'shapefile_name', 'private_comment','general_description', 'unreliable_instability_events')
+        fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag' , 'shapefile_name', 'private_comment','general_description', 'unreliable_instability_events', 'is_empty_on_polaris_release')
         labels = {
         'name': 'Polity ID (Old)',
         'new_name': 'Polity ID (New)',
@@ -197,6 +197,7 @@ class PolityForm(forms.ModelForm):
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
         'unreliable_instability_events': 'Unreliable Instability Events',
+        'is_empty_on_polaris_release': 'Empty on Polaris Release?',
 
         }
         widgets = {
@@ -211,7 +212,7 @@ class PolityForm(forms.ModelForm):
             'end_year': forms.NumberInput(
                 attrs={'class': 'form-control mb-3 fw-bold', }),
             'unreliable_instability_events' : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-
+            'is_empty_on_polaris_release': forms.CheckboxInput(attrs={'class': 'mb-3', }),
             'home_seshat_region': forms.Select(attrs={'class': 'form-control  js-example-basic-single form-select mb-3',}),
             'polity_tag': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             'shapefile_name': forms.TextInput(attrs={'class': 'form-control mb-3', }),
@@ -228,7 +229,7 @@ class PolityUpdateForm(forms.ModelForm):
         :noindex:
         """
         model = Polity
-        fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag', 'shapefile_name',  'private_comment','general_description', 'unreliable_instability_events')
+        fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag', 'shapefile_name',  'private_comment','general_description', 'unreliable_instability_events', 'is_empty_on_polaris_release')
         labels = {
         'name': 'Polity ID (Old)',
         'new_name': 'Polity ID (New)',
@@ -241,6 +242,7 @@ class PolityUpdateForm(forms.ModelForm):
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
         'unreliable_instability_events': 'Unreliable Instability Events',
+        'is_empty_on_polaris_release': 'Empty on Polaris Release?',
 
 
         }
@@ -256,6 +258,7 @@ class PolityUpdateForm(forms.ModelForm):
             'end_year': forms.NumberInput(
                 attrs={'class': 'form-control mb-3 fw-bold', }),
             'unreliable_instability_events' : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+            'is_empty_on_polaris_release': forms.CheckboxInput(attrs={'class': 'mb-3', }),
 
             'home_seshat_region': forms.Select(attrs={'class': 'form-control  js-example-basic-single form-select mb-3',}),
             'polity_tag': forms.Select(attrs={'class': 'form-control form-select mb-3',}),

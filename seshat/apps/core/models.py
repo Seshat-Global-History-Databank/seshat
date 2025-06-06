@@ -256,8 +256,6 @@ def return_number_of_citations_plus_for_comments(self):
     return 0
 
 
-
-
 class Prec_met_instance(models.Model):
     name = models.CharField(max_length=100, default="precious_metal_instance")
     metal = models.CharField(max_length=100,)
@@ -531,6 +529,18 @@ class CurrentCountry(models.Model):
         return self.name
 
 
+
+class PolityManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset()#.exclude(unreliable_instability_events=True)
+    
+    def for_user(self, user):
+        qs = super().get_queryset()
+        if user.has_perm('core.add_capital'):
+            return qs  # No filtering
+        return qs#.exclude(unreliable_instability_events=True)
+
+
 class Polity(models.Model):
     """
     Model representing a polity.
@@ -548,10 +558,14 @@ class Polity(models.Model):
     private_comment = models.TextField(blank=True, null=True,)
     private_comment_n = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     unreliable_instability_events = models.BooleanField(default=False, blank=True, null=True)
+    is_empty_on_polaris_release = models.BooleanField(default=False, blank=True, null=True)
 
     created_date = models.DateTimeField(
         auto_now_add=True, blank=True, null=True)
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    objects = PolityManager()  # Replaces the default manager
+    all_objects = models.Manager()  # Optional: for access without filtering
 
     class Meta:
         """
@@ -747,7 +761,7 @@ class CityPolityRelation(models.Model):
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.city.name} ({self.role}) in {self.polity.name}"
+        return f"{self.settlement.name} ({self.role}) in {self.polity.name}"
 
     class Meta:
         verbose_name = "Settlement-Polity Relation"
@@ -1384,6 +1398,17 @@ class ScpThroughCtn(models.Model):
     parent_paragraphs = models.TextField(blank=True, null=True,)
 
 
+class ExcludeFlaggedPolityManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset()#.exclude(polity__unreliable_instability_events=True)
+    
+    def for_user(self, user):
+        qs = super().get_queryset()
+        if user.has_perm('core.add_capital'):
+            return qs  # No filtering
+        return qs#.exclude(polity__unreliable_instability_events=True)
+
+
 class SeshatCommon(models.Model):
     """
     Model representing a common Seshat model.
@@ -1415,6 +1440,11 @@ class SeshatCommon(models.Model):
                                related_query_name="%(app_label)s_%(class)ss", blank=True,)
     comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+
+
+    # Custom managers
+    objects = ExcludeFlaggedPolityManager()     # Default manager filters out flagged polities
+    all_objects = models.Manager()              # Optional full access
 
     class Meta:
         """

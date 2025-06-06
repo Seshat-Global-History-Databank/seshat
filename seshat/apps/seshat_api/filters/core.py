@@ -93,6 +93,8 @@ class PolityFilter(django_filters.FilterSet):
             "polity_tag": ["exact"],
             "general_description": ["icontains"],
             "shapefile_name": ["icontains"],
+            "is_empty_on_polaris_release": ["exact"],
+
             #"created_date": ["range", "date__exact", "date__gt", "date__lt"],
             #"modified_date": ["range", "date__exact", "date__gt", "date__lt"],
         }
