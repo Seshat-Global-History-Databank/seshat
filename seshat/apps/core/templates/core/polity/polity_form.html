@@ -118,6 +118,7 @@
         </legend>
         <hr class="bg-colorful">
 
+
         <div class="row">
           <div class="col-md-6 row">
             <div class="col-md-12 pb-2">
@@ -146,13 +147,14 @@
             <div class="col-md-12">
               {{ form.general_description|as_crispy_field }}
             </div>
+            <div class="col-md-12" style="display:none;">
+              {{ form.general_description|as_crispy_field }}
+            </div>
           </div>
         </div>
 
         
-        <div class="row">
-          {% polity_map pk %}
-        </div>
+
 
         <div class="row align-items-center" style="min-height: 120px;">  <!-- adjust min-height as needed -->
 

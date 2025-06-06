@@ -23,7 +23,7 @@ def polity_map(pk, test=False):
             capital information.
     """
     page_id = str(pk)
-    polity = Polity.objects.get(id=page_id)
+    polity = Polity.all_objects.get(id=page_id)
     try:  # Get polity shape content if it exists, but otherwise set include_polity_map to false
         if test:
             content = get_polity_shape_content(seshat_id=polity.new_name, tick_number=3)

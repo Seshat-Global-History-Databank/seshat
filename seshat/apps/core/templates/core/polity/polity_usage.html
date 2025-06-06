@@ -1,0 +1,49 @@
+<!-- templates/polity_usage.html -->
+
+
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+
+{% block content %}
+<div class="container py-3">
+    <h3>Usage for Polity: </h3>
+    <h2> {{ polity.long_name }} ({{ polity.new_name }} / {{ polity.name }}) ID: {{ polity.id }} </h2>
+    <div class="row">
+
+    {% for model_field, data in usage.items %}
+    <div class="col-md-6">
+
+      <div class="card my-1">
+
+            <div class="card-header py-0 py-2">
+            <strong>{{ model_field }}</strong> — {{ objects.count }} records
+            </div>
+            <div class="card-body pb-0 pt-1 px-2">
+            <ul>
+                {% for obj in data.objects %}
+                <li>{{ obj.id }}: {{ obj }}</li>
+                {% endfor %}
+            </ul>
+                    <span class="p-0 m-0" style="background-color: #f8f9fa; padding: 2px; border-radius: 5px;">
+                {% for sql in data.sql %}
+              <small>  {{ sql }}</small>
+              <br>
+                {% endfor %}
+                    </span>
+            </div>
+        </div>
+
+      </div>
+    {% endfor %}
+            
+</div>
+</div>
+
+
+{% endblock %}
+

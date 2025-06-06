@@ -1964,6 +1964,10 @@ class PolityUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     permission_required = 'core.add_capital'
     success_message = "You successfully updated the Polity."
 
+    def get_queryset(self):
+        # Use all_objects to bypass the custom manager filtering
+        return Polity.all_objects.all()
+
     def get_context_data(self, **kwargs):
         """
         Get the context data of the view.
@@ -2358,6 +2362,10 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
     model = Polity
     template_name = "core/polity/polity_list_light.html"
 
+    def get_queryset(self):
+        # Use all_objects to bypass the custom manager filtering
+        return Polity.all_objects.all()
+
     def get_absolute_url(self):
         """
         Get the absolute URL of the view.
@@ -2458,6 +2466,10 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
     model = Polity
     template_name = "core/polity/polity_list.html"
 
+    def get_queryset(self):
+        # Use all_objects to bypass the custom manager filtering
+        return Polity.all_objects.all()
+    
     def get_absolute_url(self):
         """
         Get the absolute URL of the view.
@@ -2951,6 +2963,10 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
     model = Polity
     template_name = "core/polity/polity_detail.html"
 
+
+    def get_queryset(self):
+        return Polity.objects.for_user(self.request.user)
+
     def get_object(self, queryset=None):
         """
         Get the object of the view.
@@ -2966,12 +2982,13 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             Http404: If multiple polities are found with the same name.
         """
         if 'pk' in self.kwargs:
-            return get_object_or_404(Polity, pk=self.kwargs['pk'])
+            polity = get_object_or_404(Polity.objects.for_user(self.request.user), pk=self.kwargs['pk'])
+            return polity
         elif 'new_name' in self.kwargs:
             new_name = self.kwargs['new_name']
             try:
                 # Attempt to get the object by new_name, handle multiple objects returned
-                return Polity.objects.get(new_name=new_name)
+                return Polity.all_objects.get(new_name=new_name)
             except Polity.MultipleObjectsReturned:
                 # Handle the case of multiple objects with the same new_name
                 raise Http404("Multiple objects with the same new_name")
@@ -3038,7 +3055,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_instability_data"] = None
 
         ################# NEW
-        Polity_object = Polity.objects.get(id=self.object.pk)
+        Polity_object = Polity.all_objects.get(id=self.object.pk)
 
         # Get the related data
         all_durations = {
@@ -3157,11 +3174,27 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         context['preceding_data'] = preceding_data
         context['succeeding_data'] = succeeding_data
 
-
-        if self.request.user.has_perm('core.add_capital'):
-            context['polity_relations'] = CityPolityRelation.objects.filter(
+        cprels = CityPolityRelation.objects.filter(
                 polity=self.object
             ).order_by('settlement__name')
+        
+        if self.request.user.has_perm('core.add_capital'):
+            context['polity_relations'] = cprels
+
+        if self.request.user.has_perm('core.add_capital'):
+            city_data = []
+            for rel in cprels:
+                s = rel.settlement
+                if s and s.latitude and s.longitude:
+                    city_data.append({
+                        'name': s.name,
+                        'lat': float(s.latitude),
+                        'lng': float(s.longitude),
+                    })
+
+            if city_data:
+                context['city_data'] = city_data
+
 
 
         return context
@@ -6590,3 +6623,179 @@ def create_subsection_ajax(request):
     section_id = request.POST.get('section_id')
     subsection = Subsection.objects.create(name=name, section_id=section_id)
     return JsonResponse({'id': subsection.id, 'name': subsection.name,})
+
+
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def polity_usage_view2(request, polity_id):
+    polity = Polity.objects.get(id=polity_id)
+    usage = {}
+
+    for model in apps.get_models():
+        for field in model._meta.get_fields():
+            if field.is_relation and field.related_model == Polity:
+                # Filter model instances using this polity
+                related_objects = model.objects.filter(**{field.name: polity})
+                if related_objects.exists():
+                    usage[f"{model._meta.app_label}.{model.__name__} ({field.name})"] = related_objects
+
+    return render(request, "core/polity/polity_usage.html", {
+        "polity": polity,
+        "usage": usage
+    })
+
+
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def polity_usage_view(request, polity_id):
+    polity = Polity.objects.get(id=polity_id)
+    usage = {}
+
+    for model in apps.get_models():
+        for field in model._meta.get_fields():
+            if field.is_relation and field.related_model == Polity:
+                try:
+                    related_objects = model.objects.filter(**{field.name: polity})
+                except Exception:
+                    continue
+
+                if related_objects.exists():
+                    model_label = f"{model._meta.app_label}.{model.__name__} ({field.name})"
+                    sql_queries = []
+
+                    for obj in related_objects:
+                        sql = (
+                            f"DELETE FROM {model._meta.db_table} WHERE id = {obj.id};"
+                        )
+                        sql_queries.append(sql)
+
+                    usage[model_label] = {
+                        "objects": related_objects,
+                        "sql": sql_queries
+                    }
+
+    return render(request, "core/polity/polity_usage.html", {
+        "polity": polity,
+        "usage": usage
+    })
+
+# @user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+# def polity_usage_view_all(request):
+
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="polity_connections_summary.csv"'
+
+#     writer = csv.writer(response, delimiter='|')
+#     writer.writerow([
+#         'polity_id', 'polity_old_id', 'polity_long_name', 'start_year', 'end_year', 'polity_tag',
+#         'is_empty'
+#     ])
+
+#     empty_pols = []
+#     politys = Polity.objects.all().order_by('new_name')
+#     politys_dic = {}
+#     for polity in politys:
+#         usage = {}
+#         for model in apps.get_models():
+#             if len(usage) > 5:
+#                 break
+#             for field in model._meta.get_fields():
+#                 if field.is_relation and field.related_model == Polity:
+#                     try:
+#                         related_objects = model.objects.filter(**{field.name: polity})
+#                     except Exception:
+#                         continue
+
+#                     if related_objects.exists():
+#                         model_label = f"{model._meta.app_label}.{model.__name__} ({field.name})"
+#                         if "core.SeshatPrivateComment" in model_label or  "core.Seshat_region" in model_label or "core.CityPolityRelation " in model_label or "crisisdb.Instability_event" in model_label:
+#                             continue
+#                         else:
+#                             usage[model_label] = {
+#                                 "objects": related_objects,
+#                             }
+#         if len(usage) == 0:
+#             print(f"{polity.new_name}  ({polity.id}): {len(usage)}")
+#             empty_pols.append(polity.new_name)
+#             politys_dic[polity.new_name] = usage
+
+#             if polity.new_name == polity.name:
+
+#                 writer.writerow([
+#                     polity.new_name,
+#                     "",
+#                     polity.long_name,
+#                     polity.start_year,
+#                     polity.end_year,
+#                     'True',
+#                 ])
+#             else:
+#                 writer.writerow([
+#                     polity.new_name,
+#                     polity.name,
+#                     polity.long_name,
+#                     polity.start_year,
+#                     polity.end_year,
+#                     'True',
+#                 ])
+#     print('---------------')
+#     print(empty_pols)
+#     print('-------------')
+
+#     return response
+
+    #return render(request, "core/polity/polity_usages.html", {
+    #    "politys": politys_dic,
+    #})
+
+
+
+def export_seshat_regions_csv2(request):
+    # Create the HTTP response with appropriate CSV header
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="seshat_regions.csv"'
+
+    writer = csv.writer(response, delimiter='|')
+    # Write header
+    writer.writerow(['mac_name', 'seshat_region', 'subregions_list'])
+
+    # Query and write data
+    regions = Seshat_region.objects.select_related('mac_region').all()
+    for region in regions:
+        writer.writerow([
+            region.mac_region.name if region.mac_region else '',
+            region.name,
+            region.subregions_list or ''
+        ])
+
+    return response
+
+
+def export_seshat_regions_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="seshat_regions.csv"'
+
+    writer = csv.writer(response, delimiter='|')
+    writer.writerow(['macro_region', 'seshat_region', 'subregions_list',])  # Adjust columns as needed
+
+    # Filter and order Macro Regions
+    custom_order = [5, 2, 11, 3, 4, 9, 10, 8, 7, 6, 1, 23, 24, 27, 26, 25, 29, 28, 31, 33, 32, 30]
+    macro_regions = Macro_region.objects.exclude(name__in=['World', 'Somewhere'])
+    macro_regions_by_id = {mr.id: mr for mr in macro_regions}
+    ordered_macro_regions = [macro_regions_by_id[mid] for mid in custom_order if mid in macro_regions_by_id]
+
+    # Fetch and order Seshat Regions
+    custom_order_sr = [20, 18, 17, 15, 19, 16, 3, 4, 5, 7, 1, 2, 6, 43, 61, 62, 44, 45, 10, 13, 8, 9, 11, 12, 14, 58, 59, 38, 39, 37, 36, 40, 63, 64, 41, 42, 28, 29, 30, 26, 25, 27, 24, 22, 23, 21, 32, 31, 33, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57]
+    seshat_regions = Seshat_region.objects.exclude(name='Somewhere')
+    seshat_regions_by_id = {sr.id: sr for sr in seshat_regions}
+    ordered_seshat_regions = [seshat_regions_by_id[sid] for sid in custom_order_sr if sid in seshat_regions_by_id]
+
+    # Write to CSV
+    for sr in ordered_seshat_regions:
+        writer.writerow([
+            sr.mac_region.name if sr.mac_region else '',
+            sr.name,
+            sr.subregions_list,
+        ])
+
+    return response
