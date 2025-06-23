@@ -3194,6 +3194,12 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
 
             if city_data:
                 context['city_data'] = city_data
+        else:
+            context['city_data'] = [{
+                    'name': "unknown",
+                    'lat': 12.10,
+                    'lng': 13.10,
+                },]
 
 
 
