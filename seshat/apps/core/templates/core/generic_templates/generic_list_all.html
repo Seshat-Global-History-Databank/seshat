@@ -60,18 +60,46 @@ title="Click to Download all such coded records">
 
 <!-- Update Button -->
 {% block update_button %}
+<td colspan="1" style="text-align: center; border-width:0;">
+
+{% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+{% if not obj.private_comment or obj.private_comment.id == 1 or obj.private_comment.inner_private_comments_related.all|length == 0 %}
+    <a class="p-0 m-0 tight-link"  
+    style="overflow: hidden;" 
+    href="{% url 'create_private_subcomment_new' app_name=db_section model_name=obj.clean_name instance_id=obj.id %}">
+        <span class="badge p-1 text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c" data-bs-toggle="tooltip" title="Add Private Comment" >
+            <i class="fa-regular fa-comment"></i>
+
+        </span>
+    </a>
+{% else %}
+    <a  class="p-0 m-0 tight-link"  
+    style="overflow: hidden; border: 0px solid white; border-radius:5px; " >
+    <span class="accordion-button collapsed badge text-dark p-1" type="button"  style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb" 
+    title="See Private Comments" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
+    aria-expanded="false" 
+    aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
+    <i class="fa-solid fa-comments"></i>
+</span>
+
+</a>
+{% endif %}  
+{% endif %}   
+
+{% if 'core.add_capital' in user.get_all_permissions  %}
+
 {% if obj.description and obj.description != 'None' %}
-    <td colspan="1" style="text-align: center; border-width:0;">
         <small>
             <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i></a>
         </small>
-    </td>
 {% else %}
-<td colspan="1" style="text-align: center; border-width:0;">
     <small>
         <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i></a>
     </small>
-</td>
 {% endif %}
+{% endif %}
+</td>
 
 {% endblock update_button %}

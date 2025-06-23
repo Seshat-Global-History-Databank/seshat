@@ -70,11 +70,39 @@
             {{ obj.sorokin_rationale }}
         </small> 
     </div>
+    <div class="d-flex justify-content-center pt-2">
+        <button class="btn btn-sm btn-outline-primary mb-1 toggle-cot-btn"
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#cotCollapse{{ obj.id }}" 
+                aria-expanded="false" 
+                aria-controls="cotCollapse{{ obj.id }}">
+          Show Chain of Thought
+        </button>
+      </div>
+      
+<div class="collapse mt-2" id="cotCollapse{{ obj.id }}">
+    <div class="row">
+        <div class="col-md-7 pt-2" style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
+            <small>
+                <b>General Chain of Thought: </b>
+                {{ obj.general_cot }}
+            </small>
+        </div>
+        <div class="col-md-5 pt-2" style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
+            <small>
+                <b>Classification Chain of Thought: </b>
+                {{ obj.classification_cot }}
+            </small>
+        </div>
+    </div>
+</div>
 </div>
 
     
 {% else %}
 {% endif %}
 
-{% endautoescape %}
+  
 
+{% endautoescape %}

@@ -384,11 +384,11 @@ class Check_choice(models.Model):
     def compact_str(self):
         if self.name:
             if self.check_description and (self.color == "Green" or self.name == "Good"):
-                return mark_safe(f'<small class="badge bg-success-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small>')
+                return mark_safe(f'<small class="badge bg-success-light small-knopf" data-bs-toggle="tooltip" title="{ self.check_description }"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small>')
             elif self.check_description and self.color == "Blue":
-                return mark_safe(f'<small class="badge bg-info-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-exclamation-triangle"></i>&nbsp; {self.name}</small>')
+                return mark_safe(f'<small class="badge bg-info-light small-knopf" data-bs-toggle="tooltip" title="{ self.check_description }"><i class="fa-solid fa-exclamation-triangle"></i>&nbsp; {self.name}</small>')
             elif self.check_description:
-                return mark_safe(f'<small class="badge bg-secondary-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small>')
+                return mark_safe(f'<small class="badge bg-secondary-light small-knopf" data-bs-toggle="tooltip" title="{ self.check_description }"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small>')
             else:
                 return mark_safe(f'<small class="badge bg-secondary-light small-knopf"> {self.name} </small>')
             

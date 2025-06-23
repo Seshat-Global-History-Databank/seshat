@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load mathfilters %}
 {% load custom_filters %}
+{% load core_tags %}
 
 {% block content %}
 
@@ -639,6 +640,8 @@
                 <th scope="col" style="text-align: left;  width:15%; " class="fw-light"> 
                     <a href="?{% query_transform request orderby='-polity__long_name' %}"><i class="fa-solid fa-arrow-up-z-a"></i>&nbsp;</a>Polity <a href="?{% query_transform request orderby='polity__long_name' %}"><i class="fa-solid fa-arrow-up-a-z"></i>&nbsp;</a>
                 </th>
+                {% if user|in_group:"Chief Seshat External Experts" %}   
+<th> </th>              {% endif %}
                 <!-- headings for extra vars -->
                 {% block myheadings_list %}
                 {% endblock myheadings_list %}
@@ -661,17 +664,62 @@
                 </th>
 
                 {% endif %}
-
-                <th scope="col"  class = "fw-light" style="text-align: center">Edit</th>
+                {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                <th scope="col"  class = "fw-light" style="text-align: center">Modify</th>
+                {% endif %} 
                 <th scope="col"  class = "fw-light"  style="text-align: center; border-left:0px solid #782823;"><i class="fa-solid fa-caret-down"></i></th>
 
               </tr>
 
             </thead>
             <tbody>
+              {% if user|in_group:"Chief Seshat External Experts" %}   
+
+              <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                  {% csrf_token %}
+                  <div class="fs-6 mb-1 ps-1 sticky-top" style="background-color:#ffffff; color:#163832;  height:70px;top: 135px; z-index:900;">
+                      <span > 
+                      
+                          &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                         
+                      </span>
+                      <span class="form-check ps-1">
+                          <span class="ps-1 pe-3 py-2" style="background: #daf1de77; border: 1px solid #23534736; border-radius:5px;">
+                              
+                      <label class="form-check-label fs-6 ps-2 py-2 text-dark" for="id_verify_crisisdb_Instability_event" >
+                          <input 
+                          type="checkbox" 
+                          name="verify" 
+                          class="form-check-input" 
+                          style="transform: scale(1.25); margin-left: 10px; margin-right: 10px; display:none; " 
+                          id="id_verify_crisisdb_Instability_event" 
+                          onclick="toggleButton('crisisdb', 'Instability_event')"
+                      >
+                      <span style="color:darkslategrey">
+                          I ({{user.full_name}}) have checked and verified the coded records that I have ticked below, and would like to mark them as <u>Expert Reviewed</u> under my name.
+                      </span>
+                          </label>
+                          </span>
+                        
+                          <button 
+                          type="submit" 
+                          class="btn btn-outline-success bg-colorful-light ps-2 py-1 fw-bold" 
+                          id="saveButton_crisisdb_Instability_event" 
+                          style="display:none; vertical-align: bottom;"
+                      >
+                      <i class="fa-solid fa-signature"></i> Sign and Save
+                      </button>
+                      </span>
+                  </div>
+             
+                  {% endif %}
                 {% if page_obj %}
                     {% for obj in page_obj %}
-                    <tr class="p-0 m-0" style="border-top:5px solid red !important;">
+                    <tr class="p-0 m-0" style="border-top:5px solid red !important; 
+                            {% if obj.seshat_experts_list  %}
+                            background:#843b6211;                                            
+                          {% endif %}
+                    ">
                     <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}" style="border-left:5px solid red !important;">
                         <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2; ">
                         <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">
@@ -693,6 +741,20 @@
                                 {% else %}
                                 <td  style="text-align: left;">-</td>
                                 {% endif%}
+                                {% if user|in_group:"Chief Seshat External Experts" %}
+                                 
+
+                                <td style="border-width:0;">
+                                    
+                                  
+
+                                    {% with request.user.seshat_expert_set.first as current_expert %}
+                                    <input type="checkbox" name="selected_items_experts"  style="transform: scale(1.5); " value="crisisdb|{{obj.clean_name}}|{{obj.pk}}" onclick="toggleButton('crisisdb', 'Instability_event')" {% if current_expert.id in obj.seshat_experts_list_ids %}Checked disabled{% endif %}> 
+                                        
+                                    {% endwith %}
+
+                                  </td>
+                                {% endif %}
             
                                 <!-- extra vars come here -->
                                 {% block extra_vars_list %}
@@ -706,10 +768,12 @@
                                 {% include "core/partials/_years_block_new_obj.html" %}
                                 <!-- Tag tag (Disputed/Suspected etc.) -->
                                 {% endif %}
-
+                                {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                 {% block update_button %}
                                 {% endblock update_button %}
-                                <td class="text-secondary" style="border-width:0;"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
+                                {% endif %} 
+                                <td class="text-secondary" style="border-width:0;">
+                                  <span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
                                     </span>
                                 </td>
 
@@ -726,6 +790,15 @@
                             </div>
                         </td>    
                     </tr>
+                    {% autoescape off %}
+
+                    <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                      <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:20px; border-bottom-right-radius:20px; ">
+                          {% include "core/partials/_private_comment_inline_obj.html" %}
+                      </td>
+                      {% endautoescape %}
+
+                  </tr>
                     
 
                     {% endfor %}
@@ -737,6 +810,9 @@
                     </tr>                    
                     {% endif %}
 
+                    {% if user|in_group:"Chief Seshat External Experts" %}   
+                    </form>
+                    {% endif %}
             </tbody>
           </table>
         </div>
@@ -789,7 +865,7 @@
                     const objId = accordionBody.getAttribute('data-obj-id');
                     const modelName = accordionBody.getAttribute('data-model-name');
 
-                    fetch(`/get-description/${modelName}/${objId}/`) // Replace with your endpoint
+                    fetch(`/get-description-brief/${modelName}/${objId}/`) // Replace with your endpoint
                         .then(response => response.text())
                         .then(data => {
                             accordionBody.innerHTML = data; // Populate with the fetched content
@@ -803,6 +879,36 @@
             });
         });
     });
+
+    function toggleButton(secName, modelName) {
+      const mainCheckbox = document.getElementById(`id_verify_${secName}_${modelName}`);
+      const button = document.getElementById(`saveButton_${secName}_${modelName}`);
+
+      if (mainCheckbox && button) {
+          button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
+      }
+
+          // Get all checkboxes with name="verify", excluding disabled ones
+          const verifyCheckboxes = document.querySelectorAll('input[name="selected_items_experts"]:not(:disabled)');
+
+          // Check if any of the non-disabled checkboxes is checked
+          let anyChecked = false;
+          verifyCheckboxes.forEach(cb => {
+              if (cb !== mainCheckbox && cb.checked) {
+                  anyChecked = true;
+              }
+          });
+      
+          // Set the state of the hidden main checkbox
+          if (mainCheckbox) {
+              mainCheckbox.checked = anyChecked;
+          }
+      
+          // Show or hide the button based on the main checkbox state
+          if (mainCheckbox && button) {
+              button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
+          }
+  };
 </script>
 
 

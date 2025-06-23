@@ -23,13 +23,12 @@
         {% endif %}
 
         <th scope="col" class="fw-light text-secondary" style="text-align: left;">Event</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">MacroEvent</th>
         <th scope="col" class="fw-light text-secondary" style="text-align: center;">Year(s)</th>
         <th scope="col" class="fw-light text-secondary" style="text-align: left;">Type(s)</th>
+        <th scope="col" class="fw-light text-secondary" style="text-align: left;">MacroEvent</th>
         <th scope="col" class="fw-light text-secondary" style="text-align: left;">Intensity</th>
         <th scope="col" class="fw-light text-secondary" style="text-align: left;">Extent</th>
         <th scope="col" class="fw-light text-secondary" style="text-align: right;">Checks</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;"> Progress</th>
         {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
         <th scope="col" class="fw-light text-secondary" style="text-align: right;">Modify</th>
         {% else %}

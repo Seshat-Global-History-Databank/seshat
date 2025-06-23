@@ -8268,10 +8268,11 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             logged_in_user = request.user
             new_object = my_form.save(commit=False)
             suggested_experts = my_form.cleaned_data['suggested_expert']
-            all_ra_checks = my_form.cleaned_data['ra_check'] 
-            all_ra_checks_names = []
-            for aa in all_ra_checks:
-                all_ra_checks_names.append(aa.name)
+            #if 'ra_check' in my_form.cleaned_data:
+            #    all_ra_checks = my_form.cleaned_data['ra_check'] 
+            #    all_ra_checks_names = []
+            #    for aa in all_ra_checks:
+            #        all_ra_checks_names.append(aa.name)
             #print('fffffffffffffffffffff', '; '.join(all_ra_checks_names))
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
@@ -8319,10 +8320,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #new_object.curator.set([logged_in_staff]) 
             #print(logged_in_staff)
             existing_curators = list(new_object.curator.all())  # Get current curators as a list
-            existing_ra_checks = list(new_object.ra_check.all())  # Get current ra_checks as a list
-            all_ra_checks_names_2 = []
-            for aa in existing_ra_checks:
-                all_ra_checks_names_2.append(aa.name)
+            #existing_ra_checks = list(new_object.ra_check.all())  # Get current ra_checks as a list
+            #all_ra_checks_names_2 = []
+            #for aa in existing_ra_checks:
+            #    all_ra_checks_names_2.append(aa.name)
             #print('gggggggggggggggg', '; '.join(all_ra_checks_names_2))
 
             new_object.save()  # Save the object to persist the association
@@ -8847,7 +8848,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     elif var_name in ["instability_event",]:
-        object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
+        object_list = model_class.objects.filter(polity__unreliable_instability_events=False).order_by('polity_id', 'year_from')
     else:
         object_list = model_class.objects.all()
 
@@ -9046,6 +9047,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #'extra_var': obj[var_name],
         'current_order_field': order_field,
         'is_descending': is_descending,
+        'db_section': db_section,
 
         #'obj_var': my_form[x_name], 
         #"myvar": myvar,

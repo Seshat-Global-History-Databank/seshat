@@ -9,10 +9,11 @@
         {{ obj.comment }}
     </span>
     
+    
     <a class="p-0 m-0 float-end" 
     style=" overflow: hidden;" 
     href="{% url 'seshatcomment-update' obj.comment.id %}">
-        <span class="badge text-dark fs-6 " style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
+        <span class="badge text-dark fs-6 " style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="tooltip" title="Edit Description" >
             <i class="fa-solid fa-pen-to-square"></i>
         </span>
     </a>

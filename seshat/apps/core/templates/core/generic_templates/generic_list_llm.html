@@ -23,22 +23,14 @@ title="Click to Download all such coded records">
 
 
 {% block myheadings_list %}
-<th class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:3%;  " scope="col">
-    <small class="text-secondary">Batch</small>
-    
-    </th>
+
 <th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:25%;  " scope="col">
     <span> 
         Event Name
     </span>
 
 </th>
-<th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:10%;  " scope="col">
-    <span> 
-        Macro Event
-    </span>
 
-</th>
 
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
     <span> 
@@ -57,6 +49,12 @@ title="Click to Download all such coded records">
     <span> 
     Type(s)
 </span>
+</th>
+<th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:10%;  " scope="col">
+    <span> 
+        Macro Event
+    </span>
+
 </th>
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
@@ -89,56 +87,54 @@ title="Click to Download all such coded records">
     Checks
 </span>
 </th>
-<th  class = "fw-light" style="text-align: center; white-space: nowrap;" scope="col">
-    <span> 
-    Progress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span>
-</th>
+
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
 <td  style="text-align: left; z-index:890; border-width:0;" >
-    <small>
+     
+    <small style="vertical-align: center;">
         {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
-        <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+        <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#D3D3D3; border-radius:5px; color:white;"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
       {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
-        <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+        <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#ADD8E6; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
       {% else %}
-        <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+        <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#a8dcab; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
       {% endif %}
     </small>
-</td>
-<td  style="text-align: left; z-index:890; border-width:0;" >
+    <small style="vertical-align: center;  display:inline-block;">
+        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+
+        {% if obj.researchers_list  %}
+            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+        {% if obj.comment %}
+            <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
+
+        {% endif %}
+
+        {% if obj.seshat_experts_list  %}
+            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+                <span>
+                    <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
+                </span>
+            </a>
+        {% endif %}
+
+    </small>
 
     {% autoescape off %}
-    <span class="fw-normal highlighted-value-title-light" >{{obj.name}}     </span>
+    <span class="fw-bold" style="display:block; text-align: left;">        
+        
+        {{obj.name}}     </span>
     {% endautoescape %}
 
 
 
 </td>
-    {% if obj.made_up_macro_event %}
-    <td  style="text-align: left; z-index:890; border-width:0;" >
 
-        {% autoescape off %}
-        <span class="fw-normal">{{obj.made_up_macro_event}}  
-
-        </span>
-        {% endautoescape %}
-
-    </td>
-
-    {% else %}
-    <td  style="text-align: center; z-index:890; border-width:0;" >
-
-        {% autoescape off %}
-        <span class="fw-normal">- 
-
-        </span>
-        {% endautoescape %}
-
-    </td>
-    {% endif %}
 
 <td  style="text-align: center; z-index:890; border-width:0;" >
     {% if obj.year_from == None %}
@@ -176,6 +172,28 @@ title="Click to Download all such coded records">
     {% endautoescape %}
 
 </td>
+{% if obj.made_up_macro_event %}
+<td  style="text-align: left; z-index:890; border-width:0;" >
+
+    {% autoescape off %}
+    <span class="fw-normal">{{obj.made_up_macro_event}}  
+
+    </span>
+    {% endautoescape %}
+
+</td>
+
+{% else %}
+<td  style="text-align: center; z-index:890; border-width:0;" >
+
+    {% autoescape off %}
+    <span class="fw-normal">- 
+
+    </span>
+    {% endautoescape %}
+
+</td>
+{% endif %}
 <td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
     <span class="fw-bold highlighted-value-title">
@@ -198,52 +216,59 @@ title="Click to Download all such coded records">
     <small >{{obj.get_instability_checks}}</small>
     {% endautoescape %}
 </td>
-<td  style="text-align: left; z-index:890; border-width:0;" >
-    {% autoescape off %}
 
-    <small style="vertical-align: bottom;  display:inline-block;">
-        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="fw-bold rounded" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; color:rgb(114, 114, 114); background: rgb(226, 226, 226);">AI</span></a>
-
-        {% if obj.researchers_list  %}
-            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
-            </a>
-        {% endif %}
-        {% if obj.comment %}
-            <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success fw-bold rounded  " style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; background:rgb(198, 236, 198);">D</span></a>
-
-        {% endif %}
-
-        {% if obj.seshat_experts_list  %}
-            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-                <span>
-                    <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
-                </span>
-            </a>
-        {% endif %}
-
-    </small>
-
-    {% endautoescape %}
-</td>
 
 {% endblock extra_vars_list %}
 
 
 <!-- Update Button -->
 {% block update_button %}
-{% if obj.description and obj.description != 'None' %}
-    <td  style="text-align: center; border-width:0;">
-        <small>
-            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i> &nbsp;</a>
-        </small>
-    </td>
-{% else %}
 <td  style="text-align: center; border-width:0;">
-    <small>
-        <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i>&nbsp;</a>
-    </small>
-</td>
+
+{% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+{% if not obj.private_comment or obj.private_comment.id == 1 or obj.private_comment.inner_private_comments_related.all|length == 0 %}
+    <a class="p-0 m-0 tight-link"  
+    style="overflow: hidden;" 
+    href="{% url 'create_private_subcomment_new' app_name=db_section model_name=obj.clean_name instance_id=obj.id %}">
+        <span class="badge p-1 text-dark" type="button" style="vertical-align:top; white-space: nowrap; z-index:999; background-color:#edd0281c; border:1px solid #edd028; width:100%;" data-bs-toggle="tooltip" title="Add Private Comment" >
+            <i class="fa-regular fa-comment"></i>
+
+        </span>
+    </a>
+{% else %}
+    <a  class="p-0 m-0 tight-link"  
+    style="overflow: hidden; border: 0px solid white; border-radius:5px; " >
+    <span class="accordion-button collapsed badge text-dark p-1" type="button"  style="vertical-align:top; white-space: nowrap; background-color:#edd02844; border:1px solid #edd028; width:100%;" 
+    title="See Private Comments" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
+    aria-expanded="false" 
+    aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
+    <i class="fa-solid fa-comments"></i>
+</span>
+
+</a>
+
+{% endif %}  
+{% endif %}   
+
+{% if 'core.add_capital' in user.get_all_permissions  %}
+
+
+{% if obj.description and obj.description != 'None' %}
+            <a href="{% url update_url obj.id %}" style="overflow: hidden; ">
+                <span class="badge" style="width:100%; border:1px solid #ff474c44; background: #ff474c22;" data-bs-toggle="tooltip" title="Edit">
+                <i class="fa-solid fa-pen-to-square text-secondary"></i>
+            </span>
+        </a>
+{% else %}
+        <a href="{% url update_url_new obj.id %}" style="overflow: hidden; ">
+            <span class="badge" style="width:100%; border:1px solid #ff474c44; background: #ff474c22;" data-bs-toggle="tooltip" title="Edit">
+                <i class="fa-solid fa-pen-to-square text-dark"></i></a>
+            </span>
 {% endif %}
+
+{% endif %}
+</td>
 
 {% endblock update_button %}

@@ -895,7 +895,8 @@ def get_all_instability_data_for_a_polity(polity_id):
     my_data = Instability_event.objects.filter(
         polity__id=polity_id,
         polity__unreliable_instability_events=False
-    )
+    ).order_by('year_from')
+
     if my_data:
         #a_data_dic["power_transitions"] = my_data
         a_data_dic["instability_event"] = my_data

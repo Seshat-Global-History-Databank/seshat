@@ -780,15 +780,16 @@
                         {% endfor %}
                     </div>
                 </div>
-            
-                <!-- Right: Map -->
-                <div class="col-md-4 rounded">
+                   <!-- Right: Map -->
+                   <div class="col-md-4 rounded">
                     <div class="rounded" id="CityMap">
-                        <div id="map"
+                        <div id="map2"
                              style="height: 100%; min-height: 400px; width: 100%; border: 2px solid #dd571c51; border-radius:10px;">
+                            </div>
                         </div>
-                    </div>
-                </div>
+                   </div>
+
+
             </div>
             
             {% endif %}
@@ -1860,7 +1861,7 @@
                         {% endif %}
 
               {% for key, values in values_m.items %}
-                  <span id="wf_{{key|lower}}"></span>
+                  <span id="wf_{{key}}"></span>
                   {% if values %}
                                     
            
@@ -2343,7 +2344,7 @@
                                                     type="checkbox" 
                                                     name="verify" 
                                                     class="form-check-input" 
-                                                    style="transform: scale(1.25); margin-left: 10px; margin-right: 10px; display:none;" 
+                                                    style="transform: scale(1.25); margin-left: 10px; margin-right: 10px; display:none; " 
                                                     id="id_verify_crisisdb_Instability_event" 
                                                     onclick="toggleButton('crisisdb', 'Instability_event')"
                                                 >
@@ -2357,7 +2358,7 @@
                                                     type="submit" 
                                                     class="btn btn-outline-success bg-colorful-light ps-2 py-1 fw-bold" 
                                                     id="saveButton_crisisdb_Instability_event" 
-                                                    style="display: none; vertical-align: bottom;"
+                                                    style="display:none; vertical-align: bottom;"
                                                 >
                                                 <i class="fa-solid fa-signature"></i> Sign and Save
                                                 </button>
@@ -2374,7 +2375,11 @@
 
 
 
-                                <tr class="p-0 m-0" style="border-width:0;">
+                                <tr class="p-0 m-0" style="border-width:0;
+                                                    {% if obj.seshat_experts_list  %}
+                                                    background: #843b6211;                                            
+                                                    {% endif %}
+                                ">
                                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
                                     <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
                                         <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
@@ -2396,20 +2401,38 @@
                                             <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0;">
 
                                        
-                                                <small style="vertical-align: top;">
+                                                <small style="vertical-align: center;">
                                                     {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
-                                                    <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#D3D3D3; border-radius:5px; color:white;"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
                                                   {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
-                                                    <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#ADD8E6; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
                                                   {% else %}
-                                                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#a8dcab; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
                                                   {% endif %}
                                                 </small>
+                                                <small style="vertical-align: center;  display:inline-block;">
+                                                    <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
 
-                                                <span class="fw-bold ps-1" style="display:inline-block; text-align: left; vertical-align: bottom;">
-                                                  
-                                                    {{ obj.name }}
-                                                </span> 
+                                                    {% if obj.researchers_list  %}
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if obj.comment %}
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
+
+                                                    {% endif %}
+
+                                                    {% if obj.seshat_experts_list  %}
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+                                                            <span>
+                                                                <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
+                                                            </span>
+                                                        </a>
+                                                    {% endif %}
+
+                                                </small>
+                                                                  
                                                 {% if obj.description or obj.comment or obj.llm_description %}
                                                 <span class="accordion-button collapsed p-0 my-0 float-end text-info" 
                                                         style="width: 20px; min-width: 20px; height:inherit;"
@@ -2421,11 +2444,24 @@
                                                         aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}">
                                                 </span>
                                                 {% endif %}
+
+                                                <span class="fw-bold ps-1" style="display:block; text-align: left;">
+                                                  
+                                                    {{ obj.name }}
+                                                </span> 
+                            
+                             
                   
                                             </td>
                                             {% else %}
                                             <td style="text-align: left;">-</td>
                                             {% endif %}
+                        
+                                            {% include "core/partials/_years_block_new_obj.html" %}
+
+                                            <td  style="border-width:0; width:15%;">
+                                                {{ obj.get_instability_types }}                                                
+                                            </td>
                                             <td>
 
                                                 {% autoescape off %}
@@ -2433,11 +2469,6 @@
                                                     
                                                 </small>
                                                 {% endautoescape %}
-                                            </td>
-                                            {% include "core/partials/_years_block_new_obj.html" %}
-
-                                            <td  style="border-width:0; width:15%;">
-                                                {{ obj.get_instability_types }}                                                
                                             </td>
                                             <td style="border-width:0; text-align:center;">
                                                 <span class="highlighted-value-title fw-bold mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;" data-bs-toggle="popover" title="{{ obj.get_inst_intensity_display }}" >
@@ -2456,39 +2487,14 @@
                                                     <small >{{obj.get_instability_checks}}</small>
                                                     {% endautoescape %}
                                                 </td>
-                                                <td  style="text-align: left; z-index:890; border-width:0;" >
-                                                    {% autoescape off %}
-                                                    <small style="vertical-align: bottom;  display:inline-block;">
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
 
-                                                        {% if obj.researchers_list  %}
-                                                            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                                <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
-                                                            </a>
-                                                        {% endif %}
-                                                        {% if obj.comment %}
-                                                            <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
-
-                                                        {% endif %}
-
-                                                        {% if obj.seshat_experts_list  %}
-                                                            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-                                                                <span>
-                                                                    <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
-                                                                </span>
-                                                            </a>
-                                                        {% endif %}
-
-                                                    </small>
-                                                    {% endautoescape %}
-                                                </td>
                                                 
 
      
                                             <td  style="text-align: right; vertical-align: center; border-width:0;">
                                                 {% with my_app_name='crisisdb' %}
-                                                {% include "core/partials/_abc_obj_instability.html" %}
-                                            {% endwith %}
+                                                    {% include "core/partials/_abc_obj_instability.html" %}
+                                                {% endwith %}
                                             </td>
                                         </span>
                                         </span>
@@ -2706,6 +2712,7 @@
         var offset = $('#my_seshat_navbar').height();
         scrollToElementWithOffset(targetElementId, offset);
       }
+
     });
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -2746,42 +2753,43 @@
             });
         });
     });
-    
+
+        
     function toggleButton(secName, modelName) {
         const mainCheckbox = document.getElementById(`id_verify_${secName}_${modelName}`);
         const button = document.getElementById(`saveButton_${secName}_${modelName}`);
 
-    if (mainCheckbox && button) {
-        button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
-    }
-
-        // Get all checkboxes with name="verify", excluding disabled ones
-        const verifyCheckboxes = document.querySelectorAll('input[name="selected_items_experts"]:not(:disabled)');
-
-        // Check if any of the non-disabled checkboxes is checked
-        let anyChecked = false;
-        verifyCheckboxes.forEach(cb => {
-            if (cb !== mainCheckbox && cb.checked) {
-                anyChecked = true;
-            }
-        });
-    
-        // Set the state of the hidden main checkbox
-        if (mainCheckbox) {
-            mainCheckbox.checked = anyChecked;
-        }
-    
-        // Show or hide the button based on the main checkbox state
         if (mainCheckbox && button) {
             button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
         }
-}
 
+            // Get all checkboxes with name="verify", excluding disabled ones
+            const verifyCheckboxes = document.querySelectorAll('input[name="selected_items_experts"]:not(:disabled)');
+
+            // Check if any of the non-disabled checkboxes is checked
+            let anyChecked = false;
+            verifyCheckboxes.forEach(cb => {
+                if (cb !== mainCheckbox && cb.checked) {
+                    anyChecked = true;
+                }
+            });
+        
+            // Set the state of the hidden main checkbox
+            if (mainCheckbox) {
+                mainCheckbox.checked = anyChecked;
+            }
+        
+            // Show or hide the button based on the main checkbox state
+            if (mainCheckbox && button) {
+                button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
+            }
+    };
 
     const cityData = {{ city_data|safe }};
   
     if (cityData.length > 0) {
-      const map = L.map('map').setView([30, 0], 3);  // Default view
+          
+      const map_2 = L.map('map2').setView([30, 0], 3);  // Default view
   
       // Base layers
       const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -2793,25 +2801,39 @@
       });
   
       // Add default layer
-      osmLayer.addTo(map);
+      osmLayer.addTo(map_2);
+
+
   
       // Add city markers
       const bounds = [];
       cityData.forEach(city => {
-        const marker = L.marker([city.lat, city.lng]).addTo(map);
+        if (typeof city.lat === 'number' && typeof city.lng === 'number') {
+            const marker = L.circleMarker([city.lat, city.lng], {
+              radius: 5,                // size of the dot
+              color: 'orange',            // border color
+              fillColor: 'orange',        // fill color
+              fillOpacity: 0.6,         // fill opacity
+              weight: 1                 // border thickness
+            }).addTo(map_2);
         marker.bindPopup(`<b>${city.name}</b>`);
         bounds.push([city.lat, city.lng]);
+        }
       });
   
       // Fit bounds to show all markers
-      map.fitBounds(bounds);
+      map_2.fitBounds(bounds);
   
       // Layer control
       L.control.layers({
         "OpenStreetMap": osmLayer,
         "Satellite": satelliteLayer
-      }).addTo(map);
+      }).addTo(map_2);
     }
+
+
+
+
   
 
   </script>
