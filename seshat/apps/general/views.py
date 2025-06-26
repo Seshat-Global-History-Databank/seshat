@@ -8850,7 +8850,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     elif var_name in ["instability_event",]:
         object_list = model_class.objects.filter(polity__unreliable_instability_events=False).order_by('polity_id', 'year_from')
     else:
-        object_list = model_class.objects.all()
+        object_list = model_class.objects.all().order_by('polity_id', 'year_from')
 
 
 

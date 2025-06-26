@@ -283,6 +283,10 @@
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
           </div>
           <div>
+            {{myvar}}
+          </div>
+  
+          <div>
             <h5 class="mb-3"><span class="text-secondary text-end">Variable:</span> <span>{{myvar}}</span> <span class="h6 text-secondary">
                 (All coded records)
             </span></h5>
@@ -686,14 +690,14 @@
                       <span class="form-check ps-1">
                           <span class="ps-1 pe-3 py-2" style="background: #daf1de77; border: 1px solid #23534736; border-radius:5px;">
                               
-                      <label class="form-check-label fs-6 ps-2 py-2 text-dark" for="id_verify_crisisdb_Instability_event" >
+                      <label class="form-check-label fs-6 ps-2 py-2 text-dark" for="id_verify_{{db_section}}_{{myvar}}" >
                           <input 
                           type="checkbox" 
                           name="verify" 
                           class="form-check-input" 
                           style="transform: scale(1.25); margin-left: 10px; margin-right: 10px; display:none; " 
-                          id="id_verify_crisisdb_Instability_event" 
-                          onclick="toggleButton('crisisdb', 'Instability_event')"
+                          id="id_verify_{{db_section}}_{{myvar}}" 
+                          onclick="toggleButton('{{db_section}}', '{{myvar}}')"
                       >
                       <span style="color:darkslategrey">
                           I ({{user.full_name}}) have checked and verified the coded records that I have ticked below, and would like to mark them as <u>Expert Reviewed</u> under my name.
@@ -704,7 +708,7 @@
                           <button 
                           type="submit" 
                           class="btn btn-outline-success bg-colorful-light ps-2 py-1 fw-bold" 
-                          id="saveButton_crisisdb_Instability_event" 
+                          id="saveButton_{{db_section}}_{{myvar}}" 
                           style="display:none; vertical-align: bottom;"
                       >
                       <i class="fa-solid fa-signature"></i> Sign and Save
@@ -744,12 +748,12 @@
                                 {% if user|in_group:"Chief Seshat External Experts" %}
                                  
 
-                                <td style="border-width:0;">
+                                <td style="border-width:0; text-align: center;">
                                     
                                   
 
                                     {% with request.user.seshat_expert_set.first as current_expert %}
-                                    <input type="checkbox" name="selected_items_experts"  style="transform: scale(1.5); " value="crisisdb|{{obj.clean_name}}|{{obj.pk}}" onclick="toggleButton('crisisdb', 'Instability_event')" {% if current_expert.id in obj.seshat_experts_list_ids %}Checked disabled{% endif %}> 
+                                    <input type="checkbox" name="selected_items_experts"  style="transform: scale(1.5); " value="{{db_section}}|{{obj.clean_name}}|{{obj.pk}}" onclick="toggleButton('{{db_section}}', '{{myvar}}')" {% if current_expert.id in obj.seshat_experts_list_ids %}Checked disabled{% endif %}> 
                                         
                                     {% endwith %}
 
@@ -793,7 +797,7 @@
                     {% autoescape off %}
 
                     <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
-                      <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:20px; border-bottom-right-radius:20px; ">
+                      <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                           {% include "core/partials/_private_comment_inline_obj.html" %}
                       </td>
                       {% endautoescape %}
