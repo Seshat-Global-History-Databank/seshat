@@ -1,31 +1,91 @@
 {% load custom_filters %}
+{% load humanize %}
+{% load custom_filters %}
+{% load core_tags %}
 
 {% if obj.private_comment and 'core.add_seshatprivatecommentpart' in  user.get_all_permissions  %}
 
 {% if obj.private_comment.id == 1 or obj.private_comment.inner_private_comments_related.all|length == 0 %}
 {% else  %}
+<div class="pb-2">
+
 <span class="p-0 m-0">
-    <div class="p-0 m-0 row" style="font-size:14px;">
-        <div class="fw-bold col-sm-2 pt-2" style="background-color:beige; border-right:6px solid darkgray; border-bottom-left-radius:20px; ">Private Comments <br>
-            <span class="text-secondary fw-light"> (Only visible to Selected Seshat Experts/RAs)</span> <br>
-    
-    </div>
 
-        <div class="p-2 mt-2 col-sm-10">
-            {% if obj.private_comment.show_inline|textincludes:"I would appreciate it if you could review it." %}
-            {{obj.private_comment.show_inline_short}}
+
+
+
+    <table id="table_id" class="table table-borderless table-hover align-middle pt-0 mt-0"> 
+        <thead style="border-bottom: 3px solid #782823; background: #78282311">
+            <tr class="text-dark" >
+                    <th class="col-md-9" scope="col" style="text-align: left;"><small>   Private Comments 
+                        <span class="text-secondary">(Only visible to Selected Seshat Experts/RAs) </small></span>
+                    </th>
+                      <th class="col-md-2" scope="col" style="text-align: right"> <small>Target Experts or Researchers</small> </th>
+            </tr>
+          </thead>
+          <tbody class="py-1 ">
+            {% autoescape off %}
+
+            {% if obj.private_comment.inner_private_comments_related.all %}
+            {% for subcom in obj.private_comment.inner_private_comments_related.all %}
+
+                <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
+                    <div class="row">
+
+                    <td class="col-md-9 ps-2 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
+                        <span class="{% if subcom.is_done %} bg-light fw-light {% else %} fs-6 fw-bold {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{subcom.private_comment_owner.id|give_me_a_color}}; color: {{subcom.private_comment_owner.id|give_me_a_color}};  {% endif %};">{{subcom.private_comment_owner}}</span> 
+                        {% if subcom.created_date %}
+                          <small class="text-secondary extra-small">&nbsp; {{ subcom.created_date|naturaltime }}</small> 
+                        {% else %}
+                        <i class="fa-solid fa-minus text-danger"></i>
+                        {% endif %}
+                          <div class="comment-box" style="
+                          {% if subcom.is_done %} font-size:12px; {% else %} border-color: {{subcom.private_comment_owner.id|give_me_a_color}}22; background: {{subcom.private_comment_owner.id|give_me_a_color}}11; {% endif %} 
+                          
+                          ">
+                            {{ subcom.private_comment_part_text }}  
+                          </div>    
+                    </td>
+                    <td class="col-md-2" style="text-align: right">
+                        {% for an_expert in  subcom.private_comment_reader.all %}
+                        <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
+                    border: 1px solid {{an_expert.id|give_me_a_color}}; border-left: 5px solid {{an_expert.id|give_me_a_color}}
+                    {% endif %};  border-radius:5px;">{{an_expert}}</span>
+                        {% endfor %}
+                    </td>
+
+                    </div>
+                </tr>
+
+            {% endfor %}
             {% else %}
-            {{obj.private_comment.show_inline}}
+            <tr>
+                <td class="col-md-8 text-secondary" scope="row" style="text-align: left;">
+                No Private Comments yet.
+                </td>
+                <td class="col-md-2" style="text-align: left">
+                    -
+                </td>
+                <td class="col-md-2" style="text-align: left">
+                -
+                </td>
+                <td class="col-md-2" style="text-align: center">
+                    -
+                    </td>
 
-            {% endif %}  
-            <span class="badge fs-6 ms-2 py-2 px-3 text-dark fw-light mb-1" style="background-color:beige; border: 1px solid gray">
-                <a class="p-1 text-dark" href="{% url 'seshatprivatecomment-update' obj.private_comment.id %}"><span> <i class=" fa-solid fa-pen-to-square text-dark"></i><span >&nbsp;&nbsp;Add your Private Comment</span></span></a>
-            </span>
-        </div>
+            </tr>
+            {% endif %}
 
-    </div>
+            {% endautoescape %}
+
+        </tbody>
+      </table>
 </span>
-
+<span class="badge fs-6 ms-2 mt-2 py-2 px-3 text-dark fw-normal mb-1" style="background-color:beige; border: 1px solid gray">
+    <a class="p-1 text-dark" href="{% url 'seshatprivatecomment-update' obj.private_comment.id %}"><span> <i class=" fa-solid fa-comment text-dark"></i><span >&nbsp;&nbsp;Add your Private Comment</span></span></a>
+</span>
+    
+</div>
 {% endif %}  
 {% endif %}   
 

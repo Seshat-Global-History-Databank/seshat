@@ -677,8 +677,16 @@
 
       osmLayer.addTo(map);
 
-      L.marker([lat, lon]).addTo(map)
-        .bindPopup('<b>{{ object.name }}</b>').openPopup();
+      L.circleMarker([lat, lon], {
+        radius: 10,
+        color: 'orange',
+        fillColor: 'orange',
+        fillOpacity: 0.6,
+        weight: 1
+      }).addTo(map)
+        .bindPopup('<b>{{ object.name }}</b>')
+        .openPopup();
+      
 
       L.control.layers({
         "OpenStreetMap": osmLayer,

@@ -10,6 +10,8 @@ from seshat.apps.crisisdb.models import Human_sacrifice
 from seshat.apps.stlm.models import Settlement_population
  
 
+
+
 from django.contrib.sites.shortcuts import get_current_site
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, VariableHierarchyForm, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
 
@@ -73,6 +75,7 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 
 from django.contrib.messages.views import SuccessMessageMixin
+from urllib.parse import urlparse, urlunparse
 
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
 from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level, Polity_territory, Polity_population
@@ -3194,12 +3197,11 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
 
             if city_data:
                 context['city_data'] = city_data
+            else:
+                context['city_data'] = [{}]
         else:
-            context['city_data'] = [{
-                    'name': "unknown",
-                    'lat': 12.10,
-                    'lng': 13.10,
-                },]
+            context['city_data'] = [{}]
+
 
 
 
@@ -6168,7 +6170,55 @@ def verify_expert_bulk(request, pk, my_app_name, my_model):
     return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
 
 
+
 def bulk_verify_expert(request):
+    if request.method == "POST":
+        selected_items = request.POST.getlist("selected_items_experts")
+
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+
+        last_model_name = None
+        last_polity_id = None
+        success_count = 0
+
+        for item in selected_items:
+            try:
+                app_name, model_name, pk = item.split("|")
+                MyModel = apps.get_model(app_name, model_name)
+                my_inst = get_object_or_404(MyModel, pk=pk)
+
+                my_inst.curator.add(seshat_expert_instance)
+                my_inst.save()
+
+                # Save info for fallback redirect
+                last_model_name = model_name
+                last_polity_id = my_inst.polity.id if hasattr(my_inst, 'polity') else None
+                success_count += 1
+
+            except Exception as e:
+                messages.error(request, f"Error processing {item}: {str(e)}")
+
+        messages.success(request, f"Successfully verified {success_count} items.")
+
+    referer = request.META.get("HTTP_REFERER")
+    
+    if referer:
+        parsed_url = urlparse(referer)
+        print(parsed_url.path)
+
+        if "core/polity" in parsed_url.path and last_model_name and last_polity_id:
+            # Rebuild the URL with fragment
+            polity_url = reverse("polity-detail-main", kwargs={"pk": last_polity_id})
+            fragment = f"{last_model_name}_var"
+            return redirect(f"{polity_url}#{fragment}")
+        else:
+            return redirect(referer)
+
+    # Fallback
+    return redirect("seshat-index")
+
+def bulk_verify_expert_old_working(request):
     if request.method == "POST":
         selected_items = request.POST.getlist("selected_items_experts")  # Expecting values like "app_name|model_name|pk"
 
@@ -6190,10 +6240,15 @@ def bulk_verify_expert(request):
                 messages.error(request, f"Error processing {item}: {str(e)}")
 
         messages.success(request, f"Successfully verified {success_count} items.")
-        
+
+    referer = request.META.get("HTTP_REFERER")
+    if referer:
+        return redirect(referer)
+    else:
+        return redirect("seshat-index")  # or any other safe fallback
     #return redirect(request.META.get("HTTP_REFERER", "seshat-index"))
-    url = reverse("polity-detail-main", kwargs={'pk': my_inst.polity.id}) + f"#{model_name}_var"
-    return redirect(url)
+    #url = reverse("polity-detail-main", kwargs={'pk': my_inst.polity.id}) + f"#{model_name}_var"
+    #return redirect(url)
 
 
 def verify_expert2(request, my_inst):

@@ -134,7 +134,7 @@
         {% for my_inst in my_app_models %}
 
             {% if  my_inst.my_curators_list %}
-            <div class="pt-2 mb-2" style="background: #daf1de; border: 2px solid #235347; border-radius:10px;">
+            <div class="pt-2 mb-2" style="background: #daf1de; border: 1px solid #23534744; border-radius:10px;">
                 <div class="h6 mb-2" style="font-family: Roboto Mono; color:#163832;"> &nbsp;&nbsp;<i class="fa-regular fa-square-check"></i>  This record has already been Expert Reviewed by the following Experts:
 
             </div>
@@ -164,69 +164,86 @@
 
         {% if user|get_seshat_expert in my_inst.my_curators_list_ids %}
 
-        <div class="pt-3 mb-3" style="background: rgba(128, 0, 0, 0.096); border: 2px solid rgba(128, 0, 0, 0.226); border-radius:20px;">
+        <div class="pt-3 mb-3" style="background: rgba(128, 0, 0, 0.096); border: 1px solid rgba(128, 0, 0, 0.226); border-radius:10px;">
 
 
             <form  method="post" action="{% url 'delete_verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
                 {% csrf_token %}
-                <div class="h3 mb-1" style="font-family: Roboto Mono; color:maroon;"> &nbsp;<i class="fa-solid fa-file-contract"></i> Delete Expert Review
-                    <button 
-                    type="submit" 
-                    class="btn btn-outline-danger bg-colorful-light px-3 py-1 fw-bold" 
-                    id="saveButton" 
-                    style="display: none; vertical-align: top;"
-                >
-                <i class="fa-solid fa-signature"></i> Sign and Save
-                </button>
-                </div>
-                <div class="form-check pt-2 ps-5">
-                    <input 
-                        type="checkbox" 
-                        name="verify" 
-                        class="form-check-input checkboxinput" 
-                        style="transform: scale(1.5); margin-right: 10px;" 
-                        id="id_verify" 
-                        onclick="toggleButton()"
-                    >
-                    <label class="form-check-label ps-2" for="id_verify">I ({{user.full_name}}) would like to remove my check.</label>
-                </div>
-                <div class="mt-3">
+                <div class="row">
+                    <div class="col-md-10 pb-2">
 
-                </div>
-            </form>
-        </div>
-        {% else %}
-            {% if user|in_group:"Chief Seshat External Experts" and my_inst.my_model != 'polity' %}
+                        <div class="h5 mb-1" style="font-family: Roboto Mono; color:maroon;"> &nbsp;<i class="fa-solid fa-file-contract"></i> Delete Expert Review
+                   
+                        </div>
+                        <div class="form-check pt-2 ps-5">
+                            <input 
+                                type="checkbox" 
+                                name="verify" 
+                                class="form-check-input checkboxinput" 
+                                style="transform: scale(1.5); margin-right: 10px;" 
+                                id="id_verify" 
+                                onclick="toggleButton()"
+                            >
+                            <label class="form-check-label ps-2" for="id_verify">I ({{user.full_name}}) would like to remove my check.</label>
+                        </div>
+                    </div>
 
-            <div class="pt-3 mb-3" style="background: #daf1de; border: 2px solid #235347; border-radius:20px;">
-
-
-                <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
-                    {% csrf_token %}
-                    <div class="h3 mb-1" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                    <div class="col-md-2">
                         <button 
                         type="submit" 
-                        class="btn btn-outline-success bg-colorful-light px-3 py-1 fw-bold" 
+                        class="btn btn-outline-danger btn-lg bg-colorful-light px-3 py-1 fw-bold" 
                         id="saveButton" 
                         style="display: none; vertical-align: top;"
                     >
                     <i class="fa-solid fa-signature"></i> Sign and Save
                     </button>
                     </div>
-                    <div class="form-check pt-2 ps-5">
-                        <input 
-                            type="checkbox" 
-                            name="verify" 
-                            class="form-check-input checkboxinput" 
-                            style="transform: scale(1.5); margin-right: 10px;" 
-                            id="id_verify" 
-                            onclick="toggleButton()"
-                        >
-                        <label class="form-check-label ps-2" for="id_verify">I ({{user.full_name}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
-                    </div>
-                    <div class="mt-3">
+                </div>
 
+       
+            </form>
+        </div>
+        {% else %}
+            {% if user|in_group:"Chief Seshat External Experts" and my_inst.my_model != 'polity' %}
+
+            <div class="pt-3 mb-3" style="background: #daf1de; border: 1px solid #23534733; border-radius:10px;">
+
+
+                <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-10 pb-2">
+                            <div class="h5 mb-1 ps-2" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                   
+                            </div>
+                            <div class="form-check pt-2 ps-5">
+                                <input 
+                                    type="checkbox" 
+                                    name="verify" 
+                                    class="form-check-input checkboxinput" 
+                                    style="transform: scale(1.5); margin-right: 10px;" 
+                                    id="id_verify" 
+                                    onclick="toggleButton()"
+                                >
+                                <label class="form-check-label ps-2"  style=" vertical-align: center;"
+                                 for="id_verify">I ({{user.full_name}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
+                               
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button 
+                            type="submit" 
+                            class="btn btn-outline-success btn-lg bg-colorful-light px-3 py-1 fw-bold" 
+                            id="saveButton" 
+                            style="display: none; vertical-align: center;"
+                        >
+                        <i class="fa-solid fa-signature"></i> Sign and Save
+                        </button>
+                        </div>
                     </div>
+            
+            
                 </form>
             </div>
 
@@ -552,48 +569,115 @@
             </tbody>
           </table>
         </div>
-        <div class="pt-2 pb-4" style=" border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
-            <table class="table table-borderless align-middle">
-                <thead>    
-                    {% if my_inst.my_instance.comment %}
- 
-                  <tr>
-                    <th style="text-align: left;" class="fw-bold" scope="col">Description (Public): <sup>  <span class="badge bg-warning text-dark border border-dark">NEW</span> &nbsp;<i class="fa-solid fa-circle-info text-secondary"    type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Each description has several subdescriptions. A subdescription is a combination of some text and its corresponding citation(s)."></i></sup> 
 
-                    </th>
-                  </tr>
-                  {% endif %}
 
-                </thead>
-                <tbody>
+{% autoescape off %}
+
+{% if my_inst.my_instance.comment and my_inst.my_instance.comment.id > 1 %}
+<b>Seshat-approved Description: </b>
     
-            {% autoescape off %}
-            {% if my_inst.my_instance.comment %}
+    <span style="line-height:1.0rem;">
+        {{ my_inst.my_instance.comment }}
+    </span>
+    {% if user|in_group:"Chief Seshat Researchers" %}
+        <a class="p-0 m-0 float-end" 
+        style=" overflow: hidden;" 
+        href="{% url 'seshatcomment-update' my_inst.my_instance.comment.id %}">
+            <span class="badge text-dark fs-6 " style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="tooltip" title="Edit Description" >
+                <i class="fa-solid fa-pen-to-square"></i>
+            </span>
+        </a>
+    {% endif %}
+{% endif %}
+{% if my_inst.my_instance.comment and my_inst.my_instance.comment.id > 1  %}
+    {% if my_inst.my_instance.description or my_inst.my_instance.llm_description %}
+    <hr>
+    {% endif %}
+{% endif %}
 
-            <tr>
-                <td style="text-align: left;">
-                    {{my_inst.my_instance.comment}}
 
-                </td>
-            </tr>
-            {% endif %}
+{% if my_inst.my_instance.description and my_inst.my_instance.llm_description %}
+<div class="row">
+    <div class="col-md-12" >
+    <span style="line-height:1.0rem;">
+        {{ my_inst.my_instance.description|make_references_look_nicer }}
 
-            {% endautoescape %}
-            {% if my_inst.my_instance.description %}
-            {% autoescape off %}
-            <tr>
-                <td class="text-secondary">
-                  <b> Description (Public): </b>
-                  <small > {{my_inst.my_description|make_references_look_nicer}}</small>
-                </td>
-            </tr>
-            {% endautoescape %}
+    </span>
+    <br>
+    <span style="line-height:1.0rem;">
+        {{ my_inst.my_instance.llm_description }}
+    </span>
+</div>
+</div>
 
-            {% endif %}
-        </tbody>
-        </table>
-    
+{% elif my_inst.my_instance.description  %}
+
+<div class="row">
+    <div class="col-md-12" >
+        <b>Seshat-approved Description: </b>
+
+    <span style="line-height:1.0rem;">
+        {{ my_inst.my_instance.description|make_references_look_nicer }}
+    </span>
+
+</div>
+</div>
+{% elif my_inst.my_instance.llm_description  %}
+
+<div class="row">
+    <div class="col-md-7" >
+        <span style="line-height:1.0rem;">
+            <b>LLM Description: </b>
+
+            {{ my_inst.my_instance.llm_description }}
+
+        </span>
+        <br>
+        <small class="text-secondary pt-2" style="line-height:1.0rem;">
+            {{ my_inst.my_instance.get_instability_refs }}
+        </small>
+    </div>
+    <div class="col-md-5">
+        <b>Rationale:</b>
+        <small style="line-height:1.0rem;">
+            {{ my_inst.my_instance.sorokin_rationale }}
+        </small> 
+    </div>
+    <div class="d-flex justify-content-center pt-2">
+        <button class="btn btn-sm btn-outline-primary mb-1 toggle-cot-btn"
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#cotCollapse{{ my_inst.my_instance.id }}" 
+                aria-expanded="false" 
+                aria-controls="cotCollapse{{ my_inst.my_instance.id }}">
+          Show Chain of Thought
+        </button>
+      </div>
+      
+<div class="collapse mt-2" id="cotCollapse{{ my_inst.my_instance.id }}">
+    <div class="row">
+        <div class="col-md-7 pt-2" style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
+            <small>
+                <b>General Chain of Thought: </b>
+                {{ my_inst.my_instance.general_cot }}
+            </small>
         </div>
+        <div class="col-md-5 pt-2" style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
+            <small>
+                <b>Classification Chain of Thought: </b>
+                {{ my_inst.my_instance.classification_cot }}
+            </small>
+        </div>
+    </div>
+</div>
+</div>
+
+    
+{% else %}
+{% endif %}
+
+{% endautoescape %}
+
         {% endif %}
 
         {% endfor %}
@@ -632,7 +716,7 @@
 
 
       {% endif %}
-      <h6 class="roboto-regular pt-1">
+      <h6 class="roboto-regular pt-5">
         {% if object.inner_private_comments_related.all %}
         
         {% else %}
