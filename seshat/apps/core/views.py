@@ -3204,6 +3204,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
 
 
 
+
         return context
 
 
