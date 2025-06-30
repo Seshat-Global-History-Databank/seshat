@@ -1,0 +1,1365 @@
+{% extends "core/seshat-base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<style>
+
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container .select2-selection--multiple {
+        cursor: pointer;
+        display: block;
+        border: 1px solid #ccc;
+        min-height: 24px;
+        user-select: none;
+        -webkit-user-select: none;
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        display: none;
+
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(6, 51, 6);
+            margin-top:3px;
+            padding-left:0px;
+            font-size: 14px;
+            vertical-align: top;
+    }
+
+    .select2-results {
+        box-shadow: -1px 8px 8px rgba(78, 28, 23, 0.5),  1px 8px 8px rgba(78, 28, 23, 0.5); 
+    }
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+
+    }
+
+    th {
+        border-left: 1px solid #78282322 !important;
+    }
+
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        /* background: white; */
+        border: none;
+        outline: 0;
+        margin-left: 1px;
+        cursor: text;
+        box-shadow: none;
+        padding: 0px;
+        margin-top: 0px;
+    }
+
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 30px;
+    }
+    .form-select{
+        height: 30px;
+        padding-top:1px;
+        padding-bottom:1px;
+        padding-left:5px;
+        padding-right:1px;
+        
+
+    }
+
+    .form-control{
+        height: 30px;
+        padding-top:1px;
+        padding-bottom:1px;
+        padding-left:5px;
+        padding-right:1px;
+        
+
+    }
+    /* Style the dropdown */
+    .select2-container .select2-selection--single {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1px;
+      height:30px !important;
+    }
+
+    .select2-container .select2-results__option:hover {
+        background-color: #782823;
+        color: beige;
+
+      }
+
+
+
+      .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #782823;
+        color: beige;
+        width:100%;
+
+      }
+
+          /* Style the dropdown arrow */
+    .select2-container .select2-selection__arrow {
+        height: 30px;
+        width:100%;
+  
+      }
+  
+    .form-select{
+        height: 30px;
+        padding-top:1px;
+        padding-bottom:1px;
+        padding-left:5px;
+        padding-right:1px;
+        
+        background-position-x:calc(100% - 3px);
+    }
+
+    .highlighted-value-title-light-disabled {
+        display: inline-block; 
+        border: 0px solid rgba(78, 28, 23, 0.25);
+        padding: 1px; 
+        padding-right: 5px;
+        padding-left: 5px;
+        border-radius: 5px;
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.116),rgb(242, 199, 119, 0.116),rgb(151, 230, 151, 0.116));
+    }
+
+    .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+      }
+
+
+    .bg-absent-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: gray;
+        border: 0px solid lightgray;   
+       }
+
+       .bg-secondary-light {
+        color: crimson;
+        border: 0px solid rgba(220, 20, 60, 0.18);
+        background: rgba(220, 20, 60, 0.16);
+       }
+
+
+    
+       .bg-info-light {
+        color: dodgerblue;
+        border: 0px solid rgba(30, 143, 255, 0.178);   
+        background: rgba(30, 143, 255, 0.16);   
+
+       }
+    
+       .bg-violet-light {
+        color: #8a4fff;
+        border: 0px solid rgba(138, 79, 255, 0.2);
+        background: rgba(138, 79, 255, 0.12);
+      }
+       .bg-danger-light {
+        background: lightpink;
+    
+       }
+    
+        .my_small_link:hover {
+          color:navajowhite;
+        }
+
+        .bg-indianred-light {
+            color: #cd5c5c;
+            border: 0px solid rgba(139, 69, 19, 0.2);
+            background: rgba(139, 69, 19, 0.12);
+          }
+          
+        .bg-success-light {
+            color: teal;
+            border: 0px solid rgba(0, 128, 128, 0.18);   
+            background: rgba(0, 128, 128, 0.18);   
+    
+            }
+
+        .bg-orange-light {
+            color: #FF8C00;
+            border: 0px solid rgba(255, 140, 0, 0.2);
+            background: rgba(255, 140, 0, 0.12);
+            }
+
+       .bg-warning-light {
+        background: #e8c87680; /* rgb(134, 134, 134);*/
+        color: darkorange;
+        border: 0px solid goldenrod;   
+       }
+    
+       .bg-uncoded-light {
+        background: rgba(55, 178, 227, 0.261); /* rgb(134, 134, 134);*/
+        color: darkred;
+        border: 0px solid rosybrown;
+       }
+       
+       .bg-trans-light {
+        background: cadetblue;
+    
+       }
+       
+       .custom-right-align {
+        margin-left: auto !important; /* Pushes the column to the right */
+        text-align: right !important; /* Aligns inner content to the right */
+    }
+    
+       .bg-unknown-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: hotpink;
+        border: 0px solid hotpink;
+        }
+
+        .form-select {
+            background-position-x:calc(100% - 2px);
+        }
+
+
+        .bg-colorful-light {
+            background-image: linear-gradient(to right, rgb(246, 127, 127, 0.46),rgb(242, 199, 119, 0.46),rgb(151, 230, 151, 0.46));
+            border-radius: 10px;
+            color:#782823;
+            border: 1px solid rgba(0, 128, 128, 0.33);
+          }
+
+        
+</style>
+<div class="container pt-2">
+
+  <div>
+    <span class="mt-1 h2">Instability Events Analytics</span>
+
+
+    <a href="{% url 'instability_events_all' %}" 
+    class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+    data-bs-toggle="tooltip" 
+    data-bs-placement="top" 
+    title="Back to Instability Events Page">
+    <i class="fa-solid fa-circle-left"></i> &nbsp;
+    Back to Instability Events Page
+    </a>
+  </div>
+
+
+<p class="text-muted mb-2">
+    This dashboard provides a visual overview of the <strong>Instability Events</strong> dataset in the Seshat project. Use the filters above to explore patterns in event intensity, extent, type classifications, and expert contributions over time. The charts below summarize key variables such as the distribution of events by intensity and extent, the number of events across centuries, and the involvement of researchers and experts in data curation. This tool is designed to support quality control, data auditing, and research insights.
+  </p>
+
+  <div class="text-secondary mb-2 mt-2">
+    {% if unreliable_polities %}
+      <span>
+          Unreliable Polities Removed From the List ({{ unreliable_polities|length }}):
+      </span>
+
+      <span>
+          <span>
+          {% for polity in unreliable_polities %}
+              <span class="px-2 rounded bg-secondary-light me-2">{{ polity.long_name }} 
+              </span>
+          {% endfor %}
+          </span>
+      </span>
+
+  {% endif %}
+  </div>
+  
+<div class="border border-secondary rounded px-3 pt-2 mb-2" style="background: #fffdf2;">
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-6">
+        <label for="polity" class="text-secondary">Polity <small class="text-secondary"> (total: {{polities|length}})</small></label>
+        <br>
+        <select name="polity" id="polity" class="form-select js-example-basic-single "
+                onchange="this.form.submit()">
+          <option value="">All</option>
+          {% for p in polities %}
+            <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %} >
+                {{ p.long_name }} ({{ p.new_name }}) &nbsp; &nbsp; [{{ p.formatted_years_text }}]
+            </option>
+          {% endfor %}
+        </select>
+      
+        {% comment %} preserve other filters with hidden fields {% endcomment %}
+        {% for key, value in request.GET.items %}
+          {% if key != 'polity' %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+          {% endif %}
+        {% endfor %}
+    </div>
+  <div class="col-md-3">
+    <label class="text-secondary">Extent</label>
+    <select name="inst_extent" class="form-select" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for val, label in INST_EXTENT_CHOICES %}
+        <option value="{{ val }}" {% if request.GET.inst_extent == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="text-secondary">Intensity</label>
+    <select name="inst_intensity" class="form-select" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for val, label in INST_INTENSITY_CHOICES %}
+        <option value="{{ val }}" {% if request.GET.inst_intensity == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-1">
+    <label for="selected_batch" class="text-secondary">Batch</label>
+    <select name="selected_batch" id="selected_batch" class="form-select" onchange="this.form.submit()">
+      <option value="">All</option>
+      <option value="Batch 1" {% if request.GET.selected_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
+      <option value="Batch 2" {% if request.GET.selected_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
+      <option value="Batch 3" {% if request.GET.selected_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <label class="text-secondary">Data Point</label>
+    <select name="real_event_check" class="form-select" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for val, label in REAL_EVENT_CHECK_CHOICES %}
+        <option value="{{ val }}" {% if request.GET.real_event_check == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label for="ra_check_select" class="text-secondary d-block">Researcher Checks <small class="fw-light"> (Multiple selection Possible)</small></label>
+    <select id="ra_check_select" name="ra_check" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
+        {% for check in check_choices %}
+        <option value="{{ check.id }}"
+          {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
+          {{ check.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-5">
+    <label for="inst_type_select" class="text-secondary d-block">Event Types <small class="fw-light"> (Multiple selection Possible)</small></label>
+    <select id="inst_type_select" name="inst_type" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
+      {% for type in instability_types %}
+        <option value="{{ type.id }}"
+          {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
+          {{ type.name }}
+        </option>
+      {% endfor %}
+    </select>
+
+  </div>
+    <!-- Comment existence filter -->
+<div class="col-md-3">
+  <label class="text-secondary">Verified Description</label>
+  <select name="has_comment" class="form-select" onchange="this.form.submit()">
+    <option value="">All</option>
+    <option value="1" {% if request.GET.has_comment == '1' %}selected{% endif %}>Has Description</option>
+    <option value="0" {% if request.GET.has_comment == '0' %}selected{% endif %}>No verified Descriptions</option>
+  </select>
+</div>
+
+<!-- Private comment filter -->
+<div class="col-md-3">
+  <label class="text-secondary">Private Comment</label>
+  <select name="has_private_comment" class="form-select" onchange="this.form.submit()">
+    <option value="">All</option>
+    <option value="1" {% if request.GET.has_private_comment == '1' %}selected{% endif %}>Has Private Comment</option>
+    <option value="0" {% if request.GET.has_private_comment == '0' %}selected{% endif %}>No Private Comments</option>
+  </select>
+</div>
+
+  <div class="col-md-3">
+    <label class="text-secondary" for="researcher">Researcher</label>
+    <select name="researcher" id="researcher" class="form-select" onchange="this.form.submit()">
+      <option value="">All Researchers</option>
+      {% for researcher in researcher_choices %}
+        <option value="{{ researcher.id }}" {% if selected_researcher_id == researcher.id|stringformat:"s" %}selected{% endif %}>
+          {{ researcher.user.first_name }} {{ researcher.user.last_name }} ({{ researcher.role }})
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="text-secondary" for="expert">Expert</label>
+    <select name="expert" id="expert" class="form-select" onchange="this.form.submit()">
+      <option value="">All Experts</option>
+      {% for expert in expert_choices %}
+        <option value="{{ expert.id }}" {% if selected_expert_id == expert.id|stringformat:"s" %}selected{% endif %}>
+          {{ expert.user.first_name }} {{ researcher.user.last_name }} ({{ expert.role }})
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+
+
+  
+  <div class="col--md-12 align-self-end pb-0 mb-0">
+    {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.has_comment or request.GET.has_private_comment or request.GET.researcher or request.GET.expert or request.GET.real_event_check %}
+
+    <div class="py-1 px-0  d-inline-block" >
+      <strong>Filters applied:</strong>
+      <ul class="list-inline mb-1">
+        {% if request.GET.year_from_min %}
+          <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
+              <span class="fw-light">Year ≥  </span>  <span class="fw-bold"> {{ request.GET.year_from_min }}</span>
+
+            <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+        {% if request.GET.year_to_max %}
+          <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
+              <span class="fw-light">Year ≤ </span>  <span class="fw-bold"> {{ request.GET.year_to_max }}</span>
+
+            <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+        {% for type in instability_types %}
+        {% if type.id|stringformat:"s" in selected_inst_type_ids %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
+          <small class="fw-light">Type:</small>  <span class="fw-bold"> {{ type.name }}</span>
+            <a href="?{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if request.GET.inst_intensity %}
+      {% for val, label in INST_INTENSITY_CHOICES %}
+        {% if val == request.GET.inst_intensity %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-danger-light text-dark">
+              <small class="fw-light">Intensity:</small>  <span class="fw-bold"> {{ label }}</span>
+            <a href="?{% query_transform request inst_intensity=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    
+    {% if request.GET.inst_extent %}
+    {% for val, label in INST_EXTENT_CHOICES %}
+      {% if val == request.GET.inst_extent %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
+          <small class="fw-light">Extent:</small>  <span class="fw-bold"> {{ label }}</span>
+          <a href="?{% query_transform request inst_extent=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  
+
+  {% if request.GET.researcher and selected_researcher %}
+  <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
+    <small class="fw-light">Researcher:</small>
+    <span class="fw-bold">
+      {{ selected_researcher.user.first_name }} {{ selected_researcher.user.last_name }}
+    </span>
+    <a href="?{% query_transform request researcher=None %}" class="text-dark ms-1">
+      &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i>
+    </a>
+  </li>
+{% endif %}
+
+{% if request.GET.expert and selected_expert %}
+<li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
+  <small class="fw-light">Expert:</small>
+  <span class="fw-bold">
+    {{ selected_expert.user.first_name }} {{ selected_expert.user.last_name }}
+  </span>
+  <a href="?{% query_transform request expert=None %}" class="text-dark ms-1">
+    &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i>
+  </a>
+</li>
+{% endif %}
+
+{% if request.GET.has_comment %}
+
+  <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
+      <small class="fw-light">Seshat Verified Description:</small>  <span class="fw-bold"> 
+        {% if request.GET.has_comment == '1' %}
+        Available
+        {% else %}
+        Not Available
+        {% endif %}
+
+
+      </span>
+      <a href="?{% query_transform request has_private_comment=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+  </li>
+
+{% endif %}
+
+{% if request.GET.has_private_comment %}
+
+  <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
+      <small class="fw-light">Private Comment:</small>  <span class="fw-bold"> 
+        {% if request.GET.has_private_comment == '1' %}
+        Available
+        {% else %}
+        Not Available
+        {% endif %}
+
+
+      </span>
+      <a href="?{% query_transform request has_private_comment=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+  </li>
+
+{% endif %}
+  
+  {% for check in check_choices %}
+  {% if check.id|stringformat:"s" in selected_ra_check_ids %}
+    <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
+      <small class="fw-light">RA Check:</small>  <span class="fw-bold"> {{ check.name }}</span>
+      <a href="?{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+    </li>
+  {% endif %}
+{% endfor %}
+
+
+        <!-- {% if request.GET.created_before %}
+          <li class="list-inline-item px-2 mb-1 rounded  bg-warning text-dark">
+            Created Before {{ request.GET.created_before }}
+            <a href="?{% query_transform request created_before=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %} -->
+        {% if request.GET.selected_batch %}
+          <li class="list-inline-item px-2 mb-1 rounded  bg-warning-light text-dark">
+              {{ request.GET.selected_batch }}
+              <a href="?{% query_transform request selected_batch=None %}" class="text-dark ms-1" style="text-decoration: none;">
+              &nbsp;<i class="fa-solid fa-square-xmark"></i>
+              </a>
+          </li>
+      {% endif %}
+
+      {% if request.GET.real_event_check %}
+      <li class="list-inline-item px-2 mb-1 rounded  bg-success-light text-dark">
+
+        <small class="fw-light">Data Point:</small>  <span class="fw-bold"> {{ request.GET.real_event_check }}</span>
+          
+          <a href="?{% query_transform request real_event_check=None %}" class="text-dark ms-1" style="text-decoration: none;">
+          &nbsp;<i class="fa-solid fa-square-xmark"></i>
+          </a>
+      </li>
+  {% endif %}
+
+        {% if request.GET.polity %}
+        {% with request.GET.polity as selected_polity_id %}
+          {% for p in polities %}
+            {% if p.id|stringformat:"s" == selected_polity_id %}
+            <li class="list-inline-item px-2 mb-1 rounded  bg-success-light text-dark">
+              Polity: <b> {{ p.long_name }} </b>({{ p.new_name }})
+                <a href="?{% query_transform request polity=None %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a></a>
+            </li>
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+      {% endif %}
+
+      
+      </ul>
+
+    </div>
+    <span>  <a href="?" class="btn btn-sm btn-outline-danger ms-2 px-2" style="padding-top:0px; padding-bottom:0px !important;">Clear All Filters</a></span>
+
+    {% endif %}
+  </div>
+
+  
+</form>
+
+</div>
+
+
+<!-- Charts -->
+ <div class="pt-3 pb-0 mb-0">
+    <h5>  <span class="fw-light"> Total Selected Events: </span> {{events|length}} / {{all_events_count}} 
+    </h5>
+
+</div>
+ <div class="row">
+    <div class="col-md-8 p-3 border border-1">
+        <canvas id="centuryChart" height="5" width="10"></canvas>
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <canvas id="extentChart" height="10" width="10"></canvas>
+
+          </div>
+          <div class="col-md-6">
+            <canvas id="intensityChart" height="10" width="10"></canvas>
+
+          </div>
+        </div>
+      </div>
+    <div class="col-md-4 p-3 border border-1">
+
+      <canvas id="researcherChart" height="3" width="10"></canvas>
+      <hr>
+              <canvas id="expertChart" height="5" width="8"></canvas>
+    </div>
+
+    <div class="col-md-5 p-3 border border-1">
+        <canvas id="checkChoiceChart" height="9" width="10"></canvas>
+      </div>
+      <div class="col-md-7 p-3 border border-1">
+        <canvas id="instTypeChart" height="7" width="10"></canvas>
+      </div>
+
+      
+
+
+        <div class="col-md-3 p-3 border border-1">
+          <canvas id="commentChart"  height="5" width="10"></canvas>
+        </div>
+          <div class="col-md-3 p-3 border border-1">
+
+          <canvas id="privateCommentChart"  height="5" width="10"></canvas>
+        </div>
+        <div class="col-md-3 p-3 border border-1">
+          <canvas id="batchChart" height="5" width="10"></canvas>
+
+        </div>
+        <div class="col-md-3 border border-1">
+          <canvas id="realCheckChart" height="5" width="10"></canvas>
+        </div>
+      
+      
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    $(document).ready(function() {
+        // Initialize Select2 with an empty dataset
+        $('.js-example-basic-single').select2();
+    });  
+
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+          allowClear: true,
+          width: '100%'
+        });
+      });
+    const extentData = {{ extent_data|safe }}.sort((a, b) => b.count - a.count);
+    extentData.sort((a, b) => {
+        const aVal = parseInt(a.inst_extent) || 0;
+        const bVal = parseInt(b.inst_extent) || 0;
+        return aVal - bVal;
+      });
+    const intensityData = {{ intensity_data|safe }}.sort((a, b) => b.count - a.count);
+
+    intensityData.sort((a, b) => {
+        const aVal = parseInt(a.inst_intensity) || 0;
+        const bVal = parseInt(b.inst_intensity) || 0;
+        return aVal - bVal;
+      });
+      
+
+    const checkChoiceData = {{ check_choice_data|safe }}.sort((a, b) => b.count - a.count);
+    const instTypeData = {{ inst_type_data|safe }}.sort((a, b) => b.count - a.count);
+    const researcherData = {{ researcher_chart_data|safe }};
+    const expertData = {{ expert_chart_data|safe }};
+    const centuryData = {{ century_chart_data|safe }};
+
+    const batchData = {{ batch_data|safe }};
+
+    const realCheckData = {{ real_check_data|safe }};
+
+    new Chart(document.getElementById('realCheckChart'), {
+      type: 'pie',
+      data: {
+        labels: realCheckData.map(r => r.label),
+        datasets: [{
+          label: ' Count',
+          data: realCheckData.map(r => r.count),
+          backgroundColor: [
+          '#0984e3',  // blue
+          '#fdcb6e',  // soft orange
+          '#d63031',  // red
+          '#e84393',  // bright pink
+          '#00b894',  // green          ]
+          ]
+        }]      
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'DataPoint Distribution',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
+          },
+          tooltip: {
+            mode: 'nearest',
+            intersect: true
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('batchChart'), {
+      type: 'pie',
+      data: {
+        labels: batchData.map(b => b.label),
+        datasets: [{
+          label: ' Count',
+          data: batchData.map(b => b.count),
+          backgroundColor: [
+            '#ff7675', '#74b9ff', '#55efc4', 
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Distribution of Events per Batch',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
+          },
+          tooltip: {
+            mode: 'nearest',
+            intersect: true
+          }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('commentChart'), {
+        type: 'pie',
+        data: {
+          labels: {{ comment_chart_data|safe }}.map(e => e.label),
+          datasets: [{
+            data: {{ comment_chart_data|safe }}.map(e => e.count),
+            backgroundColor: ['#1E90FF', '#ccc']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+                display: true,
+                text: 'Verified Seshat Descriptions',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 10,
+                  bottom: 30
+                }
+              },
+              legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 20,
+                  padding: 15,
+                  font: {
+                    size: 14
+                  }
+                },
+                onClick: () => {}  // 👈 disables the legend click behavior
+
+              },
+          }
+        }
+      });
+    
+      new Chart(document.getElementById('privateCommentChart'), {
+        type: 'pie',
+        data: {
+          labels: {{ private_comment_chart_data|safe }}.map(e => e.label),
+          datasets: [{
+            data: {{ private_comment_chart_data|safe }}.map(e => e.count),
+            backgroundColor: ['#DC143C', '#ccc']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+                display: true,
+                text: 'Private Comments',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 10,
+                  bottom: 30
+                }
+              },
+              legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 20,
+                  padding: 15,
+                  font: {
+                    size: 14
+                  }
+                },
+                onClick: () => {}  // 👈 disables the legend click behavior
+
+              },
+          }
+        }
+      });
+
+    new Chart(document.getElementById('centuryChart'), {
+        type: 'line',
+        data: {
+        labels: centuryData.map(c => c.century),
+        datasets: [{
+            label: 'Count',
+            data: centuryData.map(c => c.count),
+            backgroundColor: 'teal'
+        }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+            title: {
+            display: true,
+            text: 'Events by Century',
+            font: {
+                size: 18,
+                weight: 'bold'
+              },
+              padding: {
+                top: 10,
+                bottom: 30
+              }
+            },
+            legend: {
+            display: false
+            }
+        },
+        scales: {
+            y: {
+              ticks: {
+                // This ensures only integer labels appear
+                callback: function(value) {
+                  if (Number.isInteger(value)) {
+                    return value;
+                  }
+                  return null;
+                },
+              },
+              beginAtZero: true,            
+              title: {
+                display: true,
+                text: 'Event Count'
+            }
+            },
+            x: {
+                grid: {
+                    display: false  // 👈 removes vertical grid lines
+                  },
+                title: {
+                    display: true,
+                    text: 'Century'
+                }
+            }
+        }
+        }
+    });
+
+
+
+  new Chart(document.getElementById('extentChart'), {
+    type: 'bar',
+    data: {
+      labels: extentData.map(e => e.inst_extent || "None"),
+      datasets: [{
+        label: 'Count',
+        data: extentData.map(e => e.count),
+        backgroundColor: [
+        '#fab1a0',  // peach
+        '#81ecec',  // cyan
+        '#fd79a8',  // pink
+        '#e17055',  // orange
+        '#00cec9',  // teal
+        '#6c5ce7',  // violet
+        '#fdcb6e',  // soft orange
+        '#d63031',  // red
+        '#0984e3',  // blue
+        '#e84393',  // bright pink
+        '#00b894',  // green
+        '#2d3436',  // dark grey
+        '#636e72',  // medium grey
+        '#b2bec3',  // light grey
+        '#ffeaa7'   // pale yellow (reused for balance)
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Distribution of Instability Extent',
+          font: {
+            size: 18,
+            weight: 'bold'
+          },
+          padding: {
+            top: 10,
+            bottom: 30
+          }
+        },
+        legend: {
+            display: false
+            },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              return ` Extent ${label}: ${value}`;
+            }
+          }
+        },
+      },
+      scales: {
+        y: {
+          ticks: {
+            // This ensures only integer labels appear
+            callback: function(value) {
+              if (Number.isInteger(value)) {
+                return value;
+              }
+              return null;
+            },
+          },
+          beginAtZero: true,
+        title: {
+            display: true,
+            text: 'Event Count'
+        }
+        },
+        x: {
+            grid: {
+                display: false  // 👈 removes vertical grid lines
+              },
+            title: {
+                display: true,
+                text: 'Extent'
+            }
+        }
+    }
+    }
+  });
+
+  new Chart(document.getElementById('intensityChart'), {
+    type: 'bar',
+    data: {
+      labels: intensityData.map(e => e.inst_intensity || "None"),
+      datasets: [{
+        label: 'Intensity',
+        data: intensityData.map(e => e.count),
+        backgroundColor: [
+        '#6c5ce7',  // violet
+        '#fdcb6e',  // soft orange
+        '#d63031',  // red
+        '#0984e3',  // blue
+        '#e84393',  // bright pink
+        '#00b894',  // green
+        '#2d3436',  // dark grey
+        '#636e72',  // medium grey
+        '#b2bec3',  // light grey
+        '#55efc4',  // mint green
+        '#ffeaa7',  // pale yellow
+        '#a29bfe',  // lavender
+        '#ffeaa7',   // pale yellow (reused for balance)
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Distribution of Instability Intensity',
+          font: {
+            size: 18,
+            weight: 'bold'
+          },
+          padding: {
+            top: 10,
+            bottom: 30
+          }
+        },
+        legend: {
+            display: false
+            },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              return ` Intensity ${label}: ${value}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          ticks: {
+            // This ensures only integer labels appear
+            callback: function(value) {
+              if (Number.isInteger(value)) {
+                return value;
+              }
+              return null;
+            },
+          },
+          beginAtZero: true,
+        title: {
+            display: true,
+            text: 'Event Count'
+        }
+        },
+        x: {
+            grid: {
+                display: false  // 👈 removes vertical grid lines
+              },
+            title: {
+                display: true,
+                text: 'Intensity'
+            }
+        }
+    }
+    }
+  });
+
+     // Chart: Check Choices (RA Checks)
+     new Chart(document.getElementById('instTypeChart'), {
+      type: 'line',
+      data: {
+        labels: instTypeData.map(e => e.label),
+        datasets: [{
+          label: 'Event Types',
+          data: instTypeData.map(e => e.count),
+          backgroundColor:  [
+          '#74b9ff',  // light blue
+          '#ff7675',  // red-pink
+          '#55efc4',  // mint green
+          '#ffeaa7',  // pale yellow
+          '#a29bfe',  // lavender
+          '#fab1a0',  // peach
+          '#81ecec',  // cyan
+          '#fd79a8',  // pink
+          '#e17055',  // orange
+          '#00cec9',  // teal
+          '#6c5ce7',  // violet
+          '#fdcb6e',  // soft orange
+          '#d63031',  // red
+          '#0984e3',  // blue
+          '#e84393',  // bright pink
+          '#00b894',  // green
+          '#2d3436',  // dark grey
+          '#636e72',  // medium grey
+          '#b2bec3',  // light grey
+          '#ffeaa7'   // pale yellow (reused for balance)
+        ]
+  
+        }]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Distribution of Event Types',
+              font: {
+                size: 18,
+                weight: 'bold'
+              },
+              padding: {
+                top: 10,
+                bottom: 30
+              }
+            },
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  return ` Count: ${value}`;
+                }
+              }
+            }
+          },
+          scales: {
+              x: {
+                 ticks: {
+                  font: {
+                      size: 14,         // 👈 Increase font size
+                      weight: 'bold'    // 👈 Make labels bold
+                    },
+                  autoSkip: false,
+                  maxRotation: 90,   // 👈 set max rotation
+                  minRotation: 45,   // 👈 set min rotation (forces vertical)
+                  },
+                grid: {
+                  display: false,
+                  // 👈 removes vertical grid lines
+                }
+              },
+              y: {
+                ticks: {
+                  // This ensures only integer labels appear
+                  callback: function(value) {
+                    if (Number.isInteger(value)) {
+                      return value;
+                    }
+                    return null;
+                  },
+                },
+                beginAtZero: true,
+                title: {
+                      display: true,
+                      text: 'Count',
+                  },
+                grid: {
+                  display: true  // 👈 removes horizontal grid lines
+                }
+              }
+            }
+        },
+  
+    });
+  
+
+   // Chart: Check Choices (RA Checks)
+   new Chart(document.getElementById('checkChoiceChart'), {
+    type: 'bar',
+    data: {
+      labels: checkChoiceData.map(e => e.label),
+      datasets: [{
+        label: 'Researcher Checks',
+        data: checkChoiceData.map(e => e.count),
+        backgroundColor: checkChoiceData.map(e => e.color)  // 👈 assign per-bar color
+
+      }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Distribution of Researcher Checks',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                return ` Count: ${value}`;
+              }
+            }
+          }
+        },
+        scales: {
+            x: {
+               ticks: {
+                font: {
+                    size: 14,         // 👈 Increase font size
+                    weight: 'bold'    // 👈 Make labels bold
+                  },
+                autoSkip: false,
+                maxRotation: 90,   // 👈 set max rotation
+                minRotation: 45,   // 👈 set min rotation (forces vertical)
+                },
+              grid: {
+                display: false,
+                // 👈 removes vertical grid lines
+              }
+            },
+            y: {
+              ticks: {
+                // This ensures only integer labels appear
+                callback: function(value) {
+                  if (Number.isInteger(value)) {
+                    return value;
+                  }
+                  return null;
+                },
+              },
+              beginAtZero: true,
+              title: {
+                    display: true,
+                    text: 'Count',
+                },
+              grid: {
+                display: true  // 👈 removes horizontal grid lines
+              }
+            }
+          }
+      },
+
+  });
+
+
+  new Chart(document.getElementById('researcherChart'), {
+    type: 'doughnut',
+    data: {
+      labels: researcherData.map(r => r.label),
+      datasets: [{
+        label: ' Count',
+        data: researcherData.map(r => r.count),
+      }]
+    },
+    options: {
+      indexAxis: 'x',
+      responsive: true,
+      plugins: {
+        title: {
+            display: true,
+            text: 'Seshat Researchers',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 20,
+              padding: 15,
+              font: {
+                size: 14,
+                weight: 'bold',
+              }
+            },
+            onClick: () => {}  // 👈 disables the legend click behavior
+
+          },
+        tooltip: {
+          mode: 'nearest',
+          intersect: true
+      }
+      },
+
+    },
+
+  });
+
+  new Chart(document.getElementById('expertChart'), {
+    type: 'doughnut',
+    data: {
+      labels: expertData.map(e => e.label),
+      datasets: [{
+        label: ' Count',
+        data: expertData.map(e => e.count),
+      }]
+    },
+    options: {
+      indexAxis: 'x',
+      responsive: true,
+      plugins: {
+        title: {
+            display: true,
+            text: 'Seshat Experts',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 20,
+              padding: 15,
+              font: {
+                size: 14,
+                weight: 'bold',
+              }
+            },
+            onClick: () => {}  // 👈 disables the legend click behavior
+
+          },
+          tooltip: {
+            mode: 'nearest',
+            intersect: true
+        }
+      },
+
+    }
+  });
+</script>
+
+    
+{% endblock %}

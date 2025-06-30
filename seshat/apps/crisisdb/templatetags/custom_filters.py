@@ -506,3 +506,9 @@ def query_without(request, key, value):
         values.remove(value)
         query_params.setlist(key, values)
     return '?' + query_params.urlencode()
+
+
+@register.filter
+def is_not_test_user(user):
+    name = f"{user.first_name} {user.last_name}".lower()
+    return "test expert" not in name

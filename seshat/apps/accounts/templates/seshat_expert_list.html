@@ -18,82 +18,192 @@
         padding-bottom: 5px;
     }
 
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 1px;
+      }
+    
+      .expert-card {
+        margin: 2px;
+        padding:1px;
+        min-width: 220px;
+        max-width: 320px;
+        border-radius:10px;
+
+      }
+
+      .expert-card2 {
+        margin: 2px;
+        padding:1px;
+        min-width: 320px;
+        border-radius:10px;
+      }
+
+      .card-body {
+        padding:5px;
+        margin:2px;
+
+      }
+
 </style>
 <div class="container">
-    <h2 class="pt-2">Seshat Research Network (Researchers and Experts)</h2>
+    <h2 class="pt-2 fw-normal"> <i class="fa-solid fa-circle-nodes"></i> Seshat Research Network </h2>
 
-    <table class="table table-hover table-borderless">
-        <thead>
-            <tr class="border-bottom" style="background:#b3cde0">
-                <th>#</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th style="text-align: right">Date Joined</th>
-                <th style="text-align: right">Last Login</th>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="h3 my-2" style="color: #138086"> &nbsp;<i class="fa-solid fa-user-tie fa-lg" ></i>  &nbsp;  Chief Seshat Researchers 
+            </div>
+            <div class="card-container">
+             
 
-            </tr>
-        </thead>
-        <tbody>
-            {% autoescape off %}
-            {% for expert in experts %}
-                <tr class="
-                {% if expert.user|is_user_real %}
-                text-dark
-                {% else %}
-                text-secondary
-                {% endif %}
-                border-bottom
-                ">
-                    <td>{{ forloop.counter }}</td>
-
-                    <td class="fw-bold">
-                        {% if expert.user.first_name and expert.user.last_name %}
-                            {{ expert.user.first_name }} {{ expert.user.last_name }}
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td style="font-family: Roboto Mono;">
+                {% for expert in experts %}
+                {% if expert.user.email == "benam.mjd@gmail.com" %}
+                <div class="col">
+                    <div class="card expert-card shadow-sm " style="border: 1px solid #13808624; border-top: 10px solid #13808644;
+        ">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-0" >
+                          <h5 class="card-title mb-0" style="color: #138086">
+                              Majid Benam
+                          </h5>
+        
+                        </div>
+                        <p class="mb-0 text-muted">
+                            <span>Seshat Admin</span> 
+                          </p>
+                        
+            
+                        <p class="mb-0" style="font-family: 'Roboto Mono'; font-size: 0.9rem;">
+                            {{ expert.user.email }}
+                        </p>
+        
+                        <p class="mb-0 text-muted">
+        
                         {% if expert.user|is_user_real and expert.iser_id != 150 %}
-                        {{ expert.user.email }}
-                        {% else %}
-                        -
+                        <small><span>Date Joined:</span> {{ expert.user.date_joined|date:"Y-m-d" }}</small><br>
                         {% endif %}
-                        </td>
-                    <td>
-                        {% for group in expert.user.related_groups %}
-                        {% if group.name == "Seshat Users First Round" %}
-                        <i class="fa-solid fa-user fa-lg" style="color: silver"></i>
-                        {% elif group.name == "Chief Seshat Researchers" %}
-                        <i class="fa-solid fa-user-tie fa-lg" style="color: #138086"></i>
+                          </p>
+        
+            
+        
+                      </div>
+                    </div>
+                  </div>               
+                {% else %}
 
-                        {% elif group.name == "Chief Seshat External Experts" %}
-                        <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62"></i>
-
-                        {% elif group.name == "Chief Seshat Admins" %}
-                        <i class="fa-solid fa-user-gear fa-lg"  style="color: #f67e7d"></i>
-                        {% else %}
-                            {% if request.user.email == 'benam.mjd@gmail.com' %}
-                            {{group.name}}
+                {% for group in expert.user.related_groups %}
+        
+                {% if group.name in "Chief Seshat Researchers" or group.name in "Chief Seshat Admins" %}
+        
+                  <div class="col">
+                    <div class="card expert-card shadow-sm " style="border: 1px solid #13808624; border-top: 10px solid #13808644;
+        ">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-0" >
+                          <h5 class="card-title mb-0" style="color: #138086">
+                            {% if expert.user.first_name and expert.user.last_name %}
+                              {{ expert.user.first_name }} {{ expert.user.last_name }}
+                            {% else %}
+                              <span class="text-muted">N/A</span>
                             {% endif %}
-                        {% endif %}                            
-                    {% endfor %}
-                        {{ expert.role }}
+                          </h5>
+        
+                        </div>
+                        <p class="mb-0 text-muted">
 
-                    </td>
-                    <td class="text-secondary" style="text-align: right">{{ expert.user.date_joined|date:"Y-m-d" }}</td>
-                    <td class="text-secondary" style="text-align: right">{{ expert.user.last_login|date:"Y-m-d" }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="9">No experts found.</td>
-                </tr>
-            {% endfor %}
-            {% endautoescape %}
+                        {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                            <span>{{ expert.role }}</span> 
 
-        </tbody>
-    </table>
+                          {% endif %}
+                          </p>
+                        
+            
+                        <p class="mb-0" style="font-family: 'Roboto Mono'; font-size: 0.9rem;">
+                          {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                            {{ expert.user.email }}
+                          {% else %}
+                            <span class="text-muted">Former&nbsp;Researcher</span>
+                          {% endif %}
+                        </p>
+        
+                        <p class="mb-0 text-muted">
+        
+                        {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                        <small><span>Date Joined:</span> {{ expert.user.date_joined|date:"Y-m-d" }}</small><br>
+                        {% endif %}
+                          </p>
+        
+            
+        
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="h3 my-2" style="color: #843b62"> &nbsp;<i class="fa-solid fa-user-graduate fa-lg" ></i>
+                &nbsp; Seshat Experts 
+            </div>
+            <div class="card-container">
+         
+                {% for expert in experts %}
+                {% if expert.user|is_not_test_user %}
+                {% for group in expert.user.related_groups %}
+        
+                {% if group.name == "Chief Seshat External Experts" %}
+        
+                  <div class="col">
+                    <div class="card expert-card2 shadow-sm " style="border: 1px solid #843b6224; border-top: 10px solid #843b6244;
+        ">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-0" >
+                          <h5 class="card-title mb-0" style="color: #843b62">
+                            {% if expert.user.first_name and expert.user.last_name %}
+                              {{ expert.user.first_name }} {{ expert.user.last_name }}
+                            {% else %}
+                              <span class="text-muted">N/A</span>
+                            {% endif %}
+                          </h5>
+        
+                        </div>
+
+                        <p class="mb-0" style="font-family: 'Roboto Mono'; font-size: 0.9rem;">
+                          {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                            {{ expert.user.email }}
+                          {% else %}
+                            <span class="text-muted">Former&nbsp;Seshat&nbsp;Expert</span>
+                          {% endif %}
+                        </p>
+        
+                        <p class="mb-0 text-muted">
+        
+                        {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                        <small><span>Date Joined:</span> {{ expert.user.date_joined|date:"Y-m-d" }}</small><br>
+                        {% endif %}
+                          </p>
+        
+            
+        
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 {% endblock %}

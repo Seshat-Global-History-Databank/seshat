@@ -282,9 +282,7 @@
                  </h6>      
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
           </div>
-          <div>
-            {{myvar}}
-          </div>
+
   
           <div>
             <h5 class="mb-3"><span class="text-secondary text-end">Variable:</span> <span>{{myvar}}</span> <span class="h6 text-secondary">
@@ -436,7 +434,7 @@
               </div>
 
               <div class="col-md-4 pb-2">
-                <label for="ra_check_select" class="text-secondary d-block">RA Checks</label>
+                <label for="ra_check_select" class="text-secondary d-block">Researcher Checks</label>
                 <select id="ra_check_select" name="ra_check" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
                     {% for check in check_choices %}
                     <option value="{{ check.id }}"
