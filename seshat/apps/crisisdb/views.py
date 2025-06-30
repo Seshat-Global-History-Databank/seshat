@@ -12,18 +12,21 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from django.db.models import F, Count, CharField, ExpressionWrapper
+from django.db.models import F, Count, CharField, ExpressionWrapper, Q
 from ..general.mixins import PolityIdMixin
 
 
 from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatComment, SeshatCommentPart
+from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatComment, SeshatCommentPart, SeshatPrivateCommentPart
 from seshat.apps.accounts.models import Seshat_Expert
+
+from collections import Counter
 
 # from .mycodes import *
 from django.conf import settings
 
 from django.urls import reverse, reverse_lazy
+from math import ceil
 
 from django.views import generic
 import csv
@@ -48,11 +51,14 @@ def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
-from .models import Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Check_choice
+from .models import Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Check_choice, Instability_event, Instability_type
 
 
 from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm, CheckChoiceForm
 
+
+BATCH_1_END = datetime.date(2025, 3, 29)
+BATCH_2_END = datetime.date(2025, 4, 11)
 
 # Create View
 class CheckChoiceCreateView(CreateView):
@@ -6329,3 +6335,331 @@ def delete_object_view(request, model_class, pk, var_name):
     messages.success(request, f"{var_name} has been deleted successfully.")
 
     return redirect(success_url)
+
+
+@permission_required('core.add_capital')
+def instability_analytics(request):
+    #queryset = Instability_event.objects.all()
+    queryset = Instability_event.objects.filter(polity__unreliable_instability_events=False)
+
+    all_events_count= len(queryset)
+
+
+    # Get distinct private_comment IDs that have at least one part
+    valid_private_comment_ids = SeshatPrivateCommentPart.objects.values_list(
+        'private_comment_id', flat=True
+    ).distinct()
+    # Get all unique curators by role for dropdowns
+    #all_curators = Seshat_Expert.objects.all()
+
+    curator_ids = queryset.values_list('curator__id', flat=True).distinct()
+    curators_with_contributions = Seshat_Expert.objects.filter(id__in=curator_ids)
+
+    researcher_choices = curators_with_contributions.filter(role__in=['Researcher', 'Seshat Admin', 'Lead Researcher'])
+    expert_choices = curators_with_contributions.filter(role='Seshat Expert')
+
+    # Filter by selected researcher
+    selected_researcher_id = request.GET.get('researcher')
+    if selected_researcher_id:
+        queryset = queryset.filter(curator__id=selected_researcher_id)
+
+    if selected_researcher_id:
+        try:
+            selected_researcher = Seshat_Expert.objects.select_related("user").get(id=selected_researcher_id)
+        except Seshat_Expert.DoesNotExist:
+            selected_researcher = None
+    else:
+        selected_researcher = None
+
+    selected_batch = request.GET.get('selected_batch')
+
+    if selected_batch:
+        if selected_batch == "Batch 1":
+            queryset = queryset.filter(created_date__lt=BATCH_1_END)
+        elif selected_batch == "Batch 2":
+            queryset = queryset.filter(
+                created_date__gte=BATCH_1_END,
+                created_date__lt=BATCH_2_END
+            )
+        elif selected_batch == "Batch 3":
+            queryset = queryset.filter(created_date__gte=BATCH_2_END)
+    # Filter by selected expert
+    selected_expert_id = request.GET.get('expert')
+    if selected_expert_id:
+        queryset = queryset.filter(curator__id=selected_expert_id)
+
+    if selected_expert_id:
+        try:
+            selected_expert = Seshat_Expert.objects.select_related("user").get(id=selected_expert_id)
+        except Seshat_Expert.DoesNotExist:
+            selected_expert = None
+    else:
+        selected_expert = None
+
+    # Filter for comment existence
+    has_comment = request.GET.get("has_comment")
+    if has_comment == "1":
+        queryset = queryset.filter(comment__isnull=False)
+    elif has_comment == "0":
+        queryset = queryset.filter(comment__isnull=True)
+
+    # Filter for private comment existence
+    has_private_comment = request.GET.get("has_private_comment")
+    if has_private_comment == "1":
+        queryset = queryset.filter(private_comment__id__in=valid_private_comment_ids)
+    elif has_private_comment == "0":
+        queryset = queryset.exclude(private_comment__id__in=valid_private_comment_ids)
+
+    # Filter by polity
+    polity_id = request.GET.get("polity")
+    if polity_id:
+        queryset = queryset.filter(polity_id=polity_id)
+    
+    # Get selected event types from GET (list of ids as strings)
+    selected_inst_type_ids = request.GET.getlist("inst_type")
+
+    if selected_inst_type_ids:
+        queryset = queryset.filter(inst_type__id__in=selected_inst_type_ids)
+
+    # Get selected event types from GET (list of ids as strings)
+    selected_ra_check_ids = request.GET.getlist("ra_check")
+
+    if selected_ra_check_ids:
+        queryset = queryset.filter(ra_check__id__in=selected_ra_check_ids)
+
+    # Apply filters
+    inst_extent = request.GET.get("inst_extent")
+    if inst_extent:
+        queryset = queryset.filter(inst_extent=inst_extent)
+
+    inst_intensity = request.GET.get("inst_intensity")
+    if inst_intensity:
+        queryset = queryset.filter(inst_intensity=inst_intensity)
+
+    real_check = request.GET.get("real_event_check")
+    if real_check:
+        queryset = queryset.filter(real_event_check=real_check)
+
+    # Prepare chart data
+    extent_data = queryset.values("inst_extent").annotate(count=Count("id"))
+    intensity_data = queryset.values("inst_intensity").annotate(count=Count("id"))
+    year_from_distribution = queryset.values("llm_year_from").annotate(count=Count("id")).order_by("llm_year_from")
+
+    # Step 1: Collect all valid years from queryset
+    year_values = queryset.values_list("llm_year_from", flat=True).exclude(llm_year_from__isnull=True)
+
+    # Step 2: Convert years to centuries
+    def year_to_century(year):
+        if year == 0:
+            return "1st century CE"  # year 0 does not officially exist in BCE/CE
+
+        # Determine if BCE or CE
+        is_bce = year < 0
+        abs_year = abs(year)
+
+        # Determine the century number
+        century = ceil(abs_year / 100)
+
+        # Determine the ordinal suffix
+        if 10 < century % 100 < 14:
+            suffix = "th"
+        elif century % 10 == 1:
+            suffix = "st"
+        elif century % 10 == 2:
+            suffix = "nd"
+        elif century % 10 == 3:
+            suffix = "rd"
+        else:
+            suffix = "th"
+
+        label = f"{century}{suffix} century"
+        return f"{'-' if year < 0 else ''}{label} {'BCE' if is_bce else 'CE'}"
+
+
+    century_counts = Counter()
+    for year in year_values:
+        century_label = year_to_century(year)
+        century_counts[century_label] += 1
+
+
+    # Step 1: Count real_event_check values in the filtered queryset
+    real_check_counts = Counter(
+        event.real_event_check or "None" for event in queryset
+    )
+
+    # Step 2: Create label-to-display-name mapping
+    xyz = Instability_event._meta.get_field("real_event_check").choices
+    real_check_label_map = dict(xyz)
+    real_check_label_map["None"] = "None"
+
+    # Step 3: Format for chart
+    real_check_data = [
+        {
+            "label": real_check_label_map.get(code, code),
+            "count": count
+        }
+        for code, count in real_check_counts.items()
+    ]
+
+
+    def get_batch_label(date):
+        if date is None:
+            return "Unknown"
+        elif date.date() < BATCH_1_END:
+            return "Batch 1"
+        elif BATCH_1_END <= date.date() < BATCH_2_END:
+            return "Batch 2"
+        else:
+            return "Batch 3"
+
+    # Step 1: Assign batch label per event
+    batch_labels = [get_batch_label(event.created_date) for event in queryset]
+
+    # Step 2: Count occurrences
+    batch_counts = Counter(batch_labels)
+
+
+    def extract_numeric(century_str):
+        century_str_ohne = century_str.replace('BCE', '').replace('CE', '')
+        return int(century_str_ohne.split('th')[0].split('st')[0].split('nd')[0].split('rd')[0])
+
+    # Step 3: Prepare chart data
+    batch_data = [
+        {"label": label, "count": count}
+        for label, count in sorted(batch_counts.items(), key=lambda x: x[0])
+    ]
+
+    century_chart_data = sorted(
+        [{"century": century, "count": count,} for century, count in century_counts.items()],
+        key=lambda x: extract_numeric(x["century"])
+    )
+
+
+    # Count check choices across all events in queryset
+    check_counts = Counter()
+    for event in queryset.prefetch_related("ra_check"):
+        for check in event.ra_check.all():
+            check_counts[check] += 1  # or check.code or check.id as needed
+
+
+    # Count check choices across all events in queryset
+    inst_type_counts = Counter()
+    for event in queryset.prefetch_related("inst_type"):
+        for a in event.inst_type.all():
+            inst_type_counts[a] += 1  # or check.code or check.id as needed
+
+    inst_type_data = [
+        {
+            "label": a.name,
+            "count": count,
+        }
+        for a, count in inst_type_counts.items()
+    ]
+
+
+    def color_mapper(x):
+        if x == "Green":
+            return "#008080"
+        elif x == "Blue":
+            return "#1E90FF"
+        elif x == "Red":
+            return "#DC143C"
+        else:
+            return "#111222"
+    check_choice_data = [
+        {
+            "label": check.name,
+            "count": count,
+            "color": color_mapper(check.color),  # assuming .color is a valid hex or CSS color
+        }
+        for check, count in check_counts.items()
+    ]
+    #check_choice_data = [{"label": label, "count": count, "color": check.color} for label, count in check_counts.items()]
+
+    # Count researchers and experts across all events
+    researcher_counter = Counter()
+    expert_counter = Counter()
+
+    for event in queryset.prefetch_related("curator__user"):
+        for curator in event.curator.all():
+            if curator.user.full_name:
+                label = f"{curator.user.full_name}"
+            else:
+                label = f"user with ID: {curator.user.id}"
+            if curator.role in ['Researcher', 'Seshat Admin', 'Lead Researcher']:
+                researcher_counter[label] += 1
+            elif curator.role == 'Seshat Expert':
+                expert_counter[label] += 1
+
+    # Convert to sorted list of dicts
+    researcher_chart_data = sorted(
+        [{"label": label, "count": count} for label, count in researcher_counter.items()],
+        key=lambda x: x["count"], reverse=True
+    )
+    expert_chart_data = sorted(
+        [{"label": label, "count": count} for label, count in expert_counter.items()],
+        key=lambda x: x["count"], reverse=True
+    )
+
+    # Prepare Chart Data for Comment & Private Comment
+    total_events = queryset.count()
+
+
+
+    with_comment = queryset.exclude(comment__isnull=True).count()
+    with_private_comment = queryset.filter(private_comment__id__in=valid_private_comment_ids).distinct().count()
+
+    comment_chart_data = [
+        {"label": "Has Verified Seshat Description", "count": with_comment},
+        {"label": "Without Seshat Description", "count": total_events - with_comment}
+    ]
+
+    private_comment_chart_data = [
+        {"label": "Has Private Comment", "count": with_private_comment},
+        {"label": "No Private Comments", "count": total_events - with_private_comment}
+    ]
+
+    polity_ids_in_list = Instability_event.objects.filter(polity__unreliable_instability_events=False).values_list('polity_id', flat=True).distinct()
+    polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')    
+
+    # unreliable_instability_events=True
+    # all_object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
+    #     polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
+    context = {
+        "events": queryset,
+        "all_events_count": all_events_count,
+        "extent_data": list(extent_data),
+        "intensity_data": list(intensity_data),
+        "year_from_data": list(year_from_distribution),
+        "INST_EXTENT_CHOICES": Instability_event._meta.get_field("inst_extent").choices,
+        "INST_INTENSITY_CHOICES": Instability_event._meta.get_field("inst_intensity").choices,
+        "REAL_EVENT_CHECK_CHOICES": Instability_event._meta.get_field("real_event_check").choices,
+        'real_check_data': real_check_data,
+        "check_choice_data": check_choice_data,
+        'inst_type_data': inst_type_data,
+        "researcher_chart_data": researcher_chart_data,
+        "expert_chart_data": expert_chart_data,
+        "researcher_choices": researcher_choices,
+        "expert_choices": expert_choices,
+        "selected_researcher_id": selected_researcher_id,
+        "selected_researcher": selected_researcher,
+        "selected_expert_id": selected_expert_id,
+        "selected_expert": selected_expert,
+        "century_chart_data": century_chart_data,
+        "has_comment": has_comment,
+        "has_private_comment": has_private_comment,
+        "selected_polity_id": polity_id,
+        "comment_chart_data": comment_chart_data,
+        "private_comment_chart_data": private_comment_chart_data,
+        'polities': polities,
+        "instability_types": Instability_type.objects.all(),
+        "selected_inst_type_ids": selected_inst_type_ids,
+        "check_choices": Check_choice.objects.all(),
+        "selected_ra_check_ids": selected_ra_check_ids,
+        'batch_data': batch_data,
+    }
+
+    context['unreliable_polities'] = Polity.objects.filter(unreliable_instability_events=True).order_by('new_name')
+
+    return render(request, "crisisdb/instability_analytics.html", context)
+

@@ -33,6 +33,8 @@ urlpatterns = [
     path('playground/', views.playground, name='playground'),
     path('playgrounddownload/', views.playgrounddownload,
          name="playgrounddownload"),
+     path("analytics-instability/", views.instability_analytics, name="instability-analytics"),
+
      #path('fpl_all/', views.fpl_all,name="fpl_all"), 
 ]
 
