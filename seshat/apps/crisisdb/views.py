@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.safestring import mark_safe
 from django.views.generic.list import ListView
 
+from django.utils import timezone
+
+
 from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -57,8 +60,9 @@ from .models import Power_transition, Crisis_consequence, Human_sacrifice, Exter
 from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm, CheckChoiceForm
 
 
-BATCH_1_END = datetime.date(2025, 3, 29)
-BATCH_2_END = datetime.date(2025, 4, 11)
+BATCH_1_END = timezone.make_aware(datetime.datetime(2025, 3, 29))
+BATCH_2_END =timezone.make_aware(datetime.datetime(2025, 4, 11))
+
 
 # Create View
 class CheckChoiceCreateView(CreateView):
@@ -6340,7 +6344,12 @@ def delete_object_view(request, model_class, pk, var_name):
 @permission_required('core.add_capital')
 def instability_analytics(request):
     #queryset = Instability_event.objects.all()
-    queryset = Instability_event.objects.filter(polity__unreliable_instability_events=False)
+    #queryset = Instability_event.objects.filter(polity__unreliable_instability_events=False)
+    queryset = Instability_event.objects.filter(
+        polity__unreliable_instability_events=False
+    ).only(
+        'id', 'created_date', 'inst_extent', 'inst_intensity', 'real_event_check', 'inst_type', 'ra_check', 'curator', 'comment', 'private_comment'
+    )
 
     all_events_count= len(queryset)
 
@@ -6443,7 +6452,6 @@ def instability_analytics(request):
     # Prepare chart data
     extent_data = queryset.values("inst_extent").annotate(count=Count("id"))
     intensity_data = queryset.values("inst_intensity").annotate(count=Count("id"))
-    year_from_distribution = queryset.values("llm_year_from").annotate(count=Count("id")).order_by("llm_year_from")
 
     # Step 1: Collect all valid years from queryset
     year_values = queryset.values_list("llm_year_from", flat=True).exclude(llm_year_from__isnull=True)
@@ -6453,14 +6461,11 @@ def instability_analytics(request):
         if year == 0:
             return "1st century CE"  # year 0 does not officially exist in BCE/CE
 
-        # Determine if BCE or CE
         is_bce = year < 0
         abs_year = abs(year)
 
-        # Determine the century number
         century = ceil(abs_year / 100)
 
-        # Determine the ordinal suffix
         if 10 < century % 100 < 14:
             suffix = "th"
         elif century % 10 == 1:
@@ -6481,18 +6486,24 @@ def instability_analytics(request):
         century_label = year_to_century(year)
         century_counts[century_label] += 1
 
+    def extract_numeric(century_str):
+        century_str_ohne = century_str.replace('BCE', '').replace('CE', '')
+        return int(century_str_ohne.split('th')[0].split('st')[0].split('nd')[0].split('rd')[0])
 
-    # Step 1: Count real_event_check values in the filtered queryset
+
+    century_chart_data = sorted(
+        [{"century": century, "count": count,} for century, count in century_counts.items()],
+        key=lambda x: extract_numeric(x["century"])
+    )
+
     real_check_counts = Counter(
         event.real_event_check or "None" for event in queryset
     )
 
-    # Step 2: Create label-to-display-name mapping
     xyz = Instability_event._meta.get_field("real_event_check").choices
     real_check_label_map = dict(xyz)
     real_check_label_map["None"] = "None"
 
-    # Step 3: Format for chart
     real_check_data = [
         {
             "label": real_check_label_map.get(code, code),
@@ -6501,61 +6512,33 @@ def instability_analytics(request):
         for code, count in real_check_counts.items()
     ]
 
-
-    def get_batch_label(date):
-        if date is None:
+    def get_batch_label(created_date):
+        if created_date is None:
             return "Unknown"
-        elif date.date() < BATCH_1_END:
+
+        # Make sure the datetime is timezone-aware
+        if timezone.is_naive(created_date):
+            created_date = timezone.make_aware(created_date)
+
+        if created_date < BATCH_1_END:
             return "Batch 1"
-        elif BATCH_1_END <= date.date() < BATCH_2_END:
+        elif BATCH_1_END <= created_date < BATCH_2_END:
             return "Batch 2"
         else:
             return "Batch 3"
-
     # Step 1: Assign batch label per event
-    batch_labels = [get_batch_label(event.created_date) for event in queryset]
+    batch_labels = [
+            get_batch_label(dt) for dt in queryset.values_list("created_date", flat=True)
+    ]
 
     # Step 2: Count occurrences
     batch_counts = Counter(batch_labels)
-
-
-    def extract_numeric(century_str):
-        century_str_ohne = century_str.replace('BCE', '').replace('CE', '')
-        return int(century_str_ohne.split('th')[0].split('st')[0].split('nd')[0].split('rd')[0])
 
     # Step 3: Prepare chart data
     batch_data = [
         {"label": label, "count": count}
         for label, count in sorted(batch_counts.items(), key=lambda x: x[0])
     ]
-
-    century_chart_data = sorted(
-        [{"century": century, "count": count,} for century, count in century_counts.items()],
-        key=lambda x: extract_numeric(x["century"])
-    )
-
-
-    # Count check choices across all events in queryset
-    check_counts = Counter()
-    for event in queryset.prefetch_related("ra_check"):
-        for check in event.ra_check.all():
-            check_counts[check] += 1  # or check.code or check.id as needed
-
-
-    # Count check choices across all events in queryset
-    inst_type_counts = Counter()
-    for event in queryset.prefetch_related("inst_type"):
-        for a in event.inst_type.all():
-            inst_type_counts[a] += 1  # or check.code or check.id as needed
-
-    inst_type_data = [
-        {
-            "label": a.name,
-            "count": count,
-        }
-        for a, count in inst_type_counts.items()
-    ]
-
 
     def color_mapper(x):
         if x == "Green":
@@ -6566,45 +6549,52 @@ def instability_analytics(request):
             return "#DC143C"
         else:
             return "#111222"
+        
+    check_counts = Check_choice.objects.filter(crisisdb_instability_events__in=queryset).annotate(count=Count('crisisdb_instability_events')).values('name', 'color', 'count')
     check_choice_data = [
-        {
-            "label": check.name,
-            "count": count,
-            "color": color_mapper(check.color),  # assuming .color is a valid hex or CSS color
-        }
-        for check, count in check_counts.items()
+        {"label": c['name'], "count": c['count'], "color": color_mapper(c['color'])} for c in check_counts]
+
+    inst_type_counts = (
+        Instability_type.objects
+        .filter(crisisdb_instability_events__in=queryset)
+        .annotate(count=Count('crisisdb_instability_events'))
+        .values('name', 'count')
+    )
+
+    inst_type_data = [
+        {"label": row["name"], "count": row["count"]}
+        for row in inst_type_counts
     ]
-    #check_choice_data = [{"label": label, "count": count, "color": check.color} for label, count in check_counts.items()]
 
-    # Count researchers and experts across all events
-    researcher_counter = Counter()
-    expert_counter = Counter()
-
-    for event in queryset.prefetch_related("curator__user"):
-        for curator in event.curator.all():
-            if curator.user.full_name:
-                label = f"{curator.user.full_name}"
-            else:
-                label = f"user with ID: {curator.user.id}"
-            if curator.role in ['Researcher', 'Seshat Admin', 'Lead Researcher']:
-                researcher_counter[label] += 1
-            elif curator.role == 'Seshat Expert':
-                expert_counter[label] += 1
-
-    # Convert to sorted list of dicts
-    researcher_chart_data = sorted(
-        [{"label": label, "count": count} for label, count in researcher_counter.items()],
-        key=lambda x: x["count"], reverse=True
+    curators_with_counts = (
+        Seshat_Expert.objects
+        .filter(crisisdb_instability_events__in=queryset)  # reverse M2M relation
+        .select_related("user")
+        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
+        .filter(event_count__gt=0)
     )
-    expert_chart_data = sorted(
-        [{"label": label, "count": count} for label, count in expert_counter.items()],
-        key=lambda x: x["count"], reverse=True
-    )
+
+    researcher_chart_data = sorted([
+        {
+            "label": curator.user.full_name or f"user with ID: {curator.user.id}",
+            "count": curator.event_count
+        }
+        for curator in curators_with_counts
+        if curator.role in ['Researcher', 'Seshat Admin', 'Lead Researcher']
+    ], key=lambda x: x["count"], reverse=True)
+
+    expert_chart_data = sorted([
+        {
+            "label": curator.user.full_name or f"user with ID: {curator.user.id}",
+            "count": curator.event_count
+        }
+        for curator in curators_with_counts
+        if curator.role == 'Seshat Expert'
+    ], key=lambda x: x["count"], reverse=True)
+
 
     # Prepare Chart Data for Comment & Private Comment
     total_events = queryset.count()
-
-
 
     with_comment = queryset.exclude(comment__isnull=True).count()
     with_private_comment = queryset.filter(private_comment__id__in=valid_private_comment_ids).distinct().count()
@@ -6622,15 +6612,11 @@ def instability_analytics(request):
     polity_ids_in_list = Instability_event.objects.filter(polity__unreliable_instability_events=False).values_list('polity_id', flat=True).distinct()
     polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')    
 
-    # unreliable_instability_events=True
-    # all_object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
-    #     polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
     context = {
         "events": queryset,
         "all_events_count": all_events_count,
         "extent_data": list(extent_data),
         "intensity_data": list(intensity_data),
-        "year_from_data": list(year_from_distribution),
         "INST_EXTENT_CHOICES": Instability_event._meta.get_field("inst_extent").choices,
         "INST_INTENSITY_CHOICES": Instability_event._meta.get_field("inst_intensity").choices,
         "REAL_EVENT_CHECK_CHOICES": Instability_event._meta.get_field("real_event_check").choices,
