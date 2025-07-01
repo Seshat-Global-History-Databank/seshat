@@ -408,25 +408,11 @@
 
   
   <div class="col--md-12 align-self-end pb-0 mb-0">
-    {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.has_comment or request.GET.has_private_comment or request.GET.researcher or request.GET.expert or request.GET.real_event_check %}
+    {% if request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.has_comment or request.GET.has_private_comment or request.GET.researcher or request.GET.expert or request.GET.real_event_check %}
 
     <div class="py-1 px-0  d-inline-block" >
       <strong>Filters applied:</strong>
       <ul class="list-inline mb-1">
-        {% if request.GET.year_from_min %}
-          <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
-              <span class="fw-light">Year ≥  </span>  <span class="fw-bold"> {{ request.GET.year_from_min }}</span>
-
-            <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
-        {% if request.GET.year_to_max %}
-          <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
-              <span class="fw-light">Year ≤ </span>  <span class="fw-bold"> {{ request.GET.year_to_max }}</span>
-
-            <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
         {% for type in instability_types %}
         {% if type.id|stringformat:"s" in selected_inst_type_ids %}
           <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
@@ -493,8 +479,6 @@
         {% else %}
         Not Available
         {% endif %}
-
-
       </span>
       <a href="?{% query_transform request has_private_comment=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
   </li>
@@ -510,8 +494,6 @@
         {% else %}
         Not Available
         {% endif %}
-
-
       </span>
       <a href="?{% query_transform request has_private_comment=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
   </li>
@@ -590,8 +572,8 @@
 </div>
  <div class="row">
     <div class="col-md-8 p-3 border border-1">
-        <canvas id="centuryChart" height="5" width="10"></canvas>
-        <hr>
+      <canvas id="centuryChart" height="5" width="10"></canvas>
+<hr>
         <div class="row">
           <div class="col-md-6">
             <canvas id="extentChart" height="10" width="10"></canvas>
@@ -674,9 +656,72 @@
     const expertData = {{ expert_chart_data|safe }};
     const centuryData = {{ century_chart_data|safe }};
 
+
     const batchData = {{ batch_data|safe }};
 
     const realCheckData = {{ real_check_data|safe }};
+
+
+    new Chart(document.getElementById('centuryChart'), {
+      type: 'bar',
+      data: {
+      labels: centuryData.map(c => c.century),
+      datasets: [{
+          label: ' Count',
+          data: centuryData.map(c => c.count),
+          backgroundColor: 'teal'
+      }]
+      },
+      options: {
+      responsive: true,
+      plugins: {
+          title: {
+          display: true,
+          text: 'Events by Century',
+          font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+          display: false
+          }
+      },
+      scales: {
+          y: {
+            ticks: {
+              // This ensures only integer labels appear
+              callback: function(value) {
+                if (Number.isInteger(value)) {
+                  return value;
+                }
+                return null;
+              },
+            },
+            beginAtZero: true,            
+            title: {
+              display: true,
+              text: 'Event Count'
+          }
+          },
+          x: {
+              grid: {
+                  display: false  // 👈 removes vertical grid lines
+                },
+              title: {
+                  display: true,
+                  text: 'Century'
+              }
+          }
+      }
+      }
+  });
+
+
 
     new Chart(document.getElementById('realCheckChart'), {
       type: 'pie',
@@ -852,66 +897,6 @@
           }
         }
       });
-
-    new Chart(document.getElementById('centuryChart'), {
-        type: 'line',
-        data: {
-        labels: centuryData.map(c => c.century),
-        datasets: [{
-            label: 'Count',
-            data: centuryData.map(c => c.count),
-            backgroundColor: 'teal'
-        }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-            title: {
-            display: true,
-            text: 'Events by Century',
-            font: {
-                size: 18,
-                weight: 'bold'
-              },
-              padding: {
-                top: 10,
-                bottom: 30
-              }
-            },
-            legend: {
-            display: false
-            }
-        },
-        scales: {
-            y: {
-              ticks: {
-                // This ensures only integer labels appear
-                callback: function(value) {
-                  if (Number.isInteger(value)) {
-                    return value;
-                  }
-                  return null;
-                },
-              },
-              beginAtZero: true,            
-              title: {
-                display: true,
-                text: 'Event Count'
-            }
-            },
-            x: {
-                grid: {
-                    display: false  // 👈 removes vertical grid lines
-                  },
-                title: {
-                    display: true,
-                    text: 'Century'
-                }
-            }
-        }
-        }
-    });
-
 
 
   new Chart(document.getElementById('extentChart'), {

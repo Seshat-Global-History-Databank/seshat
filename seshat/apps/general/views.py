@@ -8848,7 +8848,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     elif var_name in ["instability_event",]:
-        object_list = model_class.objects.filter(polity__unreliable_instability_events=False).order_by('polity_id', 'year_from')
+        object_list = model_class.objects.filter(polity__unreliable_instability_events=False).defer('general_cot', 'classification_cot', 'sorokin_rationale', 'llm_description').order_by('polity_id', 'year_from', 'id')
     else:
         object_list = model_class.objects.all().order_by('polity_id', 'year_from')
 
@@ -8950,9 +8950,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
 
 
-    if orderby:
-
-                
+    if orderby:   
         if orderby.lstrip('-') == 'year_from':
             field = 'start_year_effective'
         elif orderby.lstrip('-') == 'year_to':
@@ -9064,7 +9062,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
 
     if var_name in ['instability_event',]:
-        paginator = Paginator(object_list, 100)  # Show 100 items per page
+        paginator = Paginator(object_list, 50)  # Show 100 items per page
 
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
