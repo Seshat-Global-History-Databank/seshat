@@ -6341,7 +6341,7 @@ def delete_object_view(request, model_class, pk, var_name):
     return redirect(success_url)
 
 
-@permission_required('core.add_capital')
+@permission_required('core.add_seshatprivatecommentpart')
 def instability_analytics(request):
     #queryset = Instability_event.objects.all()
     #queryset = Instability_event.objects.filter(polity__unreliable_instability_events=False)
@@ -6449,6 +6449,9 @@ def instability_analytics(request):
     if real_check:
         queryset = queryset.filter(real_event_check=real_check)
 
+    queryset_diff = queryset.annotate(curator_count=Count("curator")).filter(curator_count__gt=0)
+
+
     # Prepare chart data
     extent_data = queryset.values("inst_extent").annotate(count=Count("id"))
     intensity_data = queryset.values("inst_intensity").annotate(count=Count("id"))
@@ -6497,7 +6500,7 @@ def instability_analytics(request):
     )
 
     real_check_counts = Counter(
-        event.real_event_check or "None" for event in queryset
+        event.real_event_check or "None" for event in queryset_diff
     )
 
     xyz = Instability_event._meta.get_field("real_event_check").choices
@@ -6600,8 +6603,8 @@ def instability_analytics(request):
     with_private_comment = queryset.filter(private_comment__id__in=valid_private_comment_ids).distinct().count()
 
     comment_chart_data = [
-        {"label": "Has Verified Seshat Description", "count": with_comment},
-        {"label": "Without Seshat Description", "count": total_events - with_comment}
+        {"label": "Seshat Description", "count": with_comment},
+        {"label": "AI Description", "count": total_events - with_comment}
     ]
 
     private_comment_chart_data = [
@@ -6611,6 +6614,86 @@ def instability_analytics(request):
 
     polity_ids_in_list = Instability_event.objects.filter(polity__unreliable_instability_events=False).values_list('polity_id', flat=True).distinct()
     polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')    
+
+
+
+    # Comparisons
+    def get_llm_comparison_data(queryset, field, llm_field, label):
+        match = 0
+        disagree = 0
+        missing = 0
+
+        for obj in queryset:
+            val = getattr(obj, field)
+            llm_val = getattr(obj, llm_field)
+            if val is None or llm_val is None:
+                missing += 1
+            elif val == llm_val:
+                match += 1
+            else:
+                disagree += 1
+
+        return [{
+                    "label": "Same", 
+                    "count": match,
+                    "color": "#4292c6"
+                },
+                {
+                    "label": "Different", 
+                    "count": disagree,
+                    "color": "#df2c14"
+
+                },
+                # {
+                #     "label": "Missing", 
+                #     "count": missing,
+                #     "color": "#190605"
+                # },
+            ]
+
+    def get_llm_year_range_comparison(queryset):
+        match = 0
+        disagree = 0
+        missing = 0
+
+        for obj in queryset:
+            val_from = obj.year_from
+            val_to = obj.year_to
+            llm_from = obj.llm_year_from
+            llm_to = obj.llm_year_to
+
+            if val_to is None:
+                val_to = val_from
+
+            if llm_to is None:
+                llm_to = llm_from
+
+            if None in [val_from, val_to, llm_from, llm_to]:
+                missing += 1
+            elif val_from == llm_from and val_to == llm_to:
+                match += 1
+            else:
+                #print(f"{val_from}__{val_to}__{llm_from}__{llm_to}")
+                disagree += 1
+
+        return [
+            {"label": "Same Range", "count": match, "color": "#4292c6"},
+            {"label": "Different Range", "count": disagree, "color": "#df2c14"},
+            # {"label": "Missing", "count": missing, "color": "#666666"},
+        ]
+    
+
+    # Run for relevant fields
+    intensity_comp_chart_data = get_llm_comparison_data(queryset_diff, "inst_intensity", "llm_inst_intensity", "Instability Intensity")
+    extent_comp_chart_data = get_llm_comparison_data(queryset_diff, "inst_extent", "llm_inst_extent", "Instability Extent")
+    #year_from_comp_chart_data = get_llm_comparison_data(queryset_diff, "year_from", "llm_year_from", "Instability Start Year")
+
+    #year_to_comp_chart_data = get_llm_comparison_data(queryset_diff, "year_to", "llm_year_to", "Instability End Year")
+
+    year_range_comp_chart_data = get_llm_year_range_comparison(queryset_diff)
+
+    # Add the polity based anayltics
+    # add the references, the most common references, etc.
 
     context = {
         "events": queryset,
@@ -6643,6 +6726,13 @@ def instability_analytics(request):
         "check_choices": Check_choice.objects.all(),
         "selected_ra_check_ids": selected_ra_check_ids,
         'batch_data': batch_data,
+        "intensity_comp_chart_data": intensity_comp_chart_data,
+        "extent_comp_chart_data": extent_comp_chart_data,
+        "year_range_comp_chart_data": year_range_comp_chart_data,
+        'total_checked': len(queryset_diff),
+        #"year_to_comp_chart_data": year_to_comp_chart_data,
+        
+
     }
 
     context['unreliable_polities'] = Polity.objects.filter(unreliable_instability_events=True).order_by('new_name')

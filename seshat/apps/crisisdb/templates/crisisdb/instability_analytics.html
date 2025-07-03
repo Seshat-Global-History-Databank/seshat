@@ -232,6 +232,39 @@
             border: 1px solid rgba(0, 128, 128, 0.33);
           }
 
+
+          .chart-legend {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 14px;
+            font-family: sans-serif;
+            margin-top: 10px;
+          }
+          
+          .chart-legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+          }
+          
+          .chart-legend-box {
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+          }
+          
+          .chart-legend-label {
+            font-weight: normal;
+          }
+          
+          .chart-legend-value {
+            font-weight: bold;
+            margin-left: 4px;
+          }
+          
         
 </style>
 <div class="container pt-2">
@@ -565,63 +598,173 @@
 
 
 <!-- Charts -->
- <div class="pt-3 pb-0 mb-0">
-    <h5>  <span class="fw-light"> Total Selected Events: </span> {{events|length}} / {{all_events_count}} 
-    </h5>
-
+<div class="row pt-1 pb-0 mb-0">
+  <div class="col text-start">
+    <h6>
+      <span class="fw-light">Total Selected Events:</span> {{ events|length }} / {{ all_events_count }}
+    </h6>
+  </div>
+  <div class="col text-end">
+    <h6>
+      <span class="fw-light">Researcher-Checked Events: </span> 
+      {{ total_checked }}
+    </h6>
+  </div>
 </div>
+
  <div class="row">
     <div class="col-md-8 p-3 border border-1">
-      <canvas id="centuryChart" height="5" width="10"></canvas>
-<hr>
         <div class="row">
-          <div class="col-md-6">
-            <canvas id="extentChart" height="10" width="10"></canvas>
+          <div class="col-md-12">
+            <canvas id="checkChoiceChart" height="5" width="10"></canvas>
+          </div>
+          <hr class="p-0 m-0">
+
+          <div class="col-md-6 p-2">
+            <canvas id="extentChart" height="6" width="10"></canvas>
 
           </div>
-          <div class="col-md-6">
-            <canvas id="intensityChart" height="10" width="10"></canvas>
+          <div class="col-md-6 p-2">
+            <canvas id="intensityChart" height="6" width="10"></canvas>
 
           </div>
-        </div>
-      </div>
-    <div class="col-md-4 p-3 border border-1">
-
-      <canvas id="researcherChart" height="3" width="10"></canvas>
-      <hr>
-              <canvas id="expertChart" height="5" width="8"></canvas>
-    </div>
-
-    <div class="col-md-5 p-3 border border-1">
-        <canvas id="checkChoiceChart" height="9" width="10"></canvas>
-      </div>
-      <div class="col-md-7 p-3 border border-1">
-        <canvas id="instTypeChart" height="7" width="10"></canvas>
-      </div>
-
+           <hr class="p-0 m-0">
+          <div class="col-md-12 p-1">
+            <canvas id="instTypeChart" height="5" width="10"></canvas>
+          </div>
+           <hr class="p-0 m-0">
+          <div class="col-md-12">
+            <canvas id="centuryChart" height="5" width="10"></canvas>
+          </div>
       
 
+        </div>
+      </div>
+    <div class="col-md-4 p-1 border border-1">
+      <div class="row p-1">
+        <div class="col-md-12 p-1 text-center text-secondary fs-4 fw-bold">
+          Seshat Researchers
+        </div>
+        <div class="col-md-6">
+          <canvas id="researcherChart" height="10" width="5"></canvas>
 
-        <div class="col-md-3 p-3 border border-1">
+        </div>
+        <div class="col-md-6">
+          <div id="myCustomLegendResearcher" class="chart-legend"></div>
+
+        </div>
+      </div>
+
+       <hr class="p-0 m-0">
+      <div class="row p-1">
+        <div class="col-md-12 p-1 text-center text-secondary fs-4 fw-bold">
+          Seshat Experts
+        </div>
+        
+        <div class="col-md-6">
+          <canvas id="expertChart" height="1" width="5"></canvas>
+
+        </div>
+        <div class="col-md-6">
+          <div id="myCustomLegendExpert" class="chart-legend"></div>
+        </div>
+      </div>
+       <hr class="p-0 m-0">
+
+      <div class="row px-3 py-1">
+        <div class="col-md-12 p-1 text-center text-secondary fs-4 fw-bold">
+          Seshat Descriptions
+        </div>
+        <div class="col-md-6 p-1">
           <canvas id="commentChart"  height="5" width="10"></canvas>
         </div>
-          <div class="col-md-3 p-3 border border-1">
+        <div class="col-md-6">
+          <div id="myCustomLegendDesc" class="chart-legend"></div>
+        </div>
+      </div>
+       <hr class="p-0 m-0">
 
+      <div class="row px-3 py-1">
+
+        <div class="col-md-12 p-1 text-center text-secondary fs-4 fw-bold">
+          Private Comments
+        </div>
+          <div class="col-md-6 p-1">
           <canvas id="privateCommentChart"  height="5" width="10"></canvas>
         </div>
-        <div class="col-md-3 p-3 border border-1">
-          <canvas id="batchChart" height="5" width="10"></canvas>
+        <div class="col-md-6">
+          <div id="myCustomLegendPrivate" class="chart-legend"></div>
+        </div>
+      </div>
+       <hr class="p-0 m-0">
 
+      <div class="row px-3 py-1">
+        <div class="col-md-12 p-1 text-center text-secondary fs-4 fw-bold">
+          Batches
         </div>
-        <div class="col-md-3 border border-1">
-          <canvas id="realCheckChart" height="5" width="10"></canvas>
+        <div class="col-md-6 p-1">
+          <canvas id="batchChart"  height="5" width="10"></canvas>
         </div>
+        <div class="col-md-6">
+          <div id="myCustomLegendBatch" class="chart-legend"></div>
+        </div>
+      </div>
+      <hr class="p-0 m-0">
+
+      <div class="row px-3 py-1">
+
+        <div class="col-md-12 text-center text-secondary fs-4 fw-bold">
+          Data Point Distribution
+        </div>
+
+        <div class="col-md-12 text-center text-secondary fw-italic">
+          Only Researcher-Checked Rows Considered (Total: {{total_checked}})
+        </div>
+          <div class="col-md-6 p-1">
+          <canvas id="realCheckChart"  height="5" width="10"></canvas>
+        </div>
+        <div class="col-md-6">
+          <div id="myCustomLegendDP" class="chart-legend"></div>
+        </div>
+      </div>
+
+
+
+         
+    </div>
+
+ 
+
       
       
+ </div>
+
+ <div class="row">
+  <div class="col-md-12 pt-5">
+    <span class=" fs-4">    Comapring LLM Data with Researcher Approved Data: 
+    </span>
+<br>
+    <span class="fs-6 text-secondary">          Only Researcher-Checked Rows Considered (Total: {{total_checked}})
+    </span>
+  </div>
+  <div class="col-md-4 p-1 ">
+    <canvas id="intensityComp" height="8" width="10"></canvas>
+  </div>
+
+  <div class="col-md-4 p-1 ">
+    <canvas id="extentComp" height="8" width="10"></canvas>
+  </div>
+  
+
+  <div class="col-md-4 p-1 ">
+    <canvas id="year_rangeComp" height="8" width="10"></canvas>
+  </div>
  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 <script>
 
     $(document).ready(function() {
@@ -657,9 +800,13 @@
     const centuryData = {{ century_chart_data|safe }};
 
 
-    const batchData = {{ batch_data|safe }};
+    const batchChartData = {{ batch_data|safe }};
 
-    const realCheckData = {{ real_check_data|safe }};
+    const realCheckChartData = {{ real_check_data|safe }};
+
+
+    const commentChartData = {{ comment_chart_data|safe }};
+    const privateCommentChartData = {{ private_comment_chart_data|safe }};
 
 
     new Chart(document.getElementById('centuryChart'), {
@@ -722,181 +869,6 @@
   });
 
 
-
-    new Chart(document.getElementById('realCheckChart'), {
-      type: 'pie',
-      data: {
-        labels: realCheckData.map(r => r.label),
-        datasets: [{
-          label: ' Count',
-          data: realCheckData.map(r => r.count),
-          backgroundColor: [
-          '#0984e3',  // blue
-          '#fdcb6e',  // soft orange
-          '#d63031',  // red
-          '#e84393',  // bright pink
-          '#00b894',  // green          ]
-          ]
-        }]      
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'DataPoint Distribution',
-            font: {
-              size: 18,
-              weight: 'bold'
-            },
-            padding: {
-              top: 10,
-              bottom: 30
-            }
-          },
-          legend: {
-            position: 'bottom',
-            onClick: null,
-            labels: {
-              font: {
-                size: 14,
-                weight: 'bold'
-              }
-            }
-          },
-          tooltip: {
-            mode: 'nearest',
-            intersect: true
-          }
-        }
-      }
-    });
-
-    new Chart(document.getElementById('batchChart'), {
-      type: 'pie',
-      data: {
-        labels: batchData.map(b => b.label),
-        datasets: [{
-          label: ' Count',
-          data: batchData.map(b => b.count),
-          backgroundColor: [
-            '#ff7675', '#74b9ff', '#55efc4', 
-          ]
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Distribution of Events per Batch',
-            font: {
-              size: 18,
-              weight: 'bold'
-            },
-            padding: {
-              top: 10,
-              bottom: 30
-            }
-          },
-          legend: {
-            display: true,
-            position: 'bottom',
-            onClick: null,
-            labels: {
-              font: {
-                size: 14,
-                weight: 'bold'
-              }
-            }
-          },
-          tooltip: {
-            mode: 'nearest',
-            intersect: true
-          }
-        }
-      }
-    });
-
-    new Chart(document.getElementById('commentChart'), {
-        type: 'pie',
-        data: {
-          labels: {{ comment_chart_data|safe }}.map(e => e.label),
-          datasets: [{
-            data: {{ comment_chart_data|safe }}.map(e => e.count),
-            backgroundColor: ['#1E90FF', '#ccc']
-          }]
-        },
-        options: {
-          plugins: {
-            title: {
-                display: true,
-                text: 'Verified Seshat Descriptions',
-                font: {
-                  size: 18,
-                  weight: 'bold'
-                },
-                padding: {
-                  top: 10,
-                  bottom: 30
-                }
-              },
-              legend: {
-                display: true,
-                position: 'bottom',
-                labels: {
-                  boxWidth: 20,
-                  padding: 15,
-                  font: {
-                    size: 14
-                  }
-                },
-                onClick: () => {}  // 👈 disables the legend click behavior
-
-              },
-          }
-        }
-      });
-    
-      new Chart(document.getElementById('privateCommentChart'), {
-        type: 'pie',
-        data: {
-          labels: {{ private_comment_chart_data|safe }}.map(e => e.label),
-          datasets: [{
-            data: {{ private_comment_chart_data|safe }}.map(e => e.count),
-            backgroundColor: ['#DC143C', '#ccc']
-          }]
-        },
-        options: {
-          plugins: {
-            title: {
-                display: true,
-                text: 'Private Comments',
-                font: {
-                  size: 18,
-                  weight: 'bold'
-                },
-                padding: {
-                  top: 10,
-                  bottom: 30
-                }
-              },
-              legend: {
-                display: true,
-                position: 'bottom',
-                labels: {
-                  boxWidth: 20,
-                  padding: 15,
-                  font: {
-                    size: 14
-                  }
-                },
-                onClick: () => {}  // 👈 disables the legend click behavior
-
-              },
-          }
-        }
-      });
 
 
   new Chart(document.getElementById('extentChart'), {
@@ -1197,6 +1169,23 @@
           legend: {
             display: false,
           },
+          datalabels: {
+            color: '#d3d3d3',  // 👈 Dark blue
+            font: {
+              weight: 'bold',
+              size: 13
+            },
+            formatter: function (value) {
+              return value;
+            },
+            anchor: function(context) {
+              // If value is tall enough, place inside (center); else outside (end)
+              return context.dataset.data[context.dataIndex] > 9 ? 'center' : 'end';
+            },
+            align: function(context) {
+              return context.dataset.data[context.dataIndex] > 9 ? 'center' : 'top';
+            }
+          },
           tooltip: {
             callbacks: {
               label: function(context) {
@@ -1244,9 +1233,52 @@
             }
           }
       },
+      plugins: [ChartDataLabels]  // 👈 register the plugin
+
 
   });
 
+
+  const customLegendPlugin = {
+    id: 'htmlLegend',
+    afterUpdate(chart, args, options) {
+      const container = document.getElementById(options.containerID);
+      if (!container) return;
+  
+      // Clear previous content
+      container.innerHTML = '';
+  
+      const labels = chart.data.labels;
+      const data = chart.data.datasets[0].data;
+      const colors = chart.data.datasets[0].backgroundColor || [];
+  
+      labels.forEach((label, i) => {
+        const color = Array.isArray(colors) ? colors[i] : colors;
+  
+        const item = document.createElement('div');
+        item.classList.add('chart-legend-item');
+  
+        const box = document.createElement('span');
+        box.classList.add('chart-legend-box');
+        box.style.backgroundColor = color;
+  
+        const labelSpan = document.createElement('span');
+        labelSpan.classList.add('chart-legend-label');
+        labelSpan.textContent = `${label}:`;
+  
+        const valueSpan = document.createElement('span');
+        valueSpan.classList.add('chart-legend-value');
+        valueSpan.textContent = `${data[i]}`;
+  
+        item.appendChild(box);
+        item.appendChild(labelSpan);
+        item.appendChild(valueSpan);
+  
+        container.appendChild(item);
+      });
+    }
+  };
+  
 
   new Chart(document.getElementById('researcherChart'), {
     type: 'doughnut',
@@ -1262,7 +1294,7 @@
       responsive: true,
       plugins: {
         title: {
-            display: true,
+            display: false,
             text: 'Seshat Researchers',
             font: {
               size: 18,
@@ -1274,19 +1306,11 @@
             }
           },
           legend: {
-            display: true,
-            position: 'bottom',
-            labels: {
-              boxWidth: 20,
-              padding: 15,
-              font: {
-                size: 14,
-                weight: 'bold',
-              }
-            },
-            onClick: () => {}  // 👈 disables the legend click behavior
-
+            display: false  // Hide default legend
           },
+          htmlLegend: {
+            containerID: 'myCustomLegendResearcher'  // 👈 ID of your legend div
+          },         
         tooltip: {
           mode: 'nearest',
           intersect: true
@@ -1294,6 +1318,7 @@
       },
 
     },
+    plugins: [customLegendPlugin]
 
   });
 
@@ -1311,7 +1336,7 @@
       responsive: true,
       plugins: {
         title: {
-            display: true,
+            display: false,
             text: 'Seshat Experts',
             font: {
               size: 18,
@@ -1323,28 +1348,445 @@
             }
           },
           legend: {
-            display: true,
-            position: 'bottom',
-            labels: {
-              boxWidth: 20,
-              padding: 15,
-              font: {
-                size: 14,
-                weight: 'bold',
-              }
-            },
-            onClick: () => {}  // 👈 disables the legend click behavior
-
+            display: false  // Hide default legend
           },
+          htmlLegend: {
+            containerID: 'myCustomLegendExpert'  // 👈 ID of your legend div
+          },  
           tooltip: {
             mode: 'nearest',
             intersect: true
         }
       },
 
-    }
+    },
+    plugins: [customLegendPlugin]
+
   });
+
+
+  new Chart(document.getElementById('commentChart'), {
+    type: 'pie',
+    data: {
+      labels: commentChartData.map(e => e.label),
+      datasets: [{
+        data: commentChartData.map(e => e.count),
+        backgroundColor: ['#1E90FF', '#fab1a0'] 
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+            display: false,
+            text: 'Verified Descriptions',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: false  // Hide default legend
+          },
+          htmlLegend: {
+            containerID: 'myCustomLegendDesc'  // 👈 ID of your legend div
+          },  
+      },
+    },
+    plugins: [customLegendPlugin]
+
+  });
+
+
+  new Chart(document.getElementById('privateCommentChart'), {
+    type: 'pie',
+    data: {
+      labels: privateCommentChartData.map(e => e.label),
+      datasets: [{
+        data: privateCommentChartData.map(e => e.count),
+        backgroundColor: ['#1E90FF', '#ff7675']
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+            display: false,
+            text: 'Private Comments',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: false  // Hide default legend
+          },
+          htmlLegend: {
+            containerID: 'myCustomLegendPrivate'  // 👈 ID of your legend div
+          },  
+      },
+    },
+    plugins: [customLegendPlugin]
+
+  });
+
+  new Chart(document.getElementById('batchChart'), {
+    type: 'pie',
+    data: {
+      labels: batchChartData.map(e => e.label),
+      datasets: [{
+        data: batchChartData.map(e => e.count),
+        backgroundColor: ['#ff7675', '#74b9ff', '#55efc4']
+
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+            display: false,
+            text: 'Batches',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 30
+            }
+          },
+          legend: {
+            display: false  // Hide default legend
+          },
+          htmlLegend: {
+            containerID: 'myCustomLegendBatch'  // 👈 ID of your legend div
+          },  
+      },
+    },
+    plugins: [customLegendPlugin]
+
+  });
+
+
+  new Chart(document.getElementById('realCheckChart'), {
+    type: 'pie',
+    data: {
+      labels: realCheckChartData.map(e => e.label),
+      datasets: [{
+        data: realCheckChartData.map(e => e.count),
+        backgroundColor: [
+        '#0984e3',  // blue
+        '#fdcb6e',  // soft orange
+        '#d63031',  // red
+        '#e84393',  // bright pink
+        '#00b894',  // green          ]
+        ]      
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+            display: false,
+            text: 'DataPoint',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 5,
+              bottom: 5
+            }
+          },
+          legend: {
+            display: false  // Hide default legend
+          },
+          htmlLegend: {
+            containerID: 'myCustomLegendDP'  // 👈 ID of your legend div
+          },  
+      },
+    },
+    plugins: [customLegendPlugin]
+
+  });
+
+
+  const intCompData = {{ intensity_comp_chart_data|safe }};
+
+
+  new Chart(document.getElementById('intensityComp'), {
+        type: 'bar',
+        data: {
+          labels: intCompData.map(e => e.label),
+          datasets: [{
+            label: ' Count',
+            data: intCompData.map(e => e.count),
+            backgroundColor: intCompData.map(e => e.color)  // 👈 assign per-bar color
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+                display: true,
+                text: 'Intensity Changes',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 5,
+                  bottom: 5
+                }
+              },
+              subtitle: {
+                display: true,
+                text: 'LLM vs. Researchers',
+                font: {
+                  size: 14,
+                  weight: 'normal',
+                  style: 'italic'
+                },
+                padding: {
+                  bottom: 5
+                },
+                align: 'center'
+              },
+              legend: {
+                display: false,
+                position: 'bottom',
+                labels: {
+                  boxWidth: 20,
+                  padding: 15,
+                  font: {
+                    size: 14,
+                    weight: 'bold',
+                  }
+                },
+    
+              },
+              datalabels: {
+                color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                font: {
+                  weight: 'bold',
+                  size: 13
+                },
+                formatter: function (value) {
+                  return value;
+                },
+                anchor: function(context) {
+                  // If value is tall enough, place inside (center); else outside (end)
+                  return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                },
+                align: function(context) {
+                  return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                }
+              },
+          },
+          scales: {
+            y: {
+              grid: {
+                display: true  // 👈 removes vertical grid lines
+              },
+            },
+            x: {
+                grid: {
+                    display: false  // 👈 removes vertical grid lines
+                  },
+            }
+        },
+        },
+        plugins: [ChartDataLabels]  // 👈 register the plugin
+
+      });
+
+      const extCompData = {{ extent_comp_chart_data|safe }};
+
+      new Chart(document.getElementById('extentComp'), {
+            type: 'bar',
+            data: {
+              labels: extCompData.map(e => e.label),
+              datasets: [{
+                label: ' Count',
+                data: extCompData.map(e => e.count),
+                backgroundColor: extCompData.map(e => e.color)  // 👈 assign per-bar color
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                    display: true,
+                    text: 'Extent Changes',
+                    font: {
+                      size: 18,
+                      weight: 'bold'
+                    },
+                    padding: {
+                      top: 5,
+                      bottom: 5
+                    }
+                  },
+                  subtitle: {
+                    display: true,
+                    text: 'LLM vs. Researchers',
+                    font: {
+                      size: 14,
+                      weight: 'normal',
+                      style: 'italic'
+                    },
+                    padding: {
+                      bottom: 5
+                    },
+                    align: 'center'
+                  },
+                  legend: {
+                    display: false,
+                    position: 'bottom',
+                    labels: {
+                      boxWidth: 20,
+                      padding: 15,
+                      font: {
+                        size: 14,
+                        weight: 'bold',
+                      }
+                    },
+        
+                  },
+                  datalabels: {
+                    color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                    font: {
+                      weight: 'bold',
+                      size: 13
+                    },
+                    formatter: function (value) {
+                      return value;
+                    },
+                    anchor: function(context) {
+                      // If value is tall enough, place inside (center); else outside (end)
+                      return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                    },
+                    align: function(context) {
+                      return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                    }
+                  },
+              },
+              scales: {
+                y: {
+                  grid: {
+                    display: true  // 👈 removes vertical grid lines
+                  },
+                },
+                x: {
+                    grid: {
+                        display: false  // 👈 removes vertical grid lines
+                      },
+                }
+            },
+            },
+            plugins: [ChartDataLabels]  // 👈 register the plugin
+
+          });
+
+          const yrCompData = {{ year_range_comp_chart_data|safe }};
+
+          new Chart(document.getElementById('year_rangeComp'), {
+                type: 'bar',
+                data: {
+                  labels: yrCompData.map(e => e.label),
+                  datasets: [{
+                    label: ' Count',
+                    data: yrCompData.map(e => e.count),
+                    backgroundColor: yrCompData.map(e => e.color)  // 👈 assign per-bar color
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  plugins: {
+                    title: {
+                        display: true,
+                        text: 'Year Range Changes',
+                        font: {
+                          size: 18,
+                          weight: 'bold'
+                        },
+                        padding: {
+                          top: 5,
+                          bottom: 5
+                        }
+                      },
+                      subtitle: {
+                        display: true,
+                        text: 'LLM vs. Researchers',
+                        font: {
+                          size: 14,
+                          weight: 'normal',
+                          style: 'italic'
+                        },
+                        padding: {
+                          bottom: 5
+                        },
+                        align: 'center'
+                      },
+                      legend: {
+                        display: false,
+                        position: 'bottom',
+                        labels: {
+                          boxWidth: 20,
+                          padding: 15,
+                          font: {
+                            size: 14,
+                            weight: 'bold',
+                          }
+                        },
+            
+                      },
+                      datalabels: {
+                        color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                        font: {
+                          weight: 'bold',
+                          size: 13
+                        },
+                        formatter: function (value) {
+                          return value;
+                        },
+                        anchor: function(context) {
+                          // If value is tall enough, place inside (center); else outside (end)
+                          return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                        },
+                        align: function(context) {
+                          return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                        }
+                      },
+                  },
+                  scales: {
+                    y: {
+                      grid: {
+                        display: true  // 👈 removes vertical grid lines
+                      },
+                    },
+                    x: {
+                        grid: {
+                            display: false  // 👈 removes vertical grid lines
+                          },
+                    }
+                },
+                },
+                plugins: [ChartDataLabels]  // 👈 register the plugin
+
+              });
+
+    
+
+
 </script>
+
+
+
 
     
 {% endblock %}
