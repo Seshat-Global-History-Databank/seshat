@@ -1,5 +1,5 @@
 
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 from django.db.models.base import Model
 # from django.http.response import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
@@ -12108,9 +12108,7 @@ def scvars(request):
     context["all_sect_download_links"] = all_sect_download_links
     context["all_polities"] = len(unique_politys)
     context["number_of_all_rows"] = number_of_all_rows
-    print('----------------')
-    print(all_vars_types)
-    print('-----------------')
+
     context["number_of_variables"] = number_of_variables
 
     return render(request, 'sc/scvars.html', context=context)

@@ -1,0 +1,27 @@
+<span style="display:inline">
+
+{% if obj.is_disputed %}
+
+<a type="button" class="fs-6 ms-1" data-bs-toggle="tooltip" data-bs-html="true"  title="Scholarly Disagreement (Disputed)">
+    <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f39b9b11; color:#c53636; border:1px solid #c5363688;"><i class="fa-regular fa-star-half-stroke"></i> Disputed</span>
+</a>
+
+{% endif %}
+
+<!-- Disputred tag (Disputed/or Not etc.) -->
+{% if obj.is_uncertain %}
+<a type="button" class="fs-6 ms-1 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#c9b458;  border:1px solid #c9b45888; background:#c9b45811;" data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+    <span class="badge" style="color:#c9b458;"><i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+</a>
+{% endif %}
+
+<!-- Expert Checked Tag -->
+{% if obj.seshat_experts_list %}
+    <a type="button" class="fs-6 ms-1" data-bs-toggle="tooltip" data-bs-html="true"  title="Reviewed By: {{ obj.seshat_experts_list }}">
+        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#12457b;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+    </a>
+{% endif %}
+
+</span>
+
+    

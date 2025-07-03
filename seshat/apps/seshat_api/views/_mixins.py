@@ -73,7 +73,7 @@ class MixinSeshatAPISerializerNEW:
         if hasattr(self, 'exclude_fields'):
             exclude_fields = self.exclude_fields  # A list of field names to exclude
             if exclude_fields:
-                print(exclude_fields)
+                #print(exclude_fields)
                 # Modify fields to exclude
                 fields = GeneralSerializer.Meta.fields
                 if fields == "__all__":

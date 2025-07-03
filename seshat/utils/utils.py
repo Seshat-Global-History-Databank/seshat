@@ -152,20 +152,6 @@ def dic_of_all_vars_in_sections():
     return (my_vars)
 
 
-def adder(a, b):
-    """
-    Adds two numbers together.
-
-    Args:
-        a (int): The first number to be added.
-        b (int): The second number to be added.
-
-    Returns:
-        int: The sum of the two numbers.
-    """
-    print(a+b)
-
-
 def section_dic_extractor():
     """
     Extracts a dictionary of all sections in the database.
@@ -179,7 +165,7 @@ def section_dic_extractor():
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
 
-    print(dic_to_be_returned)
+    #print(dic_to_be_returned)
     return dic_to_be_returned
 
 def subsection_dic_extractor():
@@ -195,7 +181,7 @@ def subsection_dic_extractor():
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
 
-    print(dic_to_be_returned)
+    #print(dic_to_be_returned)
     return dic_to_be_returned
 
 
@@ -433,15 +419,15 @@ def get_all_general_data_for_a_polity(polity_id):
 
                 if my_s:
                     all_vars_grouped_g[my_s]["None"][m.__name__] = my_data
-                else:
-                    print(f"-------------{my_s},")
+                # else:
+                #     print(f"-------------{my_s},")
             else:
                 my_s = m().subsection()
 
                 if my_s:
                     all_vars_grouped_g[my_s]["None"][m.__name__] = None
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
                 #if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
                 #    print(f"------{m.subsection()}-------")
     #print(all_vars_grouped_g)
@@ -499,8 +485,8 @@ def get_all_sc_data_for_a_polity(polity_id):
                     all_vars_grouped[my_s][my_ss][m.__name__] = my_data
                 elif my_s:
                     all_vars_grouped[my_s]["None"][m.__name__] = my_data
-                else:
-                    print(f"-------------{my_s}, {my_ss}")
+                # else:
+                #     print(f"-------------{my_s}, {my_ss}")
 
             else:
                 my_s = m().subsection()
@@ -510,8 +496,8 @@ def get_all_sc_data_for_a_polity(polity_id):
                     all_vars_grouped[my_s][my_ss][m.__name__] = my_data
                 elif my_s:
                     all_vars_grouped[my_s]["None"][m.__name__] = my_data
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
                 #if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
                 #    print(f"------{m.subsection()}-------")
     #print(all_vars_grouped)
@@ -579,15 +565,15 @@ def get_all_wf_data_for_a_polity(polity_id):
 
                 if my_s:
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = my_data
-                else:
-                    print(f"-------------{my_s},")
+                # else:
+                #     print(f"-------------{my_s},")
             else:
                 my_s = m().subsection()
 
                 if my_s:
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = None
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
                 #if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
                 #    print(f"------{m.subsection()}-------")
     #print(all_vars_grouped_wf)
@@ -650,15 +636,15 @@ def get_all_ec_data_for_a_polity(polity_id, user):
 
                 if my_s:
                     all_vars_grouped_ec[my_s]["None"][m.__name__] = my_data
-                else:
-                    print(f"-------------{my_s},")
+                # else:
+                #     print(f"-------------{my_s},")
             else:
                 my_s = "Luxury Goods"
 
                 if my_s:
                     all_vars_grouped_ec[my_s]["None"][m.__name__] = None
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
                 #if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
                 #    print(f"------{m.subsection()}-------")
     #print(all_vars_grouped_ec)
@@ -730,14 +716,14 @@ def get_all_rt_data_for_a_polity(request, polity_id):
                 my_s = mm().subsection()
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = my_data
-                else:
-                    print(f"Invalid subsection for model: {mm.__name__}")
+                # else:
+                #     print(f"Invalid subsection for model: {mm.__name__}")
             else:
                 my_s = mm().subsection()
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = None
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
 
     if user and user.has_perm('core.add_capital'):
         #print("hooooy")
@@ -789,7 +775,6 @@ def get_all_rt_data_for_a_polity_old(polity_id):
         if mm and mm.__module__ == "seshat.apps.rt.models":
             my_data = mm.objects.filter(polity=polity_id)
             if mm.__name__ in ["A_religion",]:
-                print("Skipping Religion model")
                 continue
 
             #print(f"Processing model: {mm.__name__}")
@@ -799,15 +784,15 @@ def get_all_rt_data_for_a_polity_old(polity_id):
                 #print(f"Adding data for subsection: {my_s}")
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = my_data
-                else:
-                    print(f"Invalid subsection for model: {mm.__name__}")
+                # else:
+                #     print(f"Invalid subsection for model: {mm.__name__}")
             else:
                 my_s = mm().subsection()
 
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = None
-                else:
-                    print(f"--------xxx-----{my_s},")
+                # else:
+                #     print(f"--------xxx-----{my_s},")
 
     #print("Final grouped data keys:", all_vars_grouped_rt.keys())
     return all_vars_grouped_rt, has_any_data

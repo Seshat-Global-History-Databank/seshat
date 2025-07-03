@@ -47,9 +47,9 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.SUCCESS("\n✅ All endpoints are valid."))
 
-        print('####### PASSED ####')
-        print(passed_dic)
-        print('###################')
-        print('####### Failed ####')
-        print(failed_dic)
-        print('###################')
+        # print('####### PASSED ####')
+        # print(passed_dic)
+        # print('###################')
+        # print('####### Failed ####')
+        # print(failed_dic)
+        # print('###################')

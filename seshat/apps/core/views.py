@@ -4,7 +4,7 @@ import random
 import numpy as np
 
 from collections import defaultdict, OrderedDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from seshat.apps.crisisdb.models import Human_sacrifice
 from seshat.apps.stlm.models import Settlement_population
@@ -87,7 +87,7 @@ from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Re
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, get_all_instability_data_for_a_polity, give_polity_app_data
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, get_all_instability_data_for_a_polity, give_polity_app_data
 
 
 from django.shortcuts import HttpResponse
@@ -2238,8 +2238,6 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
         all_ngas = Nga.objects.all()
         all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
-        #import time
-        #start_time = time.time()
 
         all_polities_g_sc_wf = give_polity_app_data()
 
@@ -2294,8 +2292,6 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
                 #a_polity.has_pt = None
                 a_polity.has_g_sc_wf = None
 
-        #end_time = time.time()
-        #print('elapsed_time ', end_time-start_time)
 
         for a_world_region, all_its_sub_regions in all_world_regions.items():
             for a_subregion in all_its_sub_regions:
@@ -2391,8 +2387,6 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        #import time
-        #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
         #all_mrs_unsorted = Macro_region.objects.all()
         all_mrs_unsorted = Macro_region.objects.exclude(name='World')
@@ -2457,9 +2451,6 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
         freq_dic['pol_count'] = pol_count
         context["freq_data"] = freq_dic
 
-        #end_time = time.time()
-        #print('elapsed_time ', end_time-start_time)
-
         return context
 
 class PolityListView(SuccessMessageMixin, generic.ListView):
@@ -2495,10 +2486,7 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         Returns:
             dict: The context data of the view.
         """
-        start3 = time.time()
         context = super().get_context_data(**kwargs)
-        #import time
-        #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
         #all_mrs_unsorted = Macro_region.objects.all()
         all_mrs_unsorted = Macro_region.objects.exclude(name='World')
@@ -2543,11 +2531,7 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
             all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
 
-        end3 = time.time()
 
-        print(f"33333333333333333333333 took {end3 - start3:.2f} seconds to run")
-        start2 = time.time()
-        print('HIIIIIIIIIIIIIIIII')
         ultimate_wregion_dic = {}
         ultimate_wregion_dic_top = {}
         for a_mr in all_mrs:
@@ -2563,19 +2547,11 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
                         ultimate_wregion_dic_top[a_mr.name][a_sr.name] = [a_sr.subregions_list, 0]
 
 
-        print('---------------------------')
         all_polities_g_sc_wf, freq_dic = give_polity_app_data(user_selected_tag)
         #all_polities_g_sc_wf = give_polity_app_data()
         #freq_dic = {}
         freq_dic["d"] = 0
         
-        end2 = time.time()
-
-        print(f"cccccccccccccccccccccccc took {end2 - start2:.2f} seconds to run")
-
-        start = time.time()
-
-        # Pre-fetch related data to reduce DB hits
 
         all_pols = all_pols.select_related(
             'home_seshat_region__mac_region'
@@ -2608,7 +2584,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         #     a_polity.d_o_c = Polity_degree_of_centralization.objects.filter(polity_id=a_polity.id)
         #     a_polity.s_p_r = Polity_suprapolity_relations.objects.filter(polity_id=a_polity.id)
 
-        #start = time.time()
 
         for a_polity in all_pols:
             try:
@@ -2674,10 +2649,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
             # elif all_durations["intr"]:
             #     a_polity.color = "gmm"
                 
-        #end = time.time()
-
-        #print(f"hoooooooooooooooy took {end - start:.2f} seconds to run")
-
 
         context["ultimate_wregion_dic"] = ultimate_wregion_dic
         context["ultimate_wregion_dic_top"] = ultimate_wregion_dic_top
@@ -2686,9 +2657,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         context["pol_count"] = pol_count
         freq_dic['pol_count'] = pol_count
         context["freq_data"] = freq_dic
-
-        #end_time = time.time()
-        #print('elapsed_time ', end_time-start_time)
 
         return context
 
@@ -3859,12 +3827,10 @@ def update_citations_from_inside_zotero_update():
     Returns:
         None
     """
-    from datetime import datetime
     all_refs = Reference.objects.all()
     for ref in all_refs:
         a_citation = Citation.objects.get_or_create(ref=ref, page_from=None, page_to=None)
         a_citation[0].save()
-    print("Halllooooo")
     # Citation.objects.bulk_create(all_citations)
     #return render (request, 'core/references/reference_list.html')
 

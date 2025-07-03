@@ -1,5 +1,5 @@
 
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 from django.db.models.base import Model
 # from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
@@ -5904,8 +5904,6 @@ def playground(request):
     Returns:
         dict: Context data for the view
     """
-    if request.method == "POST":
-        print(request.POST.get("selected_pols", 'Hallo'))
     all_pols = list_of_all_Polities()
     all_vars = dic_of_all_vars_with_varhier()
     all_vars_plus = dic_of_all_vars_in_sections()
@@ -5936,16 +5934,16 @@ def playgrounddownload(request):
     # sort it out and spit it out
     # small task: download what we have on seshat_api
     checked_pols = request.POST.getlist("selected_pols")
-    print("The checked politys are:", checked_pols)
+    #print("The checked politys are:", checked_pols)
 
     checked_vars = request.POST.getlist("selected_vars")
-    print("The checked vars are:", checked_vars)
+    #print("The checked vars are:", checked_vars)
 
     new_checked_vars = ["crisisdb_" + item.lower() + '_related' for item in checked_vars]
-    print("The modified checked vars are:", new_checked_vars)
+    #print("The modified checked vars are:", new_checked_vars)
 
     checked_separator = request.POST.get("SeparatorRadioOptions")
-    print("The checked separator are:", checked_separator)
+    #print("The checked separator are:", checked_separator)
 
     if checked_separator == "comma":
         checked_sep = ","
@@ -5956,7 +5954,7 @@ def playgrounddownload(request):
 
     url = "http://127.0.0.1:8000/api/politys-api/"
     #url = "https://www.majidbenam.com/api/politys/"
-    print(url)
+    #print(url)
 
 
     headers = CaseInsensitiveDict()
@@ -6636,12 +6634,12 @@ def instability_analytics(request):
         return [{
                     "label": "Same", 
                     "count": match,
-                    "color": "#4292c6"
+                    "color": "#90d6ff"
                 },
                 {
                     "label": "Different", 
                     "count": disagree,
-                    "color": "#df2c14"
+                    "color": "#ff7675"
 
                 },
                 # {
@@ -6677,8 +6675,8 @@ def instability_analytics(request):
                 disagree += 1
 
         return [
-            {"label": "Same Range", "count": match, "color": "#4292c6"},
-            {"label": "Different Range", "count": disagree, "color": "#df2c14"},
+            {"label": "Same Range", "count": match, "color": "#90d6ff"},
+            {"label": "Different Range", "count": disagree, "color": "#ff7675"},
             # {"label": "Missing", "count": missing, "color": "#666666"},
         ]
     

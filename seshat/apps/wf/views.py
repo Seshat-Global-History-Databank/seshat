@@ -1,5 +1,5 @@
 
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 from django.db.models.base import Model
 # from django.http.response import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -9569,8 +9569,8 @@ def wfvarsold(request):
         model_name = model.__name__
         if model_name == "Ra":
             continue
-        else:
-            print(model_name)
+        # else:
+        #     print(model_name)
 
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
@@ -9826,9 +9826,7 @@ def wfvars(request):
     context["all_sect_download_links"] = all_sect_download_links
     context["all_polities"] = len(unique_politys)
     context["number_of_all_rows"] = number_of_all_rows
-    print('----------------')
-    print(all_vars_types)
-    print('-----------------')
+
     context["number_of_variables"] = number_of_variables
 
     return render(request, 'wf/wfvars.html', context=context)
