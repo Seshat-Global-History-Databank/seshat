@@ -727,38 +727,30 @@
           <div id="myCustomLegendDP" class="chart-legend"></div>
         </div>
       </div>
-
-
-
-         
     </div>
-
- 
-
-      
       
  </div>
 
- <div class="row">
-  <div class="col-md-12 pt-5">
-    <span class=" fs-4">    Comapring LLM Data with Researcher Approved Data: 
-    </span>
-<br>
-    <span class="fs-6 text-secondary">          Only Researcher-Checked Rows Considered (Total: {{total_checked}})
-    </span>
-  </div>
-  <div class="col-md-4 p-1 ">
-    <canvas id="intensityComp" height="8" width="10"></canvas>
-  </div>
+ <div class="row pb-3">
+    <div class="col-md-12 pt-5">
+      <span class=" fs-4">    Comapring LLM Data with Researcher Approved Data: 
+      </span>
+  <br>
+      <span class="fs-6 text-secondary">          Only Researcher-Checked Rows Considered (Total: {{total_checked}})
+      </span>
+    </div>
+    <div class="col-md-4 p-1 ">
+      <canvas id="intensityComp" height="8" width="10"></canvas>
+    </div>
 
-  <div class="col-md-4 p-1 ">
-    <canvas id="extentComp" height="8" width="10"></canvas>
-  </div>
-  
+    <div class="col-md-4 p-1 ">
+      <canvas id="extentComp" height="8" width="10"></canvas>
+    </div>
+    
 
-  <div class="col-md-4 p-1 ">
-    <canvas id="year_rangeComp" height="8" width="10"></canvas>
-  </div>
+    <div class="col-md-4 p-1 ">
+      <canvas id="year_rangeComp" height="8" width="10"></canvas>
+    </div>
  </div>
 </div>
 
@@ -1180,10 +1172,10 @@
             },
             anchor: function(context) {
               // If value is tall enough, place inside (center); else outside (end)
-              return context.dataset.data[context.dataIndex] > 9 ? 'center' : 'end';
+              return context.dataset.data[context.dataIndex] > 20 ? 'center' : 'end';
             },
             align: function(context) {
-              return context.dataset.data[context.dataIndex] > 9 ? 'center' : 'top';
+              return context.dataset.data[context.dataIndex] > 20 ? 'center' : 'top';
             }
           },
           tooltip: {
@@ -1570,7 +1562,7 @@
     
               },
               datalabels: {
-                color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                color: ['#003366', '#8b0000'], 
                 font: {
                   weight: 'bold',
                   size: 13
@@ -1580,10 +1572,10 @@
                 },
                 anchor: function(context) {
                   // If value is tall enough, place inside (center); else outside (end)
-                  return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                  return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'end';
                 },
                 align: function(context) {
-                  return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                  return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'top';
                 }
               },
           },
@@ -1658,7 +1650,7 @@
         
                   },
                   datalabels: {
-                    color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                    color: ['#003366', '#8b0000'],
                     font: {
                       weight: 'bold',
                       size: 13
@@ -1668,10 +1660,10 @@
                     },
                     anchor: function(context) {
                       // If value is tall enough, place inside (center); else outside (end)
-                      return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                      return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'end';
                     },
                     align: function(context) {
-                      return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                      return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'top';
                     }
                   },
               },
@@ -1746,7 +1738,7 @@
             
                       },
                       datalabels: {
-                        color: ['#003366', '#c61a09'],  // 👈 Dark blue
+                        color: ['#003366', '#8b0000'],  // 👈 Dark blue
                         font: {
                           weight: 'bold',
                           size: 13
@@ -1756,10 +1748,10 @@
                         },
                         anchor: function(context) {
                           // If value is tall enough, place inside (center); else outside (end)
-                          return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'end';
+                          return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'end';
                         },
                         align: function(context) {
-                          return context.dataset.data[context.dataIndex] > 50 ? 'center' : 'top';
+                          return context.dataset.data[context.dataIndex] > 40 ? 'center' : 'top';
                         }
                       },
                   },

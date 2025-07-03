@@ -639,9 +639,18 @@
    
             <thead> 
             <tr  class="sticky-top"  style="background-color:#ffffff;height:40px; top: 95px; z-index:900;">
-                <th scope="col" style="text-align: left;  width:15%; " class="fw-light"> 
+
+              {% if var_name_display != 'Instability Event' %}
+
+                <th scope="col" style="text-align: left;  width:25%; " class="fw-light"> 
                     <a href="?{% query_transform request orderby='-polity__long_name' %}"><i class="fa-solid fa-arrow-up-z-a"></i>&nbsp;</a>Polity <a href="?{% query_transform request orderby='polity__long_name' %}"><i class="fa-solid fa-arrow-up-a-z"></i>&nbsp;</a>
                 </th>
+                {% else %} 
+                <th scope="col" style="text-align: left;  width:15%; " class="fw-light"> 
+                  <a href="?{% query_transform request orderby='-polity__long_name' %}"><i class="fa-solid fa-arrow-up-z-a"></i>&nbsp;</a>Polity <a href="?{% query_transform request orderby='polity__long_name' %}"><i class="fa-solid fa-arrow-up-a-z"></i>&nbsp;</a>
+              </th>
+                {% endif %} 
+
                 {% if user|in_group:"Chief Seshat External Experts" %}   
 <th> </th>              {% endif %}
                 <!-- headings for extra vars -->

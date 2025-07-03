@@ -51,6 +51,8 @@ title="Click to Download all such coded records">
     {% endautoescape %}
     {% if var_section != 'Luxury Goods' %}
         {% include "core/partials/_all_tags_inline_obj.html" %}
+    {% else %}
+        {% include "core/partials/_all_tags_inline_obj_lux.html" %}
     {% endif %}
 
 

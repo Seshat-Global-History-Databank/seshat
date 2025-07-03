@@ -1,5 +1,5 @@
 
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
+from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 from django.db.models.base import Model
 # from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
@@ -8996,11 +8996,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
             object_list = object_list.filter(polity__new_name__in=rt_allowed_polities)
 
 
-    if db_section == 'ec' and not request.user.has_perm('core.add_capital'):
-        #return HttpResponseForbidden("You do not have permission to access this data.")
-        return render(request, 'core/permission_denied.html', status=403)
+    # if db_section == 'ec' and not request.user.has_perm('core.add_capital'):
+    #     #return HttpResponseForbidden("You do not have permission to access this data.")
+    #     return render(request, 'core/permission_denied.html', status=403)
 
-    if var_name in ['human_sacrifice', 'power_transition', 'instability_event'] and not request.user.has_perm('core.add_seshatprivatecommentpart'):
+    if var_name in ['power_transition', 'instability_event'] and not request.user.has_perm('core.add_seshatprivatecommentpart'):
 
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
