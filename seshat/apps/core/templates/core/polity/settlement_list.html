@@ -90,6 +90,63 @@
 
         }
 
+            
+    .bg-info-light {
+        background: #ffffff; /* rgb(134, 134, 134);*/
+        color: dodgerblue;
+        border: 1px solid rgba(30, 143, 255, 0.178);   
+        background: rgba(30, 143, 255, 0.06);   
+
+       }
+    
+       .bg-danger-light {
+        background: lightpink;
+    
+       }
+    
+        .my_small_link:hover {
+          color:navajowhite;
+        }
+    
+        .bg-success-light {
+            background: #ffffff; /* rgb(134, 134, 134);*/
+            color: teal;
+            border: 1px solid rgba(0, 128, 128, 0.18);   
+            background: rgba(0, 128, 128, 0.08);   
+    
+            }
+
+        .bg-success-light-small {
+            background: #ffffff; /* rgb(134, 134, 134);*/
+            color: teal;
+            padding-bottom:1px;
+            padding-top:2px;
+            padding-left:2px;
+            padding-right:2px;
+
+            border: 1px solid rgba(0, 128, 128, 0.18);   
+            background: rgba(0, 128, 128, 0.08);   
+    
+            }
+    
+       .bg-warning-light {
+        background: #ffffff; /* rgb(134, 134, 134);*/
+        color: darkorange;
+        border: 1px solid goldenrod;   
+       }
+    
+       .bg-uncoded-light {
+        background: #ffffff; /* rgb(134, 134, 134);*/
+        color: darkred;
+        border: 1px solid rosybrown;
+       }
+       
+       .bg-trans-light {
+        background: cadetblue;
+    
+       }
+       
+
     .tight-link {
         margin: 0;
         padding: 0;
@@ -101,6 +158,13 @@
         justify-content: center; /* optional: center badges horizontally */
       }
       
+
+      .bg-absent-light {
+        background: #ffffff; /* rgb(134, 134, 134);*/
+        color: gray;
+        border: 1px solid lightgray;   
+    
+       }
         
 
 </style>
@@ -258,6 +322,7 @@ Key attributes of a Settlement include:
                     <th class="ps-2 fw-normal" style="border: 0px solid red !important;"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; Name
                         <small class="text-secondary"> &nbsp;(Alternative Names)</small> </th>
                         <th class="ps-2 fw-normal" style="border: 0px solid red !important;"> Coordinates </th>
+                        <th class="ps-2 fw-normal" style="border: 0px solid red !important;"> Datasets </th>
                         <th class="ps-2 fw-normal" style="border: 0px solid red !important; text-align:right;"> Current Country </th>
                     </tr>
                 </thead>
@@ -278,6 +343,17 @@ Key attributes of a Settlement include:
                         <td class="col-md-3 ps-2 py-2 fw-bold" style="text-align: left; "> 
                             ({{ a_city.latitude|floatformat:2  }}, {{ a_city.longitude|floatformat:2 }})   
                         </td>
+                        <td>
+                            {% if a_city.has_allen_data %}
+                                <span class="badge bg-success-light" ><i class="fa-solid fa-database"></i> &nbsp; Allen</span>
+                            {% endif %}
+                            {% if a_city.has_pop_data %}
+                            <span class="badge bg-info-light" >👥 &nbsp; Population</span>
+                            {% endif %}
+                            {% if a_city.has_rels %}
+                            <span class="badge bg-absent-light" >🏛 &nbsp; Polity</span>
+                            {% endif %}
+                                                </td>
                         <td class="col-md-3 ps-2 py-2" style="text-align: right; "> 
                             <span >
                                 <img src="https://flagsapi.com/{{a_city.current_country_obj.flag_code }}/flat/24.png" style="border-radius: 50%;">

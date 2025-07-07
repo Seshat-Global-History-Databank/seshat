@@ -1604,7 +1604,7 @@ class SeshatCityCommon(models.Model):
     tag = models.CharField(max_length=5, choices=CityTags, default="1")
     is_disputed = models.BooleanField(default=False, blank=True, null=True)
     is_uncertain = models.BooleanField(default=False, blank=True, null=True)
-    expert_reviewed = models.BooleanField(null=True, blank=True, default=True)
+    expert_reviewed = models.BooleanField(null=True, blank=True, default=False)
     curator = models.ManyToManyField(Seshat_Expert,  related_name="%(app_label)s_%(class)s_related",
                                related_query_name="%(app_label)s_%(class)ss", blank=True,)
     comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)

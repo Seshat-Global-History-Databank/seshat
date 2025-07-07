@@ -235,6 +235,15 @@
         background-color: white; /* Optional */
     }
 
+    .shadow-box-2 {
+      /* Light gray shadow */
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      /* Optional: Add a border if you like */
+      border: 1px solid #b4d2ac; 
+      padding: 0px; /* Adjust as needed 23212529 */
+      background-color: white; /* Optional */
+  }
+
     .accordion-body {
         padding:0px !important;
     }
@@ -646,10 +655,113 @@
     </table>
 
     </div>
-    
+
+
 
 
   </div>
+
+  {% if allen_data_dic %}
+
+  
+  <h4 class="pt-4">Allen Data</h4>
+
+    <div class="row">
+  <div class="col-md-12" id="population-table">
+
+
+
+
+
+
+
+
+    <table class="table mb-2 shadow-box-2" style="width: 100%;">
+      <thead>
+        <tr class="bg-primary text-white">
+          <td>Variable</td>
+          <td>Coded Value</td>
+
+          <td>Year(s)</td>
+          <td>Scientific Resource</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for k, v in allen_data_dic.items %}
+
+      {% for vv in v %}
+      <tr>
+        <td class="px-2">
+          <span class="h6 text-dark fw-bold">{{ k }}</span> 
+      </td>
+          <td class="px-2">
+              <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+          </td>
+          {% if vv.year_from == None and vv.year_to == None %}
+          <td>
+          </td>
+
+          {% else %}
+          <td style="padding-top:5px;">
+              <span class="text-secondary fw-bold fs-6" style="border-radius:5px">
+                  {% if vv.year_from == None %}
+                      &nbsp;
+                  {% elif  vv.year_from == vv.year_to %}
+                      {% if  vv.year_from < 0 %}
+                      {{ vv.year_from|abs }} 
+                      <span class="text-secondary fw-light fs-6">BCE</span> 
+                      {% else %}
+                      {{ vv.year_from }} 
+                      <span class="text-secondary fw-light fs-6">CE</span>
+                      {% endif %}
+                  {% elif vv.year_to == None %}
+                      {% if  vv.year_from < 0 %}
+                      {{ vv.year_from|abs }} 
+                          <span class="text-secondary fw-light fs-6">BCE</span>
+                      {% else %}
+                      {{ vv.year_from }} 
+                          <span class="text-secondary fw-light fs-6">CE</span>
+                      {% endif %}
+                  {% elif vv.year_to == None and  vv.year_from == None %}
+                      <i class="fa-solid fa-minus"></i> 
+                  {% else %}
+                      {% if  vv.year_from < 0 and vv.year_to < 0 %}
+                      {{ vv.year_from|abs }} 
+                          <span class="text-secondary fw-light fs-6">BCE</span> 
+                      <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
+                          <span class="text-secondary fw-light fs-6">BCE</span> 
+                      {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
+                      {{ vv.year_from|abs }}         
+                          <span class="text-secondary fw-light fs-6">BCE</span> 
+                   <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
+                          <span class="text-secondary fw-light fs-6">CE</span> 
+                      {% else %}
+                      {{ vv.year_from }} 
+                          <span class="text-secondary fw-light fs-6">CE</span>
+                    <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
+                          <span class="text-secondary fw-light fs-6">CE</span> 
+                      {% endif %}
+                  {% endif %}
+              </span>
+          </td>
+          
+          <td>
+
+            <span class="bg-secondary text-white rounded px-3" style="vertical-align:center;">{{vv.general_ref.title}}</span>
+
+          </td>
+          {% endif %}
+      </tr>
+      {% endfor %}
+
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+  </div>
+</div>
+{% endif %}
 
 
 

@@ -61,3 +61,84 @@ class Settlement_population(SeshatCityCommon):
         
     def __str__(self) -> str:
         return call_my_name(self)
+    
+class Number_of_ziggurats(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="number_of_ziggurats")
+    count = models.IntegerField(blank=True, null=True)
+
+    def show_value(self):
+        if self.count is not None:
+            return f"{self.count}"
+        else:
+            return " - "
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+class Number_of_palaces(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="number_of_palaces")
+    count = models.IntegerField(blank=True, null=True)
+
+    def show_value(self):
+        if self.count is not None:
+            return f"{self.count}"
+        else:
+            return " - "
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+class Number_of_temples(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="number_of_temples")
+    count = models.IntegerField(blank=True, null=True)
+
+    def show_value(self):
+        if self.count is not None:
+            return f"{self.count}"
+        else:
+            return " - "
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+class Defensive_wall(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="defensive_wall")
+    present = models.BooleanField(null=True, blank=True)
+
+    def show_value(self):
+        if self.present:
+            return "Present"
+        else:
+            return "Absent"
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+class Tablet(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="tablet")
+    present = models.BooleanField(null=True, blank=True)
+
+    def show_value(self):
+        if self.present:
+            return "Present"
+        else:
+            return "Absent"
+
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+class Seal_indicator(SeshatCityCommon):
+    name = models.CharField(max_length=100, default="seal_indicator")
+    present = models.BooleanField(null=True, blank=True)
+
+
+    def show_value(self):
+        if self.present:
+            return "Present"
+        else:
+            return "Absent"
+
+
+    def __str__(self) -> str:
+        return call_my_name(self)
