@@ -7,9 +7,7 @@ from collections import defaultdict, OrderedDict
 from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from seshat.apps.crisisdb.models import Human_sacrifice
-from seshat.apps.stlm.models import Settlement_population
- 
-
+from seshat.apps.stlm.models import Settlement_population, Number_of_ziggurats, Number_of_palaces, Number_of_temples, Defensive_wall, Tablet, Seal_indicator
 
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -35,7 +33,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
 from django.db import IntegrityError, connection
-from django.db.models import Prefetch, F, Value, Q, Min, Max, Count
+from django.db.models import Prefetch, F, Value, Q, Min, Max, Count, Exists, OuterRef
 from django.db.models.functions import Replace
 
 from django.views.decorators.http import require_GET
@@ -2661,32 +2659,59 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         return context
 
 
+
 class SettlementListView(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
-    """
-    List all polities.
-    """
     model = HabitationSite
     template_name = "core/polity/settlement_list.html"
     context_object_name = "settlements"
     permission_required = 'core.add_capital'
 
-
-
+    def get_queryset(self):
+        qs = HabitationSite.objects.select_related('current_country_obj__continent').annotate(
+            has_ziggurats=Exists(Number_of_ziggurats.objects.filter(settlement=OuterRef('pk'))),
+            has_palaces=Exists(Number_of_palaces.objects.filter(settlement=OuterRef('pk'))),
+            has_temples=Exists(Number_of_temples.objects.filter(settlement=OuterRef('pk'))),
+            has_wall=Exists(Defensive_wall.objects.filter(settlement=OuterRef('pk'))),
+            has_tablet=Exists(Tablet.objects.filter(settlement=OuterRef('pk'))),
+            has_seal=Exists(Seal_indicator.objects.filter(settlement=OuterRef('pk'))),
+            has_pop_data=Exists(Settlement_population.objects.filter(settlement=OuterRef('pk'))),
+            has_rels=Exists(CityPolityRelation.objects.filter(settlement=OuterRef('pk'))),
+        )
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         grouped = defaultdict(lambda: defaultdict(list))
 
-        for site in HabitationSite.objects.all():
-            continent = site.current_country_obj.continent.name if site.current_country_obj and site.current_country_obj.continent else "Unknown Continent"
-            country = site.current_country_obj.name if site.current_country_obj else "Unknown Country"
+        for site in self.get_queryset():
+            # Use precomputed flags
+            site.has_allen_data = any([
+                site.has_ziggurats,
+                site.has_palaces,
+                site.has_temples,
+                site.has_wall,
+                site.has_tablet,
+                site.has_seal
+            ])
+
+            # Already annotated
+            site.has_pop_data = site.has_pop_data
+            site.has_rels = site.has_rels
+
+            # Grouping
+            continent = (
+                site.current_country_obj.continent.name
+                if getattr(site.current_country_obj, "continent", None)
+                else "Unknown Continent"
+            )
+            country = (
+                site.current_country_obj.name
+                if site.current_country_obj
+                else "Unknown Country"
+            )
             grouped[continent][country].append(site)
 
-        # Sort the grouping (optional)
-        #sorted_grouped = dict(sorted(grouped.items(), key=lambda x: x[0]))
-
-        # Define your desired continent order
+        # Custom sorting
         continent_order = {
             "Europe": 0,
             "Africa": 1,
@@ -2696,21 +2721,96 @@ class SettlementListView(PermissionRequiredMixin, SuccessMessageMixin, generic.L
             "Oceania": 5,
         }
 
-        # Sort the grouped dict by your custom continent order
         sorted_grouped = dict(
-            sorted(grouped.items(), key=lambda x: continent_order.get(x[0], 99))  # fallback 99 for unknowns
+            sorted(grouped.items(), key=lambda x: continent_order.get(x[0], 99))
         )
         for continent in sorted_grouped:
-            #sorted_grouped[continent] = dict(sorted(sorted_grouped[continent].items(), key=lambda x: x[0]))
             sorted_grouped[continent] = dict(
-                    sorted(
-                        sorted_grouped[continent].items(),
-                        key=lambda x: len(x[1]),  # x[1] is the list of habitation sites
-                        reverse=True
-                    )
+                sorted(
+                    sorted_grouped[continent].items(),
+                    key=lambda x: len(x[1]),
+                    reverse=True
                 )
+            )
+
         context["grouped_settlements"] = sorted_grouped
         return context
+
+
+# class SettlementListView(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
+#     """
+#     List all polities.
+#     """
+#     model = HabitationSite
+#     template_name = "core/polity/settlement_list.html"
+#     context_object_name = "settlements"
+#     permission_required = 'core.add_capital'
+
+
+
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+
+#         grouped = defaultdict(lambda: defaultdict(list))
+
+#         for site in HabitationSite.objects.all():
+#             # Check for any Allen dataset
+#             has_allen_data =  False #any([
+#             #     Number_of_ziggurats.objects.filter(settlement=site).exists(),
+#             #     Number_of_palaces.objects.filter(settlement=site).exists(),
+#             #     Number_of_temples.objects.filter(settlement=site).exists(),
+#             #     Defensive_wall.objects.filter(settlement=site).exists(),
+#             #     Tablet.objects.filter(settlement=site).exists(),
+#             #     Seal_indicator.objects.filter(settlement=site).exists()
+#             # ])
+
+#             # Other flags
+#             has_pop_data = Settlement_population.objects.filter(settlement=site).exists()
+#             has_rels = False#  CityPolityRelation.objects.filter(settlement=site).exists()
+
+#             # Add flags to the object dynamically (in-memory only)
+#             site.has_allen_data = has_allen_data
+#             site.has_pop_data = has_pop_data
+#             site.has_rels = has_rels
+
+
+#             continent = site.current_country_obj.continent.name if site.current_country_obj and site.current_country_obj.continent else "Unknown Continent"
+#             country = site.current_country_obj.name if site.current_country_obj else "Unknown Country"
+#             grouped[continent][country].append(site)
+
+#         # Sort the grouping (optional)
+#         #sorted_grouped = dict(sorted(grouped.items(), key=lambda x: x[0]))
+
+#         # Define your desired continent order
+#         continent_order = {
+#             "Europe": 0,
+#             "Africa": 1,
+#             "Asia": 2,
+#             "North America": 3,
+#             "South America": 4,
+#             "Oceania": 5,
+#         }
+
+#         # Sort the grouped dict by your custom continent order
+#         sorted_grouped = dict(
+#             sorted(grouped.items(), key=lambda x: continent_order.get(x[0], 99))  # fallback 99 for unknowns
+#         )
+
+#         print("Hayloooo")
+
+#         for continent in sorted_grouped:
+#             #sorted_grouped[continent] = dict(sorted(sorted_grouped[continent].items(), key=lambda x: x[0]))
+#             sorted_grouped[continent] = dict(
+#                     sorted(
+#                         sorted_grouped[continent].items(),
+#                         key=lambda x: len(x[1]),  # x[1] is the list of habitation sites
+#                         reverse=True
+#                     )
+#                 )
+#         context["grouped_settlements"] = sorted_grouped
+#         print("Done")
+#         return context
 
 
 class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic.DetailView):
@@ -2734,13 +2834,17 @@ class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic
             my_pol = HabitationSite.objects.get(name=self.kwargs['name'])
             context['pk'] = my_pol.pk
 
-        try:
-            context["all_population_data"] = get_all_instability_data_for_a_polity(self.object.pk)
-        except:
-            context["all_population_data"] = None
-
         # 🧠 Real population data grouped by scientific source
         settlement_pops = Settlement_population.objects.filter(settlement=self.object).select_related('general_ref')
+        # Number_of_ziggurats, Number_of_palaces, Number_of_temples, Defensive_wall, Tablet, Seal_indicator
+        allen_data_dic = {
+            'number of ziggurats' : Number_of_ziggurats.objects.filter(settlement=self.object),
+            'number of palaces' : Number_of_palaces.objects.filter(settlement=self.object),
+            'number of temples' : Number_of_temples.objects.filter(settlement=self.object),
+            'defensive wall' : Defensive_wall.objects.filter(settlement=self.object),
+            'tablet' : Tablet.objects.filter(settlement=self.object),
+            'seal indicator' : Seal_indicator.objects.filter(settlement=self.object),
+        }
 
         if settlement_pops and len(settlement_pops) <= 1:
             context['table_pop_data'] = settlement_pops
@@ -2785,7 +2889,7 @@ class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic
         for idx, (source, data) in enumerate(plot_dict.items()):
             sorted_data = sorted(data, key=lambda x: x[0])
             years = [y for y, _ in sorted_data]
-            print(years)
+            #print(years)
             values = [p for _, p in sorted_data]
             # Logarithmic values (skip or filter out 0 and negative)
             log_values = [log10(p) if p > 0 else None for p in values]
@@ -2818,7 +2922,7 @@ class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic
 
         context['pop_sources'] = ", ".join(used_datasets)
         context['table_pop_data'] = settlement_pops
-
+        context['allen_data_dic'] = allen_data_dic
         return context
 
     def _random_color(self):
