@@ -136,7 +136,7 @@ class MixinSeshatPolity:
 class FilterBackends:
     filter_backends = [
         DjangoFilterBackend,
-        #filters.OrderingFilter,
+        filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    #ordering_fields = ['id',]
+    ordering_fields = ['id',]
