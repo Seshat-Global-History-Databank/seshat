@@ -9241,6 +9241,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
     if coded_value == 'preceding_entity':
         x_name_2 = 'merged_old_data'
         x_name_3 = 'relationship_to_preceding_entity'
+        x_name_4 = 'other_polity_name'
+        x_name_5 = 'other_polity_long_name'
 
     for loop_number, objj in enumerate(items):
         # convert to dict
@@ -9281,10 +9283,14 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_with_to: obj[x_name_with_to],
             })
         elif coded_value in ['preceding_entity']:
-            coded_cols.update({
+               other_polity_name = objj.other_polity.new_name if objj.other_polity else None
+               other_polity_long_name = objj.other_polity.long_name if objj.other_polity else None
+               coded_cols.update({
                 x_name: obj['other_polity'],
                 x_name_2: obj['merged_old_data'],
                 x_name_3: obj['relationship_to_preceding_entity'],
+                x_name_4: other_polity_name,
+                x_name_5: other_polity_long_name,
             })
         elif db_section == 'rt' and  coded_value in ['widespread_religion']:
             coded_cols.update({
@@ -9509,6 +9515,8 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
     if coded_value == 'preceding_entity':
         x_name_2 = 'merged_old_data'
         x_name_3 = 'relationship_to_preceding_entity'
+        x_name_4 = 'other_polity_name'
+        x_name_5 = 'other_polity_long_name'
 
     for objj in items:
         obj = model_to_dict(objj)  # Convert model instance to dictionary
@@ -9544,6 +9552,17 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
                 "widespread_religion": obj.get("widespread_religion"),
                 "degree_of_prevalence": obj.get("degree_of_prevalence"),
             })
+
+        elif coded_value == 'preceding_entity':
+            other_polity_name = objj.other_polity.new_name if objj.other_polity else None
+            other_polity_long_name = objj.other_polity.long_name if objj.other_polity else None
+            coded_cols.update({
+                x_name: obj.get('other_polity'),
+                x_name_2: obj.get('merged_old_data'),
+                x_name_3: obj.get('relationship_to_preceding_entity'),
+                x_name_4: other_polity_name,
+                x_name_5: other_polity_long_name,
+            })    
         elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
             coded_cols.update({
                 "from": obj.get(f"{coded_value}_from"),
