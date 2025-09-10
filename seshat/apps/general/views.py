@@ -9238,6 +9238,10 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
 
     writer = csv.writer(response, delimiter='|')
 
+    if coded_value == 'preceding_entity':
+        x_name_2 = 'merged_old_data'
+        x_name_3 = 'relationship_to_preceding_entity'
+
     for loop_number, objj in enumerate(items):
         # convert to dict
         obj = model_to_dict(objj)  # Convert the object to a dictionary
@@ -9501,6 +9505,10 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
     }
 
     data_list = []
+
+    if coded_value == 'preceding_entity':
+        x_name_2 = 'merged_old_data'
+        x_name_3 = 'relationship_to_preceding_entity'
 
     for objj in items:
         obj = model_to_dict(objj)  # Convert model instance to dictionary
