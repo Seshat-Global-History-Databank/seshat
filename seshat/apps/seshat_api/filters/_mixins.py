@@ -34,7 +34,7 @@ class SeshatCommonFilter:
             is_uncertain=["exact"],
             #expert_reviewed=["exact"],
             #drb_reviewed=["exact"],
-            polity__new_name=["icontains"],
+            polity__name=["exact"],
             polity__long_name=["icontains"],
             #polity__polity_tag=["exact"],
             #polity__home_nga__name=["icontains"],
