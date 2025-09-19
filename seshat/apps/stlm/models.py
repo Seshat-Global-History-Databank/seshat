@@ -106,11 +106,13 @@ class Defensive_wall(SeshatCityCommon):
     present = models.BooleanField(null=True, blank=True)
 
     def show_value(self):
-        if self.present:
+        if self.present is None:
+            return " - "
+        elif self.present:
             return "Present"
         else:
             return "Absent"
-
+        
     def __str__(self) -> str:
         return call_my_name(self)
 
@@ -119,11 +121,12 @@ class Tablet(SeshatCityCommon):
     present = models.BooleanField(null=True, blank=True)
 
     def show_value(self):
-        if self.present:
+        if self.present is None:
+            return " - "
+        elif self.present:
             return "Present"
         else:
             return "Absent"
-
 
     def __str__(self) -> str:
         return call_my_name(self)
@@ -134,7 +137,9 @@ class Seal_indicator(SeshatCityCommon):
 
 
     def show_value(self):
-        if self.present:
+        if self.present is None:
+            return " - "
+        elif self.present:
             return "Present"
         else:
             return "Absent"

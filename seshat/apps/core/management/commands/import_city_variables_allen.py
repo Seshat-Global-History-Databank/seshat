@@ -28,6 +28,8 @@ class Command(BaseCommand):
                 continue
 
             for entry in records:
+                if entry["coded_val"] == -999:
+                    continue
                 try:
                     city = HabitationSite.objects.get(name=entry["name"])
                 except HabitationSite.DoesNotExist:
