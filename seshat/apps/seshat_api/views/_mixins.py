@@ -84,7 +84,7 @@ class MixinSeshatAPISerializerNEW:
         return GeneralSerializer
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('id')
 
 class MixinSeshatAPISerializer:
     def get_serializer_class(self):
@@ -102,7 +102,7 @@ class MixinSeshatAPISerializer:
         return GeneralSerializer
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('id')
     
 class MixinLuxuryGoodsSeshatAPISerializer:
     def get_serializer_class(self):
@@ -112,7 +112,7 @@ class MixinLuxuryGoodsSeshatAPISerializer:
         return GeneralLuxuryGoodsSerializer
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('id')
     
 class MixinSeshatAPISerializerAllFields:
     def get_serializer_class(self):
@@ -122,7 +122,7 @@ class MixinSeshatAPISerializerAllFields:
         return GeneralAllFieldsSerializer
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('id')
     
 class MixinSeshatPolity:
     def get_serializer_class(self):
@@ -130,7 +130,7 @@ class MixinSeshatPolity:
 
         return PolityAPISerializer
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('id')
     
 
 class FilterBackends:

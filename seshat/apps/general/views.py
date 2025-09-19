@@ -9246,6 +9246,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
 
         if coded_value == "power_transition":
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 
+        elif coded_value == "preceding_entity":
+            x_name, x_name_2, x_name_3 = "other_polity", "merged_old_data", "relationship_to_preceding_entity"
         elif coded_value == "widespread_religion":
             x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
         elif x_name == "lux_precious_metal":

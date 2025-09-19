@@ -2848,7 +2848,7 @@ class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic
 
         if settlement_pops and len(settlement_pops) <= 1:
             context['table_pop_data'] = settlement_pops
-            return context
+            #return context
 
         plot_dict = defaultdict(list)
 
@@ -2920,9 +2920,14 @@ class SettlementDetailView(PermissionRequiredMixin, SuccessMessageMixin, generic
             'datasets': log_datasets
         })
 
+        # Compute has_allen_data: True if any of the querysets is non-empty
+        has_allen_data = any(qs.exists() for qs in allen_data_dic.values())
+
         context['pop_sources'] = ", ".join(used_datasets)
         context['table_pop_data'] = settlement_pops
         context['allen_data_dic'] = allen_data_dic
+        context["has_allen_data"] = has_allen_data
+
         return context
 
     def _random_color(self):
