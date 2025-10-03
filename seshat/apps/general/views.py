@@ -1738,11 +1738,14 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 #     return render(request, 'core/generic_templates/generic_list_all.html', context)
 
+#from seshat.utils.utils import list_variable_hierarchies
 
 
 def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, db_section, var_main_desc):
     # Only enforce authentication and permissions if db_section is not 'rt'
     # special case of RT:
+    #rows = list_variable_hierarchies()
+
 
 
     rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]

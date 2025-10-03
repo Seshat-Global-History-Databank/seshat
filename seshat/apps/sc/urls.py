@@ -6,6 +6,8 @@ from .forms import Polity_territoryForm, Polity_populationForm, Population_of_th
 
 from seshat.apps.general.views import dynamic_create_view, dynamic_update_view,  dynamic_update_view_old, generic_list_view, generic_download, generic_json_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
 
+from seshat.apps.core.models import Variablehierarchy, Section
+
 from .var_defs import sc_var_defs
 
 

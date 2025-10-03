@@ -10,11 +10,49 @@ from seshat.apps.general.models import Polity_degree_of_centralization, Polity_s
 from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
 
-from django.db.models import Q
+from django.db.models import Q, Value
 
 from ..apps.core.models import Polity
 import requests
 from requests.structures import CaseInsensitiveDict
+
+# repos.py
+from typing import Optional, Iterable, Dict, Any
+from django.db.models.functions import Coalesce
+from seshat.apps.core.models import Variablehierarchy, Section
+
+def list_variable_hierarchies(
+    canonical: Optional[str] = None,
+    section_name: Optional[str] = None,
+    subsection_name: Optional[str] = None,
+) -> Iterable[Variablehierarchy]:
+    """
+    Return Variablehierarchy rows with section/subsection eagerly loaded and
+    (optionally) filtered by canonical, section, and subsection names (case-insensitive).
+    """
+    qs = (
+        Variablehierarchy.objects
+        .select_related("section", "subsection")   # eager load to avoid N+1
+        .order_by("sort_order", "pk")
+    )
+
+    # filter by canonical name OR fall back to "name" if canonical is null
+    if canonical:
+        canonical = canonical.strip()
+        qs = qs.annotate(
+            search_canonical=Coalesce("canonical_name", "name")
+        ).filter(search_canonical__iexact=canonical)
+
+    if section_name:
+        qs = qs.filter(section__name__iexact=section_name.strip())
+
+    if subsection_name:
+        qs = qs.filter(subsection__name__iexact=subsection_name.strip())
+
+    #for q in qs:
+    #    print(q.canonical_name, q.section, q.subsection)
+
+    return qs
 
 
 vars_dic_for_utils = {
