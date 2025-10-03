@@ -5,12 +5,18 @@ from .forms import Polity_utm_zoneForm, Polity_original_nameForm, Polity_alterna
 from django.urls import path
 from .var_defs import general_var_defs
 
+#from seshat.utils.utils import list_variable_hierarchies
+
+
 from . import views
 
 urlpatterns = [
     path('generalvars/', views.generalvars, name='generalvars'),
     path('download-csv-general-all/', views.download_csv_all_general,name='download_csv_all_general'),
 ]
+
+
+#variable_rows = list_variable_hierarchies()
 
 
 #####################

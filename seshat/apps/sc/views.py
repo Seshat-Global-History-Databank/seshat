@@ -334,7 +334,7 @@ class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Territory"
-        context["my_exp"] = "Talking about Social Scale, Polity territory is coded in squared kilometers."
+        context["my_exp"] = "Polity territory is coded in squared kilometers."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'polity_territory_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of polity territory for a polity.', 'units': 'km squared', 'choices': None, 'null_meaning': None}, 'polity_territory_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of polity territory for a polity.', 'units': 'km squared', 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -414,7 +414,7 @@ class Polity_territoryListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Territory"
-        context["var_main_desc"] = "Talking about social scale, polity territory is coded in squared kilometers."
+        context["var_main_desc"] = "polity territory is coded in squared kilometers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -461,7 +461,7 @@ class Polity_territoryListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Territory"
-        context["var_main_desc"] = "Talking about social scale, polity territory is coded in squared kilometers."
+        context["var_main_desc"] = "polity territory is coded in squared kilometers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -530,7 +530,7 @@ def polity_territory_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_polity_territorys.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Social Scale, Polity territory is coded in squared kilometers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Polity territory is coded in squared kilometers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
     my_meta_data_dic_inner_vars = {'polity_territory_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of polity territory for a polity.', 'units': 'km squared', 'choices': None, 'null_meaning': None}, 'polity_territory_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of polity territory for a polity.', 'units': 'km squared', 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -585,7 +585,7 @@ class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Population"
-        context["my_exp"] = "Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
+        context["my_exp"] = "Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'polity_population_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of polity population for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'polity_population_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of polity population for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -665,7 +665,7 @@ class Polity_populationListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Population"
-        context["var_main_desc"] = "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
+        context["var_main_desc"] = "polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -712,7 +712,7 @@ class Polity_populationListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Polity Population"
-        context["var_main_desc"] = "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
+        context["var_main_desc"] = "polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -781,7 +781,7 @@ def polity_population_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_polity_populations.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
     my_meta_data_dic_inner_vars = {'polity_population_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of polity population for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'polity_population_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of polity population for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -836,7 +836,7 @@ class Population_of_the_largest_settlementCreate(PermissionRequiredMixin, Polity
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Population of the Largest Settlement"
-        context["my_exp"] = "Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data."
+        context["my_exp"] = "Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'population_of_the_largest_settlement_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of population of the largest settlement for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'population_of_the_largest_settlement_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of population of the largest settlement for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -916,7 +916,7 @@ class Population_of_the_largest_settlementListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Population of the Largest Settlement"
-        context["var_main_desc"] = "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
+        context["var_main_desc"] = "population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -963,7 +963,7 @@ class Population_of_the_largest_settlementListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Population of the Largest Settlement"
-        context["var_main_desc"] = "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
+        context["var_main_desc"] = "population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Social Scale"
@@ -1008,7 +1008,7 @@ def population_of_the_largest_settlement_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_population_of_the_largest_settlements.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Social Scale'}
     my_meta_data_dic_inner_vars = {'population_of_the_largest_settlement_from': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of population of the largest settlement for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'population_of_the_largest_settlement_to': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of population of the largest settlement for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -1063,7 +1063,7 @@ class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Settlement Hierarchy"
-        context["my_exp"] = "Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
+        context["my_exp"] = "Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'settlement_hierarchy_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of settlement hierarchy for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'settlement_hierarchy_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of settlement hierarchy for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -1143,7 +1143,7 @@ class Settlement_hierarchyListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Settlement Hierarchy"
-        context["var_main_desc"] = "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
+        context["var_main_desc"] = "settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1190,7 +1190,7 @@ class Settlement_hierarchyListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Settlement Hierarchy"
-        context["var_main_desc"] = "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
+        context["var_main_desc"] = "settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1235,7 +1235,7 @@ def settlement_hierarchy_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_settlement_hierarchys.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
     my_meta_data_dic_inner_vars = {'settlement_hierarchy_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of settlement hierarchy for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'settlement_hierarchy_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of settlement hierarchy for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -1290,7 +1290,7 @@ class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Administrative Level"
-        context["my_exp"] = "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command)."
+        context["my_exp"] = "Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command)."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'administrative_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of administrative level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'administrative_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of administrative level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -1370,7 +1370,7 @@ class Administrative_levelListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Administrative Level"
-        context["var_main_desc"] = "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
+        context["var_main_desc"] = "administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1417,7 +1417,7 @@ class Administrative_levelListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Administrative Level"
-        context["var_main_desc"] = "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
+        context["var_main_desc"] = "administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1462,7 +1462,7 @@ def administrative_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_administrative_levels.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
     my_meta_data_dic_inner_vars = {'administrative_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of administrative level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'administrative_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of administrative level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -1517,7 +1517,7 @@ class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Religious Level"
-        context["my_exp"] = "Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
+        context["my_exp"] = "Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'religious_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of religious level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'religious_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of religious level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -1597,7 +1597,7 @@ class Religious_levelListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Level"
-        context["var_main_desc"] = "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
+        context["var_main_desc"] = "religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1644,7 +1644,7 @@ class Religious_levelListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Level"
-        context["var_main_desc"] = "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
+        context["var_main_desc"] = "religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1689,7 +1689,7 @@ def religious_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_religious_levels.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
     my_meta_data_dic_inner_vars = {'religious_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of religious level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'religious_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of religious level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -1744,7 +1744,7 @@ class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Military Level"
-        context["my_exp"] = "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."
+        context["my_exp"] = "Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'military_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of military level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'military_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of military level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
         context["potential_cols"] = []
@@ -1824,7 +1824,7 @@ class Military_levelListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Military Level"
-        context["var_main_desc"] = "Talking about hierarchical complexity, military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
+        context["var_main_desc"] = "military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Hierarchical Complexity"
@@ -1851,7 +1851,7 @@ class Military_levelListView(generic.ListView):
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
 #         context["myvar"] = "Military Level"
-#         context["var_main_desc"] = "Talking about hierarchical complexity, military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
+#         context["var_main_desc"] = "military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
 #         context["var_main_desc_source"] = "NOTHING"
 #         context["var_section"] = "Social Complexity"
 #         context["var_subsection"] = "Hierarchical Complexity"
@@ -1896,7 +1896,7 @@ def military_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_military_levels.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier).', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier).', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Hierarchical Complexity'}
     my_meta_data_dic_inner_vars = {'military_level_from': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The lower range of military level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}, 'military_level_to': {'min': 0, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The upper range of military level for a polity.', 'units': None, 'choices': None, 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -1951,7 +1951,7 @@ class Professional_military_officerCreate(PermissionRequiredMixin, PolityIdMixin
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Professional Military Officer"
-        context["my_exp"] = "Talking about Professions, Professional military officers refer to Full-time Professional military officers."
+        context["my_exp"] = "Professional military officers refer to Full-time Professional military officers."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'professional_military_officer': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional military officer for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -2031,7 +2031,7 @@ class Professional_military_officerListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Military Officer"
-        context["var_main_desc"] = "Talking about professions, professional military officers refer to full-time professional military officers."
+        context["var_main_desc"] = "professional military officers refer to full-time professional military officers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2078,7 +2078,7 @@ class Professional_military_officerListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Military Officer"
-        context["var_main_desc"] = "Talking about professions, professional military officers refer to full-time professional military officers."
+        context["var_main_desc"] = "professional military officers refer to full-time professional military officers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2123,7 +2123,7 @@ def professional_military_officer_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_military_officers.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Professions, Professional military officers refer to Full-time Professional military officers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Professional military officers refer to Full-time Professional military officers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
     my_meta_data_dic_inner_vars = {'professional_military_officer': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional military officer for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -2178,7 +2178,7 @@ class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Professional Soldier"
-        context["my_exp"] = "Talking about Professions, Professional soldiers refer to Full-time Professional soldiers."
+        context["my_exp"] = "Professional soldiers refer to Full-time Professional soldiers."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'professional_soldier': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional soldier for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -2258,7 +2258,7 @@ class Professional_soldierListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Soldier"
-        context["var_main_desc"] = "Talking about professions, professional soldiers refer to full-time professional soldiers."
+        context["var_main_desc"] = "professional soldiers refer to full-time professional soldiers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2305,7 +2305,7 @@ class Professional_soldierListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Soldier"
-        context["var_main_desc"] = "Talking about professions, professional soldiers refer to full-time professional soldiers."
+        context["var_main_desc"] = "professional soldiers refer to full-time professional soldiers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2350,7 +2350,7 @@ def professional_soldier_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_soldiers.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Professions, Professional soldiers refer to Full-time Professional soldiers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Professional soldiers refer to Full-time Professional soldiers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
     my_meta_data_dic_inner_vars = {'professional_soldier': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional soldier for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -2405,7 +2405,7 @@ class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, Crea
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Professional Priesthood"
-        context["my_exp"] = "Talking about Professions, Professional priesthood refers to Full-time Professional priesthood."
+        context["my_exp"] = "Professional priesthood refers to Full-time Professional priesthood."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'professional_priesthood': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional priesthood for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -2485,7 +2485,7 @@ class Professional_priesthoodListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Priesthood"
-        context["var_main_desc"] = "Talking about professions, professional priesthood refers to full-time professional priesthood."
+        context["var_main_desc"] = "professional priesthood refers to full-time professional priesthood."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2532,7 +2532,7 @@ class Professional_priesthoodListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Priesthood"
-        context["var_main_desc"] = "Talking about professions, professional priesthood refers to full-time professional priesthood."
+        context["var_main_desc"] = "professional priesthood refers to full-time professional priesthood."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Professions"
@@ -2577,7 +2577,7 @@ def professional_priesthood_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_priesthoods.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Professions, Professional priesthood refers to Full-time Professional priesthood.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Professional priesthood refers to Full-time Professional priesthood.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Professions'}
     my_meta_data_dic_inner_vars = {'professional_priesthood': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional priesthood for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -2632,7 +2632,7 @@ class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Full Time Bureaucrat"
-        context["my_exp"] = "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
+        context["my_exp"] = "Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'full_time_bureaucrat': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of full time bureaucrat for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -2712,7 +2712,7 @@ class Full_time_bureaucratListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Full Time Bureaucrat"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
+        context["var_main_desc"] = "full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -2759,7 +2759,7 @@ class Full_time_bureaucratListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Full Time Bureaucrat"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
+        context["var_main_desc"] = "full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -2804,7 +2804,7 @@ def full_time_bureaucrat_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_full_time_bureaucrats.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
     my_meta_data_dic_inner_vars = {'full_time_bureaucrat': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of full time bureaucrat for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -2859,7 +2859,7 @@ class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Examination System"
-        context["my_exp"] = "Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system."
+        context["my_exp"] = "The paradigmatic example of an Examination system is the Chinese imperial system."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'examination_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of examination system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -2939,7 +2939,7 @@ class Examination_systemListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Examination System"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
+        context["var_main_desc"] = "the paradigmatic example of an examination system is the chinese imperial system."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -2986,7 +2986,7 @@ class Examination_systemListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Examination System"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
+        context["var_main_desc"] = "the paradigmatic example of an examination system is the chinese imperial system."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -3031,7 +3031,7 @@ def examination_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_examination_systems.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'The paradigmatic example of an Examination system is the Chinese imperial system.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
     my_meta_data_dic_inner_vars = {'examination_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of examination system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -3086,7 +3086,7 @@ class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Merit Promotion"
-        context["my_exp"] = "Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
+        context["my_exp"] = "Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'merit_promotion': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of merit promotion for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -3166,7 +3166,7 @@ class Merit_promotionListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Merit Promotion"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
+        context["var_main_desc"] = "merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -3213,7 +3213,7 @@ class Merit_promotionListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Merit Promotion"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
+        context["var_main_desc"] = "merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -3258,7 +3258,7 @@ def merit_promotion_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_merit_promotions.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
     my_meta_data_dic_inner_vars = {'merit_promotion': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of merit promotion for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -3313,7 +3313,7 @@ class Specialized_government_buildingCreate(PermissionRequiredMixin, PolityIdMix
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Specialized Government Building"
-        context["my_exp"] = "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here."
+        context["my_exp"] = "These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'specialized_government_building': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of specialized government building for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -3393,7 +3393,7 @@ class Specialized_government_buildingListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Specialized Government Building"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
+        context["var_main_desc"] = "these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -3440,7 +3440,7 @@ class Specialized_government_buildingListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Specialized Government Building"
-        context["var_main_desc"] = "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
+        context["var_main_desc"] = "these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Bureaucracy characteristics"
@@ -3485,7 +3485,7 @@ def specialized_government_building_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_specialized_government_buildings.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Bureaucracy characteristics'}
     my_meta_data_dic_inner_vars = {'specialized_government_building': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of specialized government building for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -3540,7 +3540,7 @@ class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Formal Legal Code"
-        context["my_exp"] = "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description"
+        context["my_exp"] = "Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'formal_legal_code': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of formal legal code for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -3620,7 +3620,7 @@ class Formal_legal_codeListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Formal Legal Code"
-        context["var_main_desc"] = "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
+        context["var_main_desc"] = "formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -3667,7 +3667,7 @@ class Formal_legal_codeListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Formal Legal Code"
-        context["var_main_desc"] = "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
+        context["var_main_desc"] = "formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -3712,7 +3712,7 @@ def formal_legal_code_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_formal_legal_codes.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
     my_meta_data_dic_inner_vars = {'formal_legal_code': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of formal legal code for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -3767,7 +3767,7 @@ class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Judge"
-        context["my_exp"] = "Talking about Law, judges refers only to full-time professional judges"
+        context["my_exp"] = "judges refers only to full-time professional judges"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'judge': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of judge for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -3847,7 +3847,7 @@ class JudgeListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Judge"
-        context["var_main_desc"] = "Talking about law, judges refers only to full-time professional judges"
+        context["var_main_desc"] = "judges refers only to full-time professional judges"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -3894,7 +3894,7 @@ class JudgeListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Judge"
-        context["var_main_desc"] = "Talking about law, judges refers only to full-time professional judges"
+        context["var_main_desc"] = "judges refers only to full-time professional judges"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -3939,7 +3939,7 @@ def judge_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_judges.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Law, judges refers only to full-time professional judges', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'judges refers only to full-time professional judges', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
     my_meta_data_dic_inner_vars = {'judge': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of judge for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -3994,7 +3994,7 @@ class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Court"
-        context["my_exp"] = "Talking about Law, courts are buildings specialized for legal proceedings only."
+        context["my_exp"] = "courts are buildings specialized for legal proceedings only."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'court': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of court for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -4074,7 +4074,7 @@ class CourtListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Court"
-        context["var_main_desc"] = "Talking about law, courts are buildings specialized for legal proceedings only."
+        context["var_main_desc"] = "courts are buildings specialized for legal proceedings only."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -4121,7 +4121,7 @@ class CourtListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Court"
-        context["var_main_desc"] = "Talking about law, courts are buildings specialized for legal proceedings only."
+        context["var_main_desc"] = "courts are buildings specialized for legal proceedings only."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -4166,7 +4166,7 @@ def court_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_courts.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Law, courts are buildings specialized for legal proceedings only.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'courts are buildings specialized for legal proceedings only.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
     my_meta_data_dic_inner_vars = {'court': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of court for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -4221,7 +4221,7 @@ class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateVi
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Professional Lawyer"
-        context["my_exp"] = "Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK."
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'professional_lawyer': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional lawyer for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -4301,7 +4301,7 @@ class Professional_lawyerListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Lawyer"
-        context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
+        context["var_main_desc"] = "no Descriptions IN Codebook."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -4348,7 +4348,7 @@ class Professional_lawyerListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Professional Lawyer"
-        context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
+        context["var_main_desc"] = "no Descriptions IN Codebook."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Law"
@@ -4393,7 +4393,7 @@ def professional_lawyer_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_lawyers.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Law'}
     my_meta_data_dic_inner_vars = {'professional_lawyer': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of professional lawyer for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -4448,7 +4448,7 @@ class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Irrigation System"
-        context["my_exp"] = "Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'irrigation_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of irrigation system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -4528,7 +4528,7 @@ class Irrigation_systemListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Irrigation System"
-        context["var_main_desc"] = "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -4575,7 +4575,7 @@ class Irrigation_systemListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Irrigation System"
-        context["var_main_desc"] = "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -4620,7 +4620,7 @@ def irrigation_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_irrigation_systems.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
     my_meta_data_dic_inner_vars = {'irrigation_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of irrigation system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -4675,7 +4675,7 @@ class Drinking_water_supply_systemCreate(PermissionRequiredMixin, PolityIdMixin,
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Drinking Water Supply System"
-        context["my_exp"] = "Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'drinking_water_supply_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of drinking water supply system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -4755,7 +4755,7 @@ class Drinking_water_supply_systemListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Drinking Water Supply System"
-        context["var_main_desc"] = "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -4802,7 +4802,7 @@ class Drinking_water_supply_systemListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Drinking Water Supply System"
-        context["var_main_desc"] = "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -4847,7 +4847,7 @@ def drinking_water_supply_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_drinking_water_supply_systems.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
     my_meta_data_dic_inner_vars = {'drinking_water_supply_system': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of drinking water supply system for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -4902,7 +4902,7 @@ class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Market"
-        context["my_exp"] = "Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'market': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of market for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -4982,7 +4982,7 @@ class MarketListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Market"
-        context["var_main_desc"] = "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -5029,7 +5029,7 @@ class MarketListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Market"
-        context["var_main_desc"] = "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -5074,7 +5074,7 @@ def market_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_markets.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
     my_meta_data_dic_inner_vars = {'market': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of market for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -5129,7 +5129,7 @@ class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Food Storage Site"
-        context["my_exp"] = "Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'food_storage_site': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of food storage site for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -5209,7 +5209,7 @@ class Food_storage_siteListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Food Storage Site"
-        context["var_main_desc"] = "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -5256,7 +5256,7 @@ class Food_storage_siteListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Food Storage Site"
-        context["var_main_desc"] = "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
+        context["var_main_desc"] = "food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Specialized Buildings"
@@ -5301,7 +5301,7 @@ def food_storage_site_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_food_storage_sites.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Specialized Buildings'}
     my_meta_data_dic_inner_vars = {'food_storage_site': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of food storage site for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -5356,7 +5356,7 @@ class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Road"
-        context["my_exp"] = "Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
+        context["my_exp"] = "roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'road': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of road for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -5436,7 +5436,7 @@ class RoadListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Road"
-        context["var_main_desc"] = "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
+        context["var_main_desc"] = "roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5483,7 +5483,7 @@ class RoadListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Road"
-        context["var_main_desc"] = "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
+        context["var_main_desc"] = "roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5528,7 +5528,7 @@ def road_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_roads.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
     my_meta_data_dic_inner_vars = {'road': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of road for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -5583,7 +5583,7 @@ class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Bridge"
-        context["my_exp"] = "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
+        context["my_exp"] = "bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'bridge': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of bridge for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -5663,7 +5663,7 @@ class BridgeListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Bridge"
-        context["var_main_desc"] = "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
+        context["var_main_desc"] = "bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5710,7 +5710,7 @@ class BridgeListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Bridge"
-        context["var_main_desc"] = "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
+        context["var_main_desc"] = "bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5755,7 +5755,7 @@ def bridge_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_bridges.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
     my_meta_data_dic_inner_vars = {'bridge': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of bridge for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -5810,7 +5810,7 @@ class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Canal"
-        context["my_exp"] = "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
+        context["my_exp"] = "canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'canal': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of canal for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -5890,7 +5890,7 @@ class CanalListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Canal"
-        context["var_main_desc"] = "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
+        context["var_main_desc"] = "canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5937,7 +5937,7 @@ class CanalListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Canal"
-        context["var_main_desc"] = "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
+        context["var_main_desc"] = "canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -5982,7 +5982,7 @@ def canal_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_canals.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it).", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
     my_meta_data_dic_inner_vars = {'canal': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of canal for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -6037,7 +6037,7 @@ class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Port"
-        context["my_exp"] = "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
+        context["my_exp"] = "Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'port': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of port for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -6117,7 +6117,7 @@ class PortListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Port"
-        context["var_main_desc"] = "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
+        context["var_main_desc"] = "ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -6164,7 +6164,7 @@ class PortListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Port"
-        context["var_main_desc"] = "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
+        context["var_main_desc"] = "ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Transport infrastructure"
@@ -6209,7 +6209,7 @@ def port_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_ports.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Transport infrastructure'}
     my_meta_data_dic_inner_vars = {'port': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of port for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -6264,7 +6264,7 @@ class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Mines or Quarry"
-        context["my_exp"] = "Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'mines_or_quarry': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of mines or quarry for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -6344,7 +6344,7 @@ class Mines_or_quarryListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mines or Quarry"
-        context["var_main_desc"] = "Talking about special purpose sites, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Special purpose sites"
@@ -6391,7 +6391,7 @@ class Mines_or_quarryListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mines or Quarry"
-        context["var_main_desc"] = "Talking about special purpose sites, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Special purpose sites"
@@ -6436,7 +6436,7 @@ def mines_or_quarry_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_mines_or_quarrys.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Special purpose sites'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Special purpose sites'}
     my_meta_data_dic_inner_vars = {'mines_or_quarry': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of mines or quarry for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -6491,7 +6491,7 @@ class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Mnemonic Device"
-        context["my_exp"] = "Talking about Writing Systems, Mnemonic devices are: For example, tallies"
+        context["my_exp"] = "Mnemonic devices are: For example, tallies"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'mnemonic_device': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of mnemonic device for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -6571,7 +6571,7 @@ class Mnemonic_deviceListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mnemonic Device"
-        context["var_main_desc"] = "Talking about writing systems, mnemonic devices are: for example, tallies"
+        context["var_main_desc"] = "mnemonic devices are: for example, tallies"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -6618,7 +6618,7 @@ class Mnemonic_deviceListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Mnemonic Device"
-        context["var_main_desc"] = "Talking about writing systems, mnemonic devices are: for example, tallies"
+        context["var_main_desc"] = "mnemonic devices are: for example, tallies"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -6663,7 +6663,7 @@ def mnemonic_device_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_mnemonic_devices.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Writing Systems, Mnemonic devices are: For example, tallies', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Mnemonic devices are: For example, tallies', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'mnemonic_device': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of mnemonic device for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -6718,7 +6718,7 @@ class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Nonwritten Record"
-        context["my_exp"] = "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps"
+        context["my_exp"] = "Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'nonwritten_record': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of nonwritten record for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -6798,7 +6798,7 @@ class Nonwritten_recordListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Nonwritten Record"
-        context["var_main_desc"] = "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
+        context["var_main_desc"] = "nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -6845,7 +6845,7 @@ class Nonwritten_recordListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Nonwritten Record"
-        context["var_main_desc"] = "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
+        context["var_main_desc"] = "nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -6890,7 +6890,7 @@ def nonwritten_record_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_nonwritten_records.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'nonwritten_record': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of nonwritten record for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -6945,7 +6945,7 @@ class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Written Record"
-        context["my_exp"] = "Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records"
+        context["my_exp"] = "Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'written_record': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of written record for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -7025,7 +7025,7 @@ class Written_recordListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Written Record"
-        context["var_main_desc"] = "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
+        context["var_main_desc"] = "written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7072,7 +7072,7 @@ class Written_recordListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Written Record"
-        context["var_main_desc"] = "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
+        context["var_main_desc"] = "written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7117,7 +7117,7 @@ def written_record_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_written_records.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'written_record': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of written record for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -7172,7 +7172,7 @@ class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Script"
-        context["my_exp"] = "Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
+        context["my_exp"] = "script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'script': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of script for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -7252,7 +7252,7 @@ class ScriptListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Script"
-        context["var_main_desc"] = "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
+        context["var_main_desc"] = "script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7299,7 +7299,7 @@ class ScriptListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Script"
-        context["var_main_desc"] = "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
+        context["var_main_desc"] = "script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7363,7 +7363,7 @@ def script_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_scripts.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'script': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of script for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -7418,7 +7418,7 @@ class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Non Phonetic Writing"
-        context["my_exp"] = "Talking about Writing Systems, this refers to the kind of script"
+        context["my_exp"] = "this refers to the kind of script"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'non_phonetic_writing': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of non phonetic writing for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -7498,7 +7498,7 @@ class Non_phonetic_writingListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Non Phonetic Writing"
-        context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
+        context["var_main_desc"] = "this refers to the kind of script"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7545,7 +7545,7 @@ class Non_phonetic_writingListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Non Phonetic Writing"
-        context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
+        context["var_main_desc"] = "this refers to the kind of script"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7590,7 +7590,7 @@ def non_phonetic_writing_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_non_phonetic_writings.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Writing Systems, this refers to the kind of script', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'this refers to the kind of script', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'non_phonetic_writing': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of non phonetic writing for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -7645,7 +7645,7 @@ class Phonetic_alphabetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, 
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Phonetic Alphabetic Writing"
-        context["my_exp"] = "Talking about Writing Systems, this refers to the kind of script"
+        context["my_exp"] = "this refers to the kind of script"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'phonetic_alphabetic_writing': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of phonetic alphabetic writing for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -7725,7 +7725,7 @@ class Phonetic_alphabetic_writingListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Phonetic Alphabetic Writing"
-        context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
+        context["var_main_desc"] = "this refers to the kind of script"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7772,7 +7772,7 @@ class Phonetic_alphabetic_writingListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Phonetic Alphabetic Writing"
-        context["var_main_desc"] = "Talking about writing systems, this refers to the kind of script"
+        context["var_main_desc"] = "this refers to the kind of script"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Writing Systems"
@@ -7817,7 +7817,7 @@ def phonetic_alphabetic_writing_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_phonetic_alphabetic_writings.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Writing Systems, this refers to the kind of script', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'this refers to the kind of script', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Writing Systems'}
     my_meta_data_dic_inner_vars = {'phonetic_alphabetic_writing': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of phonetic alphabetic writing for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -7872,7 +7872,7 @@ class Lists_tables_and_classificationCreate(PermissionRequiredMixin, PolityIdMix
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Lists Tables and Classification"
-        context["my_exp"] = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'lists_tables_and_classification': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of lists tables and classification for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -7952,7 +7952,7 @@ class Lists_tables_and_classificationListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Lists Tables and Classification"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -7999,7 +7999,7 @@ class Lists_tables_and_classificationListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Lists Tables and Classification"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8044,7 +8044,7 @@ def lists_tables_and_classification_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_lists_tables_and_classifications.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'lists_tables_and_classification': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of lists tables and classification for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -8099,7 +8099,7 @@ class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Calendar"
-        context["my_exp"] = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'calendar': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of calendar for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -8179,7 +8179,7 @@ class CalendarListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Calendar"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8226,7 +8226,7 @@ class CalendarListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Calendar"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8271,7 +8271,7 @@ def calendar_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_calendars.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'calendar': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of calendar for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -8326,7 +8326,7 @@ class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Sacred Text"
-        context["my_exp"] = "Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them."
+        context["my_exp"] = "Sacred Texts originate from supernatural agents (deities), or are directly inspired by them."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'sacred_text': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of sacred text for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -8406,7 +8406,7 @@ class Sacred_textListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Sacred Text"
-        context["var_main_desc"] = "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
+        context["var_main_desc"] = "sacred texts originate from supernatural agents (deities), or are directly inspired by them."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8453,7 +8453,7 @@ class Sacred_textListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Sacred Text"
-        context["var_main_desc"] = "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
+        context["var_main_desc"] = "sacred texts originate from supernatural agents (deities), or are directly inspired by them."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8498,7 +8498,7 @@ def sacred_text_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_sacred_texts.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Sacred Texts originate from supernatural agents (deities), or are directly inspired by them.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'sacred_text': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of sacred text for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -8553,7 +8553,7 @@ class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Religious Literature"
-        context["my_exp"] = "Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
+        context["my_exp"] = "Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'religious_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of religious literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -8633,7 +8633,7 @@ class Religious_literatureListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
+        context["var_main_desc"] = "religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8680,7 +8680,7 @@ class Religious_literatureListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Religious Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
+        context["var_main_desc"] = "religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8725,7 +8725,7 @@ def religious_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_religious_literatures.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'religious_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of religious literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -8780,7 +8780,7 @@ class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Practical Literature"
-        context["my_exp"] = "Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature."
+        context["my_exp"] = "Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'practical_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of practical literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -8860,7 +8860,7 @@ class Practical_literatureListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Practical Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
+        context["var_main_desc"] = "practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8907,7 +8907,7 @@ class Practical_literatureListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Practical Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
+        context["var_main_desc"] = "practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -8952,7 +8952,7 @@ def practical_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_practical_literatures.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'practical_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of practical literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -9007,7 +9007,7 @@ class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "History"
-        context["my_exp"] = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'history': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of history for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -9087,7 +9087,7 @@ class HistoryListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "History"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9134,7 +9134,7 @@ class HistoryListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "History"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9179,7 +9179,7 @@ def history_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_historys.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'history': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of history for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -9234,7 +9234,7 @@ class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Philosophy"
-        context["my_exp"] = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
+        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'philosophy': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of philosophy for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -9314,7 +9314,7 @@ class PhilosophyListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Philosophy"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9361,7 +9361,7 @@ class PhilosophyListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Philosophy"
-        context["var_main_desc"] = "Talking about kinds of written documents, no Descriptions IN Codebook"
+        context["var_main_desc"] = "no Descriptions IN Codebook"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9406,7 +9406,7 @@ def philosophy_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_philosophys.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'NO_DESCRIPTIONS_IN_CODEBOOK', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'philosophy': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of philosophy for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -9461,7 +9461,7 @@ class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, Create
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Scientific Literature"
-        context["my_exp"] = "Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences"
+        context["my_exp"] = "Scientific literature includes mathematics, natural sciences, social sciences"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'scientific_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of scientific literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -9541,7 +9541,7 @@ class Scientific_literatureListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Scientific Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
+        context["var_main_desc"] = "scientific literature includes mathematics, natural sciences, social sciences"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9588,7 +9588,7 @@ class Scientific_literatureListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Scientific Literature"
-        context["var_main_desc"] = "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
+        context["var_main_desc"] = "scientific literature includes mathematics, natural sciences, social sciences"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9633,7 +9633,7 @@ def scientific_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_scientific_literatures.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Scientific literature includes mathematics, natural sciences, social sciences', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'scientific_literature': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of scientific literature for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -9688,7 +9688,7 @@ class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Fiction"
-        context["my_exp"] = "Talking about Kinds of Written Documents, fiction includes poetry."
+        context["my_exp"] = "fiction includes poetry."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'fiction': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of fiction for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -9768,7 +9768,7 @@ class FictionListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Fiction"
-        context["var_main_desc"] = "Talking about kinds of written documents, fiction includes poetry."
+        context["var_main_desc"] = "fiction includes poetry."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9815,7 +9815,7 @@ class FictionListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Fiction"
-        context["var_main_desc"] = "Talking about kinds of written documents, fiction includes poetry."
+        context["var_main_desc"] = "fiction includes poetry."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Kinds of Written Documents"
@@ -9860,7 +9860,7 @@ def fiction_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_fictions.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about Kinds of Written Documents, fiction includes poetry.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'fiction includes poetry.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Kinds of Written Documents'}
     my_meta_data_dic_inner_vars = {'fiction': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of fiction for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -9915,7 +9915,7 @@ class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Article"
-        context["my_exp"] = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
+        context["my_exp"] = "articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'article': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of article for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -9997,7 +9997,7 @@ class ArticleListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Article"
-        context["var_main_desc"] = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
+        context["var_main_desc"] = "articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10044,7 +10044,7 @@ class ArticleListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Article"
-        context["var_main_desc"] = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
+        context["var_main_desc"] = "articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10089,7 +10089,7 @@ def article_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_articles.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
     my_meta_data_dic_inner_vars = {'article': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of article for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -10144,7 +10144,7 @@ class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Token"
-        context["my_exp"] = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
+        context["my_exp"] = "tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'token': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of token for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -10221,7 +10221,7 @@ class TokenListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Token"
-        context["var_main_desc"] = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
+        context["var_main_desc"] = "tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10268,7 +10268,7 @@ class TokenListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Token"
-        context["var_main_desc"] = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
+        context["var_main_desc"] = "tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10313,7 +10313,7 @@ def token_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_tokens.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
     my_meta_data_dic_inner_vars = {'token': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of token for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -10368,7 +10368,7 @@ class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Precious Metal"
-        context["my_exp"] = "Talking about forms of money, Precious metals are non-coined silver, gold, platinum"
+        context["my_exp"] = "Precious metals are non-coined silver, gold, platinum"
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'precious_metal': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of precious metal for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -10448,7 +10448,7 @@ class Precious_metalListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Precious Metal"
-        context["var_main_desc"] = "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
+        context["var_main_desc"] = "precious metals are non-coined silver, gold, platinum"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10495,7 +10495,7 @@ class Precious_metalListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Precious Metal"
-        context["var_main_desc"] = "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
+        context["var_main_desc"] = "precious metals are non-coined silver, gold, platinum"
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Forms of money"
@@ -10540,7 +10540,7 @@ def precious_metal_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_precious_metals.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about forms of money, Precious metals are non-coined silver, gold, platinum', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Precious metals are non-coined silver, gold, platinum', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Forms of money'}
     my_meta_data_dic_inner_vars = {'precious_metal': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of precious metal for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -11493,7 +11493,7 @@ class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Postal Station"
-        context["my_exp"] = "Talking about postal sytems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers."
+        context["my_exp"] = "Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'postal_station': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of postal station for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -11573,7 +11573,7 @@ class Postal_stationListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Postal Station"
-        context["var_main_desc"] = "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
+        context["var_main_desc"] = "postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Postal sytems"
@@ -11620,7 +11620,7 @@ class Postal_stationListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "Postal Station"
-        context["var_main_desc"] = "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
+        context["var_main_desc"] = "postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Postal sytems"
@@ -11665,7 +11665,7 @@ def postal_station_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_postal_stations.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Talking about postal sytems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Postal sytems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': 'Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers.', 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Postal sytems'}
     my_meta_data_dic_inner_vars = {'postal_station': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of postal station for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
@@ -11720,7 +11720,7 @@ class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, Creat
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "General Postal Service"
-        context["my_exp"] = "Talking about postal sytems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
+        context["my_exp"] = "'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {'general_postal_service': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of general postal service for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
         context["potential_cols"] = []
@@ -11800,7 +11800,7 @@ class General_postal_serviceListView(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "General Postal Service"
-        context["var_main_desc"] = "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
+        context["var_main_desc"] = "'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Postal sytems"
@@ -11847,7 +11847,7 @@ class General_postal_serviceListViewAll(generic.ListView):
         """
         context = super().get_context_data(**kwargs)
         context["myvar"] = "General Postal Service"
-        context["var_main_desc"] = "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
+        context["var_main_desc"] = "'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
         context["var_main_desc_source"] = "NOTHING"
         context["var_section"] = "Social Complexity"
         context["var_subsection"] = "Postal sytems"
@@ -11892,7 +11892,7 @@ def general_postal_service_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_general_postal_services.csv"'
     
-    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "Talking about postal sytems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Postal sytems'}
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': "'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens.", 'main_desc_source': 'NOTHING', 'section': 'Social Complexity', 'subsection': 'Postal sytems'}
     my_meta_data_dic_inner_vars = {'general_postal_service': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'The absence or presence of general postal service for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
     writer = csv.writer(response, delimiter='|')
     # bring in the meta data nedded
