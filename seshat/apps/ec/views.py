@@ -222,7 +222,7 @@ def ecvars(request):
     return render(request, 'ec/ecvars.html', context=context)
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_luxury_goods(request):
     # Fetch all models in the "socomp" app
     app_name = 'ec'  # Replace with your app name

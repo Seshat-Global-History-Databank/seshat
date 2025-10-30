@@ -42,29 +42,38 @@
                     <label for="id_password" class="form-label fw-bold">Password:</label>
                     <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="form-control" required="" id="id_password">
                   </div>
-                  <div class="mt-2">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <input type="checkbox"  name="remember" id="id_remember">
-                        <label for="id_remember" class="form-label">Remember Me.</label>
-                      </div>
-                      <div class="col-md-6 text-end">
-                        <a class="button text-secondary secondaryAction" href="{% url 'account_reset_password' %}"><u>{% trans "Forgot Password?" %}</u></a>
-                      </div>
-                    </div>
-                  </div>
+                 
                   {% if redirect_field_value %}
                   <div>
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                   </div>
                   {% endif %}
-                  <div class="col-md-12 mt-3">
-                    <button class="primaryAction btn btn-primary fw-bold fa-lg col-md-12 gradient-custom-2 mb-3 me-3 my-3 px-5"  type="submit">{% trans "Sign In" %}</button>
-                  </div>
+          <div class="row align-items-center">
+            <div class="col-md-6 d-flex">
+              <button
+                class="primaryAction btn btn-outline-primary fw-bold w-100 fa-lg mb-3 my-3 px-5"
+                type="submit"
+              >
+                {% trans "Sign In" %}
+              </button>
+            </div>
+
+            <div class="col-md-6 d-flex justify-content-md-end justify-content-start">
+              <a
+                class="button text-secondary secondaryAction mb-3 my-3"
+                href="{% url 'account_reset_password' %}"
+              >
+                <u>{% trans "Forgot Password?" %}</u>
+              </a>
+            </div>
+          </div>
+
+                 
+                 
                 </form>
                 <div class="row">
                   <div>
-                    <p>If you have not created an account yet, then please sign up with:</p> 
+                    <p class="fw-light">If you have not created an account yet, then please sign up with:</p> 
                   </div>
                 </div>
 
@@ -72,15 +81,13 @@
                 {% if socialaccount_providers %}
                 <div class="socialaccount_ballot">
                   <div class="row">
-                    <div class="col-md-6">
-                      <a title="GitHub" class="socialaccount_provider github btn btn-outline-dark fw-bold fa-lg col-md-12 mb-3 my-1 disabled" href="/accounts/github/login/?process=login"> <i class="fa-brands fa-github"></i> &nbsp; GitHub</a>
-                    </div>
+
                     <div class="col-md-6">
                       <a title="Google" class="socialaccount_provider google btn btn-outline-danger fw-bold fa-lg col-md-12 mb-1 my-1" href="/accounts/google/login/?process=login"> <i class="fa-brands fa-google"></i>  &nbsp; Google</a>
                     </div>
                   </div>
                   <div class="col-md-12 pt-2">
-                      <p> or, sign up the traditional way: </p>
+                      <p class="fw-light"> or, sign up the traditional way: </p>
                       <a class="btn btn-secondary fw-bold fa-lg col-md-6  me-3 my-1 px-5"  href="{% url 'signup' %}">{% trans "Sign Up" %}</a>
                   </div>
                 </div>
@@ -88,7 +95,7 @@
                 {% include "socialaccount/snippets/login_extra.html" %}
                 
                 {% else %}
-                <p>{% blocktrans %}If you have not created an account yet, then please
+                <p class="fw-light">{% blocktrans %}If you have not created an account yet, then please
                 <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
                 {% endif %}
 
@@ -96,18 +103,15 @@
             </div>
             <div class="col-lg-6 d-flex align-items-center text-dark" style="background-color: #fefae6">
               <div class="text-dark px-3 py-4 p-md-5 mx-md-4 fw-bold">
-                <div class="bg-info text-dark pt-4 pb-1 px-3 rounded"> <i class="fa-solid fa-circle-exclamation text-dark"></i> If you are a Seshat Expert or a Seshat Research Assistant, please:
-                  <ol class="fw-bold">
+                <div class="text-dark pt-4 pb-1 px-3 rounded" style=" background: #99cfd9;"> <i class="fa-solid fa-circle-exclamation text-dark"></i> If you are a Seshat Expert or a Seshat Research Assistant, please:
+                  <ol class="fw-normal">
                     <li>Create an account on this page.</li>
                     <li>Contact Majid (benam@csh.ac.at) to get your account activated with the right permissions.</li>
                   </ol> 
                 </div>
                 <h4 class="mt-4 mb-3">Seshat: Global History Databank</h4>
-                <p class="small mb-2">was founded in 2011 to bring together the most current and comprehensive body of knowledge about human history in one place. The huge potential of this knowledge for testing theories about political and economic development has been largely untapped.</p>
-                <hr>
-                <h4 class="mt-4 mb-3">Seshat unique Databank
-                </h4>
-                <p class="small mb-2">systematically collects what is currently known about the social and political organization of human societies and how civilizations have evolved over time. This massive collection of historical information allows us and others to rigorously test different hypotheses about the rise and fall of large-scale societies across the globe and human history.</p>
+                <p class="small mb-2 fw-normal">was founded in 2011 to bring together the most current and comprehensive body of knowledge about human history in one place. The huge potential of this knowledge for testing theories about political and economic development has been largely untapped.</p>
+                <p class="small mb-2 fw-normal">Seshat unique Databank systematically collects what is currently known about the social and political organization of human societies and how civilizations have evolved over time. This massive collection of historical information allows us and others to rigorously test different hypotheses about the rise and fall of large-scale societies across the globe and human history.</p>
               </div>
             </div>
           </div>

@@ -6,6 +6,16 @@ urlpatterns = [path('', views.seshatindex, name='seshat-index'),]
 urlpatterns += [path('methods/', views.seshatmethods, name='seshat-methods'),]
 urlpatterns += [path('whoweare/', views.seshatwhoweare, name='seshat-whoweare'),]
 urlpatterns += [path('codebook', views.seshatcodebookold, name='seshat-codebook'),]
+urlpatterns += [path('terms', views.terms_view, name='seshat-terms'),]
+
+# terms
+urlpatterns += [
+    path("terms/current/", views.terms_current, name="terms_current"),
+    path("terms/accept/", views.terms_accept, name="terms_accept"),
+     path("terms/launch/", views.show_terms_then_return, name="terms_launch"),
+
+    # ... other core URLs
+]
 urlpatterns += [path('downloads_page/', views.seshatolddownloads, name='seshat-olddownloads'),]
 urlpatterns += [
     path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),

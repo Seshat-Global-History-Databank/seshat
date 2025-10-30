@@ -919,7 +919,7 @@ def delete_object_view(request, model_class, pk, var_name):
     
     return redirect(success_url)
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_rt(request):
     """
     Download all data for all models in the RT app.
@@ -951,10 +951,16 @@ def download_csv_all_rt(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
         items = model.objects.exclude(polity_id__isnull=True)
+
+        # special case of RT:
+        if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+            items = items.filter(polity__new_name__in=rt_allowed_polities)
 
         for obj in items:
             if obj.clean_name() == "widespread_religion":
@@ -968,7 +974,7 @@ def download_csv_all_rt(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def show_problematic_rt_data_table(request):
     """
     View that shows a table of problematic data in the RT app.
@@ -998,7 +1004,7 @@ def show_problematic_rt_data_table(request):
     return render(request, 'rt/problematic_rt_data_table.html', {'data': data})
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_religious_demography(request):
     """
     Download all data for the Religious Landscape model in the RT app.
@@ -1031,6 +1037,8 @@ def download_csv_religious_demography(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
@@ -1040,6 +1048,11 @@ def download_csv_religious_demography(request):
         s_value = str(model().subsection())
         if s_value == "Religious Demography":
             items = model.objects.exclude(polity_id__isnull=True)
+
+            # special case of RT:
+            if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+                items = items.filter(polity__new_name__in=rt_allowed_polities)
+                
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1047,7 +1060,7 @@ def download_csv_religious_demography(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_government_restrictions(request):
     """
     Download all data for the Government Restrictions model in the RT app.
@@ -1080,6 +1093,8 @@ def download_csv_government_restrictions(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
@@ -1090,6 +1105,10 @@ def download_csv_government_restrictions(request):
         ss_value = str(model().sub_subsection())
         if s_value == "Religious Tolerance" and ss_value == "Government Restrictions":
             items = model.objects.exclude(polity_id__isnull=True)
+            # special case of RT:
+            if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+                items = items.filter(polity__new_name__in=rt_allowed_polities)
+
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1097,7 +1116,7 @@ def download_csv_government_restrictions(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_societal_restrictions(request):
     """
     Download all data for the Societal Restrictions model in the RT app.
@@ -1130,6 +1149,8 @@ def download_csv_societal_restrictions(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
@@ -1140,6 +1161,9 @@ def download_csv_societal_restrictions(request):
         ss_value = str(model().sub_subsection())
         if s_value == "Religious Tolerance" and ss_value == "Societal Restrictions":
             items = model.objects.exclude(polity_id__isnull=True)
+            # special case of RT:
+            if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+                items = items.filter(polity__new_name__in=rt_allowed_polities)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1147,7 +1171,7 @@ def download_csv_societal_restrictions(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_moralizing_supernatural_punishment_and_reward(request):
     """
     Download all data for the Societal Restrictions model in the RT app.
@@ -1180,6 +1204,8 @@ def download_csv_moralizing_supernatural_punishment_and_reward(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
@@ -1189,6 +1215,9 @@ def download_csv_moralizing_supernatural_punishment_and_reward(request):
         s_value = str(model().subsection())
         if s_value == "Moralizing Supernatural Punishment and Reward":
             items = model.objects.exclude(polity_id__isnull=True)
+            # special case of RT:
+            if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+                items = items.filter(polity__new_name__in=rt_allowed_polities)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1197,7 +1226,7 @@ def download_csv_moralizing_supernatural_punishment_and_reward(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_religious_tolerance(request):
     """
     Download all data for the Societal Restrictions model in the RT app.
@@ -1230,6 +1259,8 @@ def download_csv_religious_tolerance(request):
     # type the headers
     writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
                     'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
@@ -1239,6 +1270,9 @@ def download_csv_religious_tolerance(request):
         s_value = str(model().subsection())
         if s_value == "Religious Tolerance":
             items = model.objects.exclude(polity_id__isnull=True)
+            # special case of RT:
+            if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+                items = items.filter(polity__new_name__in=rt_allowed_polities)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1247,7 +1281,7 @@ def download_csv_religious_tolerance(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_human_sacrifice(request):
     """
     Download all data for the Societal Restrictions model in the RT app.

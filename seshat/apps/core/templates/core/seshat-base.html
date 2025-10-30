@@ -114,10 +114,46 @@
     {% block content-home %} {% endblock %}
   </div>
 
+  {% if TERMS_SHOW_MODAL and TERMS_CURRENT %}
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ TERMS_CURRENT.title }}</h5>
+        </div>
+        <div class="modal-body">
+          <!-- If you store HTML in body_html -->
+          {{ TERMS_CURRENT.body_html|safe }}
+        </div>
+        <div class="modal-footer">
+          <form id="terms-accept-form" method="post" action="{% url 'terms_accept' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="btn btn-success">I Agree</button>
+          </form>
+          <a href="{% url 'seshat-index' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var modalEl = document.getElementById('termsModal');
+    if (modalEl) {
+      var modal = new bootstrap.Modal(modalEl, {backdrop:'static', keyboard:false});
+      modal.show();
+    }
+  });
+  </script>
+{% endif %}
 
     <!-- footer -->
       {% include "core/partials/_footer_bar.html" %}
     </div>
+
+
+
 
 
     <!-- JS Scripts Needed -->

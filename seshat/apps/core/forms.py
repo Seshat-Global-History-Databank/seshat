@@ -529,6 +529,13 @@ class SignUpForm(UserCreationForm):
     #     max_length=30, required=False, help_text='Optional.')
     # email = forms.EmailField(
     #     max_length=254, help_text='Required. Inform a valid email address.')
+
+    # ✅ add required T&C checkbox
+    accept_terms = forms.BooleanField(
+        required=True,
+        label='I agree to the <a href="" target="_blank">Seshat User Agreement</a>',
+        error_messages={'required': 'You must agree to the terms to register.'}
+    )
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
@@ -538,6 +545,14 @@ class SignUpForm(UserCreationForm):
         label="Confirm password",
         widget=forms.PasswordInput(
             attrs={'class': 'form-control mb-3', 'type': 'password', 'align': 'center', 'placeholder': 'password'}),
+    )
+
+    username = forms.CharField(
+        max_length=150,
+        help_text='',  # <- silence the default
+        label="Username",
+        widget=forms.TextInput(
+                attrs={'class': 'form-control mb-3', }),
     )
 
     def clean_email(self):
@@ -554,8 +569,16 @@ class SignUpForm(UserCreationForm):
         :noindex:
         """
         model = User
-        fields = ('username', 'first_name', 'last_name',
-                  'email', 'password1', 'password2', 'captcha')
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password1',
+            'password2',
+            'captcha',
+            'accept_terms'  # include it here so it shows up in form rendering
+        )
         widgets = {
             'first_name': forms.TextInput(
                 attrs={'class': 'form-control mb-3', }),

@@ -2,26 +2,29 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container mt-3 pt-2 d-flex justify-content-center">
-  <h3>Sign up for a Seshat account:</h3>
-</div>
-<div class="container d-flex justify-content-center">
-  <hr class="bg-colorful" style="width:50%">
-</div>
-<div class="container py-3 d-flex justify-content-center">
-      <form method="post">
-        {% csrf_token %}
-        <!-- START row -->
-        <div class="row">
-          <div class="col-md-12">
-            {% if form.errors %}
-              <div class="alert alert-danger">Please fix the following errors:
-                {{form.errors}}
-              </div>
-            {% endif %}
+
+<div class="container py-3">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="row">
+      <!-- LEFT COLUMN: form fields -->
+      <div class="col-md-6">
+      <div>
+        <h3 class="text-secondary">Sign up for a free Seshat Account:</h3>
+      </div>
+
+      <div>
+        <hr class="bg-colorful">
+      </div>
+
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            Please fix the following errors:
+            {{ form.errors }}
           </div>
-        </div>
-        <!-- END row -->
+        {% endif %}
+
         <div class="row">
           <div class="col-md-6">
             {{ form.first_name|as_crispy_field }}
@@ -30,6 +33,7 @@
             {{ form.last_name|as_crispy_field }}
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-6">
             {{ form.username|as_crispy_field }}
@@ -38,6 +42,7 @@
             {{ form.email|as_crispy_field }}
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-6">
             {{ form.password1|as_crispy_field }}
@@ -46,10 +51,49 @@
             {{ form.password2|as_crispy_field }}
           </div>
         </div>
-        {{ form.captcha }}
 
-        <button class="btn btn-primary col-12 fa-lg gradient-custom-2 mb-3 me-3 mt-3" type="submit"> &nbsp; &nbsp; <strong>Sign up</strong>  &nbsp; &nbsp; </button>
-      </form>
+        <div class="row">
+          <div class="col-md-12">
+            {{ form.captcha }}
+          </div>
+        </div>
+
+        <!-- The checkbox logically applies to the Terms, but
+             UX-wise we still show it here too so it's obvious
+             it's required before submit -->
+        <div class="form-check mt-4 ps-0">
+          {{ form.accept_terms }}
+          <label class="form-check-label fw-normal" for="{{ form.accept_terms.id_for_label }}">
+            I have read and understood the
+            <u>Seshat Databank User Agreement</u>.
+          </label>
+          {% if form.accept_terms.errors %}
+            <div class="text-danger small">{{ form.accept_terms.errors }}</div>
+          {% endif %}
+        </div>
+
+        <button
+          class="btn btn-outline-primary col-6 fa-lg mb-3 me-3 mt-4"
+          type="submit"
+        >
+          &nbsp; &nbsp; <strong>Sign up</strong> &nbsp; &nbsp;
+        </button>
+      </div>
+
+      <!-- RIGHT COLUMN: terms box -->
+      <div class="col-md-6">
+          <div class="small text-muted mt-2">
+          Please review the Seshat Databank User Agreement before creating an account.
+        </div>
+        <div class="border rounded p-3 bg-light"
+             style="max-height: 400px; overflow-y: auto; font-size: 0.9rem; line-height: 1.4;">
+          {{ terms_html|safe }}
+        </div>
+          <div class="small text-muted mt-2">
+            Questions about this Agreement or licensing: contact seshatghd@gmail.com.
+          </div>
+      </div>
+    </div>
+  </form>
 </div>
-
 {% endblock %}
