@@ -6463,7 +6463,9 @@ def get_description_brief(request, model_name, obj_id):
 @user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
 def download_habitation_sites_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="habitation_sites.csv"'
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"habitation_sites_{current_datetime}.csv"
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
     writer = csv.writer(response, delimiter='|')
     writer.writerow([
