@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from .models import Profile
+from .models import Profile, TermsVersion, TermsAcceptance
 from django.contrib.contenttypes.models import ContentType
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin

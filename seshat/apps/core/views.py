@@ -41,7 +41,7 @@ from django.views.decorators.http import require_GET
 from django.utils.decorators import method_decorator
 
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from seshat.apps.accounts.models import Seshat_Expert
+from seshat.apps.accounts.models import Seshat_Expert, TermsVersion, TermsAcceptance
 from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years, Polity_suprapolity_relations, Polity_degree_of_centralization
 from seshat.apps.sc.models import Token, Precious_metal
 from seshat.apps.ec.models import Lux_precious_metal
@@ -53,6 +53,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 import os
 
 from django.contrib.contenttypes.models import ContentType
+
 
 
 from django.apps import apps
@@ -73,7 +74,7 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 
 from django.contrib.messages.views import SuccessMessageMixin
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, quote
 
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
 from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level, Polity_territory, Polity_population
@@ -647,7 +648,7 @@ class ReferenceDetailView(generic.DetailView):
 
 
 
-@permission_required('core.view_capital')
+@login_required
 def references_download(request):
     """
     Download all references as a CSV file.
@@ -3413,7 +3414,7 @@ class CapitalDelete(PermissionRequiredMixin, DeleteView):
 
     
 
-@permission_required('core.view_capital')
+@login_required
 def capital_download(request):
     """
     Download all Capitals as CSV.
@@ -3452,12 +3453,24 @@ def signup_traditional(request):
     Returns:
         HttpResponse: The HTTP response.
     """
+    current = TermsVersion.objects.filter(is_active=True).first()
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            # ✅ Log acceptance if checkbox present/true
+            if form.cleaned_data.get("accept_terms"):
+                #current = TermsVersion.objects.get(is_active=True)
+                #print(current)
+                #print("##################")
+                TermsAcceptance.objects.create(
+                    user=user,
+                    terms=current,
+                    ip_address=request.META.get("REMOTE_ADDR"),
+                    user_agent=request.META.get("HTTP_USER_AGENT", "")[:1000],
+                )
 
             #current_site = get_current_site(request)
             #subject = 'Activate Your Seshat Account'
@@ -3468,13 +3481,13 @@ def signup_traditional(request):
                 'token': account_activation_token.make_token(user)
             })
 
-            send_mail(
-                'Seshat-DB Email Verification',
-                message,
-                'seshatdb@gmail.com',  # Replace with your sender email
-                [user.email],  # Replace with recipient email(s)
-                fail_silently=False,
-            )
+            # send_mail(
+            #     'Seshat-DB Email Verification',
+            #     message,
+            #     'seshatdb@gmail.com',  # Replace with your sender email
+            #     [user.email],  # Replace with recipient email(s)
+            #     fail_silently=False,
+            # )
             #user.email_user(subject, message)
             # to_be_sent_email = EmailMessage(subject=subject, body=message,
             #                                 from_email=settings.EMAIL_FROM_USER, to=[user.email])
@@ -3484,7 +3497,10 @@ def signup_traditional(request):
             return redirect('account_activation_sent')
     else:
         form = SignUpForm()
-    return render(request, 'core/signup_traditional.html', {'form': form})
+    return render(request, 'core/signup_traditional.html', {
+        'form': form,
+        "terms_html": current.body_html, 
+        })
 
 
 def signupfollowup(request):
@@ -4306,7 +4322,7 @@ def get_polity_data_single(polity_id):
 
     return data
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_polities(request):
     """
     Download a CSV file containing all polities.
@@ -6936,3 +6952,57 @@ def export_seshat_regions_csv(request):
         ])
 
     return response
+
+def terms_view(request):
+    return render(request, "core/terms.html")
+
+def terms_current(request):
+    user = getattr(request, 'user', None)
+    current = TermsVersion.objects.filter(is_active=True).first()
+
+    already_accepted = False
+    accepted_at = None
+
+    if current and user and user.is_authenticated:
+        # strict check for the current version
+        qs = TermsAcceptance.objects.filter(user=user, terms=current).order_by("-accepted_at")
+        if qs.exists():
+            already_accepted = True
+            accepted_at = qs.first().accepted_at
+
+    next_url = request.GET.get("next") or "/"
+    my_caller = request.META.get("HTTP_REFERER")
+
+    return render(request, "core/terms.html", {
+        "terms": current, 
+        "next": next_url,
+        'my_caller': my_caller,
+        "TERMS_ALREADY_ACCEPTED": already_accepted,
+        "TERMS_ACCEPTED_AT": accepted_at,})
+
+def terms_current_new(request):
+    next_url = request.GET.get("next") or "/"
+    # tell the UI to show the modal on the *next* page render
+    #request.session["FORCE_TERMS_MODAL"] = True
+    return redirect(next_url)
+
+def show_terms_then_return(request):
+    next_url = request.GET.get("next") or request.META.get("HTTP_REFERER") or "/"
+    request.session["FORCE_TERMS_MODAL"] = True
+    return redirect(next_url)
+
+@login_required
+def terms_accept(request):
+    if request.method == "POST":
+        current = TermsVersion.objects.get(is_active=True)
+        TermsAcceptance.objects.get_or_create(
+            user=request.user, terms=current,
+            defaults={
+                "ip_address": request.META.get("REMOTE_ADDR"),
+                "user_agent": request.META.get("HTTP_USER_AGENT", "")[:1000],
+            }
+        )
+        return redirect(request.POST.get("next") or "/")
+    #return redirect(f"{reverse('terms_launch')}?next={quote(request.get_full_path())}")
+
+    return redirect(reverse("seshat-index"))

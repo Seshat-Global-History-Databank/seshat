@@ -202,7 +202,7 @@ class Long_wallDetailView(generic.DetailView):
     template_name = "wf/long_wall/long_wall_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def long_wall_download(request):
     items = Long_wall.objects.all()
 
@@ -222,7 +222,7 @@ def long_wall_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def long_wall_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="long_walls.csv"'
@@ -415,7 +415,7 @@ class CopperDetailView(generic.DetailView):
     template_name = "wf/copper/copper_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def copper_download(request):
     items = Copper.objects.all()
 
@@ -435,7 +435,7 @@ def copper_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def copper_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="coppers.csv"'
@@ -609,7 +609,7 @@ class BronzeDetailView(generic.DetailView):
     template_name = "wf/bronze/bronze_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def bronze_download(request):
     items = Bronze.objects.all()
 
@@ -629,7 +629,7 @@ def bronze_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def bronze_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="bronzes.csv"'
@@ -803,7 +803,7 @@ class IronDetailView(generic.DetailView):
     template_name = "wf/iron/iron_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def iron_download(request):
     items = Iron.objects.all()
 
@@ -823,7 +823,7 @@ def iron_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def iron_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="irons.csv"'
@@ -997,7 +997,7 @@ class SteelDetailView(generic.DetailView):
     template_name = "wf/steel/steel_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def steel_download(request):
     items = Steel.objects.all()
 
@@ -1017,7 +1017,7 @@ def steel_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def steel_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="steels.csv"'
@@ -1191,7 +1191,7 @@ class JavelinDetailView(generic.DetailView):
     template_name = "wf/javelin/javelin_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def javelin_download(request):
     items = Javelin.objects.all()
 
@@ -1211,7 +1211,7 @@ def javelin_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def javelin_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="javelins.csv"'
@@ -1385,7 +1385,7 @@ class AtlatlDetailView(generic.DetailView):
     template_name = "wf/atlatl/atlatl_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def atlatl_download(request):
     items = Atlatl.objects.all()
 
@@ -1405,7 +1405,7 @@ def atlatl_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def atlatl_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="atlatls.csv"'
@@ -1579,7 +1579,7 @@ class SlingDetailView(generic.DetailView):
     template_name = "wf/sling/sling_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def sling_download(request):
     items = Sling.objects.all()
 
@@ -1599,7 +1599,7 @@ def sling_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def sling_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="slings.csv"'
@@ -1773,7 +1773,7 @@ class Self_bowDetailView(generic.DetailView):
     template_name = "wf/self_bow/self_bow_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def self_bow_download(request):
     items = Self_bow.objects.all()
 
@@ -1793,7 +1793,7 @@ def self_bow_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def self_bow_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="self_bows.csv"'
@@ -1967,7 +1967,7 @@ class Composite_bowDetailView(generic.DetailView):
     template_name = "wf/composite_bow/composite_bow_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def composite_bow_download(request):
     items = Composite_bow.objects.all()
 
@@ -1987,7 +1987,7 @@ def composite_bow_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def composite_bow_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="composite_bows.csv"'
@@ -2161,7 +2161,7 @@ class CrossbowDetailView(generic.DetailView):
     template_name = "wf/crossbow/crossbow_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def crossbow_download(request):
     items = Crossbow.objects.all()
 
@@ -2181,7 +2181,7 @@ def crossbow_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def crossbow_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="crossbows.csv"'
@@ -2355,7 +2355,7 @@ class Tension_siege_engineDetailView(generic.DetailView):
     template_name = "wf/tension_siege_engine/tension_siege_engine_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def tension_siege_engine_download(request):
     items = Tension_siege_engine.objects.all()
 
@@ -2375,7 +2375,7 @@ def tension_siege_engine_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def tension_siege_engine_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="tension_siege_engines.csv"'
@@ -2549,7 +2549,7 @@ class Sling_siege_engineDetailView(generic.DetailView):
     template_name = "wf/sling_siege_engine/sling_siege_engine_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def sling_siege_engine_download(request):
     items = Sling_siege_engine.objects.all()
 
@@ -2569,7 +2569,7 @@ def sling_siege_engine_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def sling_siege_engine_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="sling_siege_engines.csv"'
@@ -2743,7 +2743,7 @@ class Gunpowder_siege_artilleryDetailView(generic.DetailView):
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def gunpowder_siege_artillery_download(request):
     items = Gunpowder_siege_artillery.objects.all()
 
@@ -2763,7 +2763,7 @@ def gunpowder_siege_artillery_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def gunpowder_siege_artillery_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="gunpowder_siege_artillerys.csv"'
@@ -2937,7 +2937,7 @@ class Handheld_firearmDetailView(generic.DetailView):
     template_name = "wf/handheld_firearm/handheld_firearm_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def handheld_firearm_download(request):
     items = Handheld_firearm.objects.all()
 
@@ -2957,7 +2957,7 @@ def handheld_firearm_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def handheld_firearm_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="handheld_firearms.csv"'
@@ -3131,7 +3131,7 @@ class War_clubDetailView(generic.DetailView):
     template_name = "wf/war_club/war_club_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def war_club_download(request):
     items = War_club.objects.all()
 
@@ -3151,7 +3151,7 @@ def war_club_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def war_club_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="war_clubs.csv"'
@@ -3324,7 +3324,7 @@ class Battle_axeDetailView(generic.DetailView):
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_detail.html"
 
-@permission_required('core.view_capital')
+@login_required
 def battle_axe_download(request):
     items = Battle_axe.objects.all()
 
@@ -3344,7 +3344,7 @@ def battle_axe_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def battle_axe_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="battle_axes.csv"'
@@ -3518,7 +3518,7 @@ class DaggerDetailView(generic.DetailView):
     template_name = "wf/dagger/dagger_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def dagger_download(request):
     items = Dagger.objects.all()
 
@@ -3538,7 +3538,7 @@ def dagger_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def dagger_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="daggers.csv"'
@@ -3712,7 +3712,7 @@ class SwordDetailView(generic.DetailView):
     template_name = "wf/sword/sword_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def sword_download(request):
     items = Sword.objects.all()
 
@@ -3732,7 +3732,7 @@ def sword_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def sword_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="swords.csv"'
@@ -3906,7 +3906,7 @@ class SpearDetailView(generic.DetailView):
     template_name = "wf/spear/spear_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def spear_download(request):
     items = Spear.objects.all()
 
@@ -3926,7 +3926,7 @@ def spear_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def spear_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="spears.csv"'
@@ -4100,7 +4100,7 @@ class PolearmDetailView(generic.DetailView):
     template_name = "wf/polearm/polearm_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def polearm_download(request):
     items = Polearm.objects.all()
 
@@ -4120,7 +4120,7 @@ def polearm_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def polearm_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="polearms.csv"'
@@ -4294,7 +4294,7 @@ class DogDetailView(generic.DetailView):
     template_name = "wf/dog/dog_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def dog_download(request):
     items = Dog.objects.all()
 
@@ -4314,7 +4314,7 @@ def dog_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def dog_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="dogs.csv"'
@@ -4488,7 +4488,7 @@ class DonkeyDetailView(generic.DetailView):
     template_name = "wf/donkey/donkey_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def donkey_download(request):
     items = Donkey.objects.all()
 
@@ -4508,7 +4508,7 @@ def donkey_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def donkey_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="donkeys.csv"'
@@ -4682,7 +4682,7 @@ class HorseDetailView(generic.DetailView):
     template_name = "wf/horse/horse_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def horse_download(request):
     items = Horse.objects.all()
 
@@ -4702,7 +4702,7 @@ def horse_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def horse_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="horses.csv"'
@@ -4876,7 +4876,7 @@ class CamelDetailView(generic.DetailView):
     template_name = "wf/camel/camel_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def camel_download(request):
     items = Camel.objects.all()
 
@@ -4896,7 +4896,7 @@ def camel_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def camel_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="camels.csv"'
@@ -5070,7 +5070,7 @@ class ElephantDetailView(generic.DetailView):
     template_name = "wf/elephant/elephant_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def elephant_download(request):
     items = Elephant.objects.all()
 
@@ -5090,7 +5090,7 @@ def elephant_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def elephant_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="elephants.csv"'
@@ -5264,7 +5264,7 @@ class Wood_bark_etcDetailView(generic.DetailView):
     template_name = "wf/wood_bark_etc/wood_bark_etc_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def wood_bark_etc_download(request):
     items = Wood_bark_etc.objects.all()
 
@@ -5284,7 +5284,7 @@ def wood_bark_etc_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def wood_bark_etc_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="wood_bark_etcs.csv"'
@@ -5458,7 +5458,7 @@ class Leather_clothDetailView(generic.DetailView):
     template_name = "wf/leather_cloth/leather_cloth_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def leather_cloth_download(request):
     items = Leather_cloth.objects.all()
 
@@ -5478,7 +5478,7 @@ def leather_cloth_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def leather_cloth_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="leather_cloths.csv"'
@@ -5652,7 +5652,7 @@ class ShieldDetailView(generic.DetailView):
     template_name = "wf/shield/shield_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def shield_download(request):
     items = Shield.objects.all()
 
@@ -5672,7 +5672,7 @@ def shield_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def shield_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="shields.csv"'
@@ -5846,7 +5846,7 @@ class HelmetDetailView(generic.DetailView):
     template_name = "wf/helmet/helmet_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def helmet_download(request):
     items = Helmet.objects.all()
 
@@ -5866,7 +5866,7 @@ def helmet_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def helmet_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="helmets.csv"'
@@ -6040,7 +6040,7 @@ class BreastplateDetailView(generic.DetailView):
     template_name = "wf/breastplate/breastplate_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def breastplate_download(request):
     items = Breastplate.objects.all()
 
@@ -6060,7 +6060,7 @@ def breastplate_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def breastplate_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="breastplates.csv"'
@@ -6234,7 +6234,7 @@ class Limb_protectionDetailView(generic.DetailView):
     template_name = "wf/limb_protection/limb_protection_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def limb_protection_download(request):
     items = Limb_protection.objects.all()
 
@@ -6254,7 +6254,7 @@ def limb_protection_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def limb_protection_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="limb_protections.csv"'
@@ -6428,7 +6428,7 @@ class Scaled_armorDetailView(generic.DetailView):
     template_name = "wf/scaled_armor/scaled_armor_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def scaled_armor_download(request):
     items = Scaled_armor.objects.all()
 
@@ -6448,7 +6448,7 @@ def scaled_armor_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def scaled_armor_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="scaled_armors.csv"'
@@ -6622,7 +6622,7 @@ class Laminar_armorDetailView(generic.DetailView):
     template_name = "wf/laminar_armor/laminar_armor_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def laminar_armor_download(request):
     items = Laminar_armor.objects.all()
 
@@ -6642,7 +6642,7 @@ def laminar_armor_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def laminar_armor_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="laminar_armors.csv"'
@@ -6816,7 +6816,7 @@ class Plate_armorDetailView(generic.DetailView):
     template_name = "wf/plate_armor/plate_armor_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def plate_armor_download(request):
     items = Plate_armor.objects.all()
 
@@ -6836,7 +6836,7 @@ def plate_armor_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def plate_armor_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="plate_armors.csv"'
@@ -7010,7 +7010,7 @@ class Small_vessels_canoes_etcDetailView(generic.DetailView):
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def small_vessels_canoes_etc_download(request):
     items = Small_vessels_canoes_etc.objects.all()
 
@@ -7030,7 +7030,7 @@ def small_vessels_canoes_etc_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def small_vessels_canoes_etc_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="small_vessels_canoes_etcs.csv"'
@@ -7204,7 +7204,7 @@ class Merchant_ships_pressed_into_serviceDetailView(generic.DetailView):
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def merchant_ships_pressed_into_service_download(request):
     items = Merchant_ships_pressed_into_service.objects.all()
 
@@ -7224,7 +7224,7 @@ def merchant_ships_pressed_into_service_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def merchant_ships_pressed_into_service_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="merchant_ships_pressed_into_services.csv"'
@@ -7398,7 +7398,7 @@ class Specialized_military_vesselDetailView(generic.DetailView):
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def specialized_military_vessel_download(request):
     items = Specialized_military_vessel.objects.all()
 
@@ -7418,7 +7418,7 @@ def specialized_military_vessel_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def specialized_military_vessel_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="specialized_military_vessels.csv"'
@@ -7592,7 +7592,7 @@ class Settlements_in_a_defensive_positionDetailView(generic.DetailView):
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def settlements_in_a_defensive_position_download(request):
     items = Settlements_in_a_defensive_position.objects.all()
 
@@ -7612,7 +7612,7 @@ def settlements_in_a_defensive_position_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def settlements_in_a_defensive_position_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="settlements_in_a_defensive_positions.csv"'
@@ -7786,7 +7786,7 @@ class Wooden_palisadeDetailView(generic.DetailView):
     template_name = "wf/wooden_palisade/wooden_palisade_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def wooden_palisade_download(request):
     items = Wooden_palisade.objects.all()
 
@@ -7806,7 +7806,7 @@ def wooden_palisade_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def wooden_palisade_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="wooden_palisades.csv"'
@@ -7980,7 +7980,7 @@ class Earth_rampartDetailView(generic.DetailView):
     template_name = "wf/earth_rampart/earth_rampart_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def earth_rampart_download(request):
     items = Earth_rampart.objects.all()
 
@@ -8000,7 +8000,7 @@ def earth_rampart_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def earth_rampart_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="earth_ramparts.csv"'
@@ -8174,7 +8174,7 @@ class DitchDetailView(generic.DetailView):
     template_name = "wf/ditch/ditch_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def ditch_download(request):
     items = Ditch.objects.all()
 
@@ -8194,7 +8194,7 @@ def ditch_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def ditch_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="ditchs.csv"'
@@ -8368,7 +8368,7 @@ class MoatDetailView(generic.DetailView):
     template_name = "wf/moat/moat_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def moat_download(request):
     items = Moat.objects.all()
 
@@ -8388,7 +8388,7 @@ def moat_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def moat_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="moats.csv"'
@@ -8562,7 +8562,7 @@ class Stone_walls_non_mortaredDetailView(generic.DetailView):
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def stone_walls_non_mortared_download(request):
     items = Stone_walls_non_mortared.objects.all()
 
@@ -8582,7 +8582,7 @@ def stone_walls_non_mortared_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def stone_walls_non_mortared_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="stone_walls_non_mortareds.csv"'
@@ -8756,7 +8756,7 @@ class Stone_walls_mortaredDetailView(generic.DetailView):
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def stone_walls_mortared_download(request):
     items = Stone_walls_mortared.objects.all()
 
@@ -8776,7 +8776,7 @@ def stone_walls_mortared_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def stone_walls_mortared_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="stone_walls_mortareds.csv"'
@@ -8947,7 +8947,7 @@ class Fortified_campDetailView(generic.DetailView):
     template_name = "wf/fortified_camp/fortified_camp_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def fortified_camp_download(request):
     items = Fortified_camp.objects.all()
 
@@ -8967,7 +8967,7 @@ def fortified_camp_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def fortified_camp_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="fortified_camps.csv"'
@@ -9135,7 +9135,7 @@ class Complex_fortificationDetailView(generic.DetailView):
     template_name = "wf/complex_fortification/complex_fortification_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def complex_fortification_download(request):
     items = Complex_fortification.objects.all()
 
@@ -9155,7 +9155,7 @@ def complex_fortification_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def complex_fortification_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="complex_fortifications.csv"'
@@ -9323,7 +9323,7 @@ class Modern_fortificationDetailView(generic.DetailView):
     template_name = "wf/modern_fortification/modern_fortification_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def modern_fortification_download(request):
     items = Modern_fortification.objects.all()
 
@@ -9343,7 +9343,7 @@ def modern_fortification_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def modern_fortification_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="modern_fortifications.csv"'
@@ -9511,7 +9511,7 @@ class ChainmailDetailView(generic.DetailView):
     template_name = "wf/chainmail/chainmail_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def chainmail_download(request):
     items = Chainmail.objects.all()
 
@@ -9531,7 +9531,7 @@ def chainmail_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def chainmail_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="chainmails.csv"'
@@ -9835,7 +9835,7 @@ def wfvars(request):
 
 
 
-@permission_required('core.view_capital')
+@login_required
 def show_problematic_wf_data_table(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -9853,7 +9853,7 @@ def show_problematic_wf_data_table(request):
     return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
 
 
-# @permission_required('core.view_capital')
+# @login_required
 # def show_problematic_wf_data_table(request):
 #     # Fetch all models in the "socomp" app
 #     app_name = 'wf'  # Replace with your app name
@@ -9871,7 +9871,7 @@ def show_problematic_wf_data_table(request):
 #     return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_wf(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -9912,7 +9912,7 @@ def download_csv_all_wf(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_fortifications(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -9948,7 +9948,7 @@ def download_csv_fortifications(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_military_use_of_metals(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -9984,7 +9984,7 @@ def download_csv_military_use_of_metals(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_projectiles(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -10020,7 +10020,7 @@ def download_csv_projectiles(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_handheld_weapons(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -10056,7 +10056,7 @@ def download_csv_handheld_weapons(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_animals_used_in_warfare(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -10093,7 +10093,7 @@ def download_csv_animals_used_in_warfare(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_armor(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name
@@ -10130,7 +10130,7 @@ def download_csv_armor(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_naval_technology(request):
     # Fetch all models in the "socomp" app
     app_name = 'wf'  # Replace with your app name

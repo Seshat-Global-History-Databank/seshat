@@ -228,7 +228,7 @@ class RaDetailView(generic.DetailView):
     template_name = "sc/ra/ra_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def ra_download(request):
     """
     Download all the data in the Ra model as a CSV file.
@@ -262,7 +262,7 @@ def ra_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def ra_meta_download(request):
     """
     Download the metadata of the Ra model as a CSV file.
@@ -479,7 +479,7 @@ class Polity_territoryDetailView(generic.DetailView):
     template_name = "sc/polity_territory/polity_territory_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def polity_territory_download(request):
     """
     Download all the data in the Polity_territory model as a CSV file.
@@ -513,7 +513,7 @@ def polity_territory_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def polity_territory_meta_download(request):
     """
     Download the metadata of the Polity_territory model as a CSV file.
@@ -730,7 +730,7 @@ class Polity_populationDetailView(generic.DetailView):
     template_name = "sc/polity_population/polity_population_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def polity_population_download(request):
     """
     Download all the data of the Polity_population model as a CSV file.
@@ -764,7 +764,7 @@ def polity_population_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def polity_population_meta_download(request):
     """
     Download the metadata of the Polity_population model as a CSV file.
@@ -981,7 +981,7 @@ class Population_of_the_largest_settlementDetailView(generic.DetailView):
     template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def population_of_the_largest_settlement_download(request):
     items = Population_of_the_largest_settlement.objects.all()
 
@@ -1003,7 +1003,7 @@ def population_of_the_largest_settlement_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def population_of_the_largest_settlement_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_population_of_the_largest_settlements.csv"'
@@ -1208,7 +1208,7 @@ class Settlement_hierarchyDetailView(generic.DetailView):
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def settlement_hierarchy_download(request):
     items = Settlement_hierarchy.objects.all()
 
@@ -1230,7 +1230,7 @@ def settlement_hierarchy_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def settlement_hierarchy_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_settlement_hierarchys.csv"'
@@ -1435,7 +1435,7 @@ class Administrative_levelDetailView(generic.DetailView):
     template_name = "sc/administrative_level/administrative_level_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def administrative_level_download(request):
     items = Administrative_level.objects.all()
 
@@ -1457,7 +1457,7 @@ def administrative_level_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def administrative_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_administrative_levels.csv"'
@@ -1662,7 +1662,7 @@ class Religious_levelDetailView(generic.DetailView):
     template_name = "sc/religious_level/religious_level_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def religious_level_download(request):
     items = Religious_level.objects.all()
 
@@ -1684,7 +1684,7 @@ def religious_level_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def religious_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_religious_levels.csv"'
@@ -1869,7 +1869,7 @@ class Military_levelDetailView(generic.DetailView):
     template_name = "sc/military_level/military_level_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def military_level_download(request):
     items = Military_level.objects.all()
 
@@ -1891,7 +1891,7 @@ def military_level_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def military_level_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_military_levels.csv"'
@@ -2096,7 +2096,7 @@ class Professional_military_officerDetailView(generic.DetailView):
     template_name = "sc/professional_military_officer/professional_military_officer_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def professional_military_officer_download(request):
     items = Professional_military_officer.objects.all()
 
@@ -2118,7 +2118,7 @@ def professional_military_officer_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def professional_military_officer_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_military_officers.csv"'
@@ -2323,7 +2323,7 @@ class Professional_soldierDetailView(generic.DetailView):
     template_name = "sc/professional_soldier/professional_soldier_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def professional_soldier_download(request):
     items = Professional_soldier.objects.all()
 
@@ -2345,7 +2345,7 @@ def professional_soldier_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def professional_soldier_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_soldiers.csv"'
@@ -2550,7 +2550,7 @@ class Professional_priesthoodDetailView(generic.DetailView):
     template_name = "sc/professional_priesthood/professional_priesthood_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def professional_priesthood_download(request):
     items = Professional_priesthood.objects.all()
 
@@ -2572,7 +2572,7 @@ def professional_priesthood_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def professional_priesthood_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_priesthoods.csv"'
@@ -2777,7 +2777,7 @@ class Full_time_bureaucratDetailView(generic.DetailView):
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def full_time_bureaucrat_download(request):
     items = Full_time_bureaucrat.objects.all()
 
@@ -2799,7 +2799,7 @@ def full_time_bureaucrat_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def full_time_bureaucrat_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_full_time_bureaucrats.csv"'
@@ -3004,7 +3004,7 @@ class Examination_systemDetailView(generic.DetailView):
     template_name = "sc/examination_system/examination_system_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def examination_system_download(request):
     items = Examination_system.objects.all()
 
@@ -3026,7 +3026,7 @@ def examination_system_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def examination_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_examination_systems.csv"'
@@ -3231,7 +3231,7 @@ class Merit_promotionDetailView(generic.DetailView):
     template_name = "sc/merit_promotion/merit_promotion_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def merit_promotion_download(request):
     items = Merit_promotion.objects.all()
 
@@ -3253,7 +3253,7 @@ def merit_promotion_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def merit_promotion_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_merit_promotions.csv"'
@@ -3458,7 +3458,7 @@ class Specialized_government_buildingDetailView(generic.DetailView):
     template_name = "sc/specialized_government_building/specialized_government_building_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def specialized_government_building_download(request):
     items = Specialized_government_building.objects.all()
 
@@ -3480,7 +3480,7 @@ def specialized_government_building_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def specialized_government_building_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_specialized_government_buildings.csv"'
@@ -3685,7 +3685,7 @@ class Formal_legal_codeDetailView(generic.DetailView):
     template_name = "sc/formal_legal_code/formal_legal_code_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def formal_legal_code_download(request):
     items = Formal_legal_code.objects.all()
 
@@ -3707,7 +3707,7 @@ def formal_legal_code_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def formal_legal_code_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_formal_legal_codes.csv"'
@@ -3912,7 +3912,7 @@ class JudgeDetailView(generic.DetailView):
     template_name = "sc/judge/judge_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def judge_download(request):
     items = Judge.objects.all()
 
@@ -3934,7 +3934,7 @@ def judge_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def judge_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_judges.csv"'
@@ -4139,7 +4139,7 @@ class CourtDetailView(generic.DetailView):
     template_name = "sc/court/court_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def court_download(request):
     items = Court.objects.all()
 
@@ -4161,7 +4161,7 @@ def court_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def court_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_courts.csv"'
@@ -4366,7 +4366,7 @@ class Professional_lawyerDetailView(generic.DetailView):
     template_name = "sc/professional_lawyer/professional_lawyer_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def professional_lawyer_download(request):
     items = Professional_lawyer.objects.all()
 
@@ -4388,7 +4388,7 @@ def professional_lawyer_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def professional_lawyer_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_professional_lawyers.csv"'
@@ -4593,7 +4593,7 @@ class Irrigation_systemDetailView(generic.DetailView):
     template_name = "sc/irrigation_system/irrigation_system_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def irrigation_system_download(request):
     items = Irrigation_system.objects.all()
 
@@ -4615,7 +4615,7 @@ def irrigation_system_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def irrigation_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_irrigation_systems.csv"'
@@ -4820,7 +4820,7 @@ class Drinking_water_supply_systemDetailView(generic.DetailView):
     template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def drinking_water_supply_system_download(request):
     items = Drinking_water_supply_system.objects.all()
 
@@ -4842,7 +4842,7 @@ def drinking_water_supply_system_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def drinking_water_supply_system_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_drinking_water_supply_systems.csv"'
@@ -5047,7 +5047,7 @@ class MarketDetailView(generic.DetailView):
     template_name = "sc/market/market_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def market_download(request):
     items = Market.objects.all()
 
@@ -5069,7 +5069,7 @@ def market_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def market_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_markets.csv"'
@@ -5274,7 +5274,7 @@ class Food_storage_siteDetailView(generic.DetailView):
     template_name = "sc/food_storage_site/food_storage_site_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def food_storage_site_download(request):
     items = Food_storage_site.objects.all()
 
@@ -5296,7 +5296,7 @@ def food_storage_site_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def food_storage_site_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_food_storage_sites.csv"'
@@ -5501,7 +5501,7 @@ class RoadDetailView(generic.DetailView):
     template_name = "sc/road/road_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def road_download(request):
     items = Road.objects.all()
 
@@ -5523,7 +5523,7 @@ def road_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def road_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_roads.csv"'
@@ -5728,7 +5728,7 @@ class BridgeDetailView(generic.DetailView):
     template_name = "sc/bridge/bridge_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def bridge_download(request):
     items = Bridge.objects.all()
 
@@ -5750,7 +5750,7 @@ def bridge_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def bridge_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_bridges.csv"'
@@ -5955,7 +5955,7 @@ class CanalDetailView(generic.DetailView):
     template_name = "sc/canal/canal_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def canal_download(request):
     items = Canal.objects.all()
 
@@ -5977,7 +5977,7 @@ def canal_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def canal_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_canals.csv"'
@@ -6182,7 +6182,7 @@ class PortDetailView(generic.DetailView):
     template_name = "sc/port/port_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def port_download(request):
     items = Port.objects.all()
 
@@ -6204,7 +6204,7 @@ def port_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def port_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_ports.csv"'
@@ -6409,7 +6409,7 @@ class Mines_or_quarryDetailView(generic.DetailView):
     template_name = "sc/mines_or_quarry/mines_or_quarry_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def mines_or_quarry_download(request):
     items = Mines_or_quarry.objects.all()
 
@@ -6431,7 +6431,7 @@ def mines_or_quarry_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def mines_or_quarry_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_mines_or_quarrys.csv"'
@@ -6636,7 +6636,7 @@ class Mnemonic_deviceDetailView(generic.DetailView):
     template_name = "sc/mnemonic_device/mnemonic_device_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def mnemonic_device_download(request):
     items = Mnemonic_device.objects.all()
 
@@ -6658,7 +6658,7 @@ def mnemonic_device_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def mnemonic_device_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_mnemonic_devices.csv"'
@@ -6863,7 +6863,7 @@ class Nonwritten_recordDetailView(generic.DetailView):
     template_name = "sc/nonwritten_record/nonwritten_record_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def nonwritten_record_download(request):
     items = Nonwritten_record.objects.all()
 
@@ -6885,7 +6885,7 @@ def nonwritten_record_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def nonwritten_record_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_nonwritten_records.csv"'
@@ -7090,7 +7090,7 @@ class Written_recordDetailView(generic.DetailView):
     template_name = "sc/written_record/written_record_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def written_record_download(request):
     items = Written_record.objects.all()
 
@@ -7112,7 +7112,7 @@ def written_record_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def written_record_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_written_records.csv"'
@@ -7336,7 +7336,7 @@ class ScriptDetailView(generic.DetailView):
 
 
 
-@permission_required('core.view_capital')
+@login_required
 def script_download(request):
     items = Script.objects.all()
 
@@ -7358,7 +7358,7 @@ def script_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def script_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_scripts.csv"'
@@ -7563,7 +7563,7 @@ class Non_phonetic_writingDetailView(generic.DetailView):
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def non_phonetic_writing_download(request):
     items = Non_phonetic_writing.objects.all()
 
@@ -7585,7 +7585,7 @@ def non_phonetic_writing_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def non_phonetic_writing_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_non_phonetic_writings.csv"'
@@ -7790,7 +7790,7 @@ class Phonetic_alphabetic_writingDetailView(generic.DetailView):
     template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def phonetic_alphabetic_writing_download(request):
     items = Phonetic_alphabetic_writing.objects.all()
 
@@ -7812,7 +7812,7 @@ def phonetic_alphabetic_writing_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def phonetic_alphabetic_writing_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_phonetic_alphabetic_writings.csv"'
@@ -8017,7 +8017,7 @@ class Lists_tables_and_classificationDetailView(generic.DetailView):
     template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def lists_tables_and_classification_download(request):
     items = Lists_tables_and_classification.objects.all()
 
@@ -8039,7 +8039,7 @@ def lists_tables_and_classification_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def lists_tables_and_classification_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_lists_tables_and_classifications.csv"'
@@ -8244,7 +8244,7 @@ class CalendarDetailView(generic.DetailView):
     template_name = "sc/calendar/calendar_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def calendar_download(request):
     items = Calendar.objects.all()
 
@@ -8266,7 +8266,7 @@ def calendar_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def calendar_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_calendars.csv"'
@@ -8471,7 +8471,7 @@ class Sacred_textDetailView(generic.DetailView):
     template_name = "sc/sacred_text/sacred_text_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def sacred_text_download(request):
     items = Sacred_text.objects.all()
 
@@ -8493,7 +8493,7 @@ def sacred_text_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def sacred_text_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_sacred_texts.csv"'
@@ -8698,7 +8698,7 @@ class Religious_literatureDetailView(generic.DetailView):
     template_name = "sc/religious_literature/religious_literature_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def religious_literature_download(request):
     items = Religious_literature.objects.all()
 
@@ -8720,7 +8720,7 @@ def religious_literature_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def religious_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_religious_literatures.csv"'
@@ -8925,7 +8925,7 @@ class Practical_literatureDetailView(generic.DetailView):
     template_name = "sc/practical_literature/practical_literature_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def practical_literature_download(request):
     items = Practical_literature.objects.all()
 
@@ -8947,7 +8947,7 @@ def practical_literature_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def practical_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_practical_literatures.csv"'
@@ -9152,7 +9152,7 @@ class HistoryDetailView(generic.DetailView):
     template_name = "sc/history/history_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def history_download(request):
     items = History.objects.all()
 
@@ -9174,7 +9174,7 @@ def history_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def history_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_historys.csv"'
@@ -9379,7 +9379,7 @@ class PhilosophyDetailView(generic.DetailView):
     template_name = "sc/philosophy/philosophy_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def philosophy_download(request):
     items = Philosophy.objects.all()
 
@@ -9401,7 +9401,7 @@ def philosophy_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def philosophy_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_philosophys.csv"'
@@ -9606,7 +9606,7 @@ class Scientific_literatureDetailView(generic.DetailView):
     template_name = "sc/scientific_literature/scientific_literature_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def scientific_literature_download(request):
     items = Scientific_literature.objects.all()
 
@@ -9628,7 +9628,7 @@ def scientific_literature_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def scientific_literature_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_scientific_literatures.csv"'
@@ -9833,7 +9833,7 @@ class FictionDetailView(generic.DetailView):
     template_name = "sc/fiction/fiction_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def fiction_download(request):
     items = Fiction.objects.all()
 
@@ -9855,7 +9855,7 @@ def fiction_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def fiction_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_fictions.csv"'
@@ -10062,7 +10062,7 @@ class ArticleDetailView(generic.DetailView):
     template_name = "sc/article/article_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def article_download(request):
     items = Article.objects.all()
 
@@ -10084,7 +10084,7 @@ def article_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def article_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_articles.csv"'
@@ -10286,7 +10286,7 @@ class TokenDetailView(generic.DetailView):
     template_name = "sc/token/token_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def token_download(request):
     items = Token.objects.all()
 
@@ -10308,7 +10308,7 @@ def token_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def token_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_tokens.csv"'
@@ -10513,7 +10513,7 @@ class Precious_metalDetailView(generic.DetailView):
     template_name = "sc/precious_metal/precious_metal_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def precious_metal_download(request):
     items = Precious_metal.objects.all()
 
@@ -10535,7 +10535,7 @@ def precious_metal_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def precious_metal_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_precious_metals.csv"'
@@ -10740,7 +10740,7 @@ class Foreign_coinDetailView(generic.DetailView):
     template_name = "sc/foreign_coin/foreign_coin_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def foreign_coin_download(request):
     items = Foreign_coin.objects.all()
 
@@ -10762,7 +10762,7 @@ def foreign_coin_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def foreign_coin_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_foreign_coins.csv"'
@@ -10967,7 +10967,7 @@ class Indigenous_coinDetailView(generic.DetailView):
     template_name = "sc/indigenous_coin/indigenous_coin_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def indigenous_coin_download(request):
     items = Indigenous_coin.objects.all()
 
@@ -10990,7 +10990,7 @@ def indigenous_coin_download(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def indigenous_coin_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_indigenous_coins.csv"'
@@ -11195,7 +11195,7 @@ class Paper_currencyDetailView(generic.DetailView):
     template_name = "sc/paper_currency/paper_currency_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def paper_currency_download(request):
     items = Paper_currency.objects.all()
 
@@ -11217,7 +11217,7 @@ def paper_currency_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def paper_currency_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_paper_currencys.csv"'
@@ -11411,7 +11411,7 @@ class CourierDetailView(generic.DetailView):
     template_name = "sc/courier/courier_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def courier_download(request):
     items = Courier.objects.all()
 
@@ -11433,7 +11433,7 @@ def courier_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def courier_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_couriers.csv"'
@@ -11638,7 +11638,7 @@ class Postal_stationDetailView(generic.DetailView):
     template_name = "sc/postal_station/postal_station_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def postal_station_download(request):
     items = Postal_station.objects.all()
 
@@ -11660,7 +11660,7 @@ def postal_station_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def postal_station_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_postal_stations.csv"'
@@ -11865,7 +11865,7 @@ class General_postal_serviceDetailView(generic.DetailView):
     template_name = "sc/general_postal_service/general_postal_service_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def general_postal_service_download(request):
     items = General_postal_service.objects.all()
 
@@ -11887,7 +11887,7 @@ def general_postal_service_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def general_postal_service_meta_download(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="metadata_general_postal_services.csv"'
@@ -12116,7 +12116,7 @@ def scvars(request):
 
 # new
 
-@permission_required('core.view_capital')
+@login_required
 def show_problematic_sc_data_table(request):
     # Fetch all models in the "socomp" app
     app_name = 'sc'  # Replace with your app name
@@ -12134,7 +12134,7 @@ def show_problematic_sc_data_table(request):
     return render(request, 'sc/problematic_sc_data_table.html', {'data': data})
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_sc(request):
     # Fetch all models in the "socomp" app
     app_name = 'sc'  # Replace with your app name
@@ -12171,7 +12171,7 @@ def download_csv_all_sc(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_social_scale(request):
     # Fetch all models in the "socomp" app
     app_name = 'sc'  # Replace with your app name
@@ -12254,35 +12254,35 @@ def generate_csv_response(subsection_filter, file_suffix):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_professions(request):
     return generate_csv_response('Professions', 'professions')
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_bureaucracy_characteristics(request):
     return generate_csv_response('Bureaucracy Characteristics', 'bureaucracy_characteristics')
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_hierarchical_complexity(request):
     return generate_csv_response('Hierarchical Complexity', 'hierarchical_complexity')
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_information(request):
     return generate_csv_response('Information', 'information')
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_law(request):
     return generate_csv_response('Law', 'law')
     
-@permission_required('core.view_capital')
+@login_required
 def download_csv_specialized_buildings_polity_owned(request):
     return generate_csv_response('Specialized Buildings: polity owned', 'specialized_buildings_polity_owned')
     
-@permission_required('core.view_capital')
+@login_required
 def download_csv_transport_infrastructure(request):
     return generate_csv_response('Transport Infrastructure', 'transport_infrastructure')
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_special_purpose_sites(request):
     return generate_csv_response('Special-purpose Sites', 'special_purpose_sites')
     

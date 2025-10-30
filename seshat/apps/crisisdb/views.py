@@ -469,7 +469,7 @@ class Crisis_consequenceDetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'core.add_capital'
 
 
-@permission_required('core.view_capital')
+@login_required
 def crisis_consequence_download(request):
     """
     Download all Crisis_consequence instances as CSV.
@@ -519,7 +519,7 @@ def crisis_consequence_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def crisis_consequence_meta_download(request):
     """
     Download the metadata for Crisis_consequence instances as CSV.
@@ -947,7 +947,7 @@ class Power_transitionDetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'core.add_capital'
 
 
-@permission_required('core.view_capital')
+@login_required
 def power_transition_download(request):
     """
     Download all Power_transition instances as CSV.
@@ -985,7 +985,7 @@ def power_transition_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def power_transition_meta_download(request):
     """
     Download the metadata for Power_transition instances as CSV.
@@ -1292,7 +1292,7 @@ class Human_sacrificeDetailView(PermissionRequiredMixin, generic.DetailView):
 
 
 
-@permission_required('core.view_capital')
+@login_required
 def human_sacrifice_download(request):
     """
     Download all Human_sacrifice instances as CSV.
@@ -1371,7 +1371,7 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
     return redirect('seshatcomment-update', pk=comment_instance.id)
 
 
-@permission_required('core.view_capital')
+@login_required
 def human_sacrifice_meta_download(request):
     """
     Download the metadata for Human_sacrifice instances as CSV.
@@ -1562,7 +1562,7 @@ class External_conflictDetailView(generic.DetailView):
     template_name = "crisisdb/external_conflict/external_conflict_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def external_conflict_download(request):
     """
     Download all External_conflict instances as CSV.
@@ -1591,7 +1591,7 @@ def external_conflict_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def external_conflict_meta_download(request):
     """
     Download the metadata for External_conflict instances as CSV.
@@ -1781,7 +1781,7 @@ class Internal_conflictDetailView(generic.DetailView):
     template_name = "crisisdb/internal_conflict/internal_conflict_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def internal_conflict_download(request):
     """
     Download all Internal_conflict instances as CSV.
@@ -1810,7 +1810,7 @@ def internal_conflict_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def internal_conflict_meta_download(request):
     """
     Download the metadata for Internal_conflict instances as CSV.
@@ -2001,7 +2001,7 @@ class External_conflict_sideDetailView(generic.DetailView):
     template_name = "crisisdb/external_conflict_side/external_conflict_side_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def external_conflict_side_download(request):
     """
     Download all External_conflict_side instances as CSV.
@@ -2030,7 +2030,7 @@ def external_conflict_side_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def external_conflict_side_meta_download(request):
     """
     Download the metadata for External_conflict_side instances as CSV.
@@ -2220,7 +2220,7 @@ class Agricultural_populationDetailView(generic.DetailView):
     template_name = "crisisdb/agricultural_population/agricultural_population_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def agricultural_population_download(request):
     """
     Download all Agricultural_population instances as CSV.
@@ -2249,7 +2249,7 @@ def agricultural_population_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def agricultural_population_meta_download(request):
     """
     Download the metadata for Agricultural_population instances as CSV.
@@ -2437,7 +2437,7 @@ class Arable_landDetailView(generic.DetailView):
     template_name = "crisisdb/arable_land/arable_land_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def arable_land_download(request):
     """
     Download all Arable_land instances as CSV.
@@ -2466,7 +2466,7 @@ def arable_land_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def arable_land_meta_download(request):
     """
     Download the metadata for Arable_land instances as CSV.
@@ -2658,7 +2658,7 @@ class Arable_land_per_farmerDetailView(generic.DetailView):
     template_name = "crisisdb/arable_land_per_farmer/arable_land_per_farmer_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def arable_land_per_farmer_download(request):
     """
     Download all Arable_land_per_farmer instances as CSV.
@@ -2687,7 +2687,7 @@ def arable_land_per_farmer_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def arable_land_per_farmer_meta_download(request):
     """
     Download the metadata for Arable_land_per_farmer instances as CSV.
@@ -2878,7 +2878,7 @@ class Gross_grain_shared_per_agricultural_populationDetailView(generic.DetailVie
     template_name = "crisisdb/gross_grain_shared_per_agricultural_population/gross_grain_shared_per_agricultural_population_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def gross_grain_shared_per_agricultural_population_download(request):
     """
     Download all Gross_grain_shared_per_agricultural_population instances as CSV.
@@ -2907,7 +2907,7 @@ def gross_grain_shared_per_agricultural_population_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def gross_grain_shared_per_agricultural_population_meta_download(request):
     """
     Download the metadata for Gross_grain_shared_per_agricultural_population instances as CSV.
@@ -3102,7 +3102,7 @@ class Net_grain_shared_per_agricultural_populationDetailView(generic.DetailView)
     template_name = "crisisdb/net_grain_shared_per_agricultural_population/net_grain_shared_per_agricultural_population_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def net_grain_shared_per_agricultural_population_download(request):
     """
     Download all Net_grain_shared_per_agricultural_population instances as CSV.
@@ -3131,7 +3131,7 @@ def net_grain_shared_per_agricultural_population_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def net_grain_shared_per_agricultural_population_meta_download(request):
     """
     Download the metadata for Net_grain_shared_per_agricultural_population instances as CSV.
@@ -3317,7 +3317,7 @@ class SurplusDetailView(generic.DetailView):
     template_name = "crisisdb/surplus/surplus_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def surplus_download(request):
     """
     Download all Surplus instances as CSV.
@@ -3346,7 +3346,7 @@ def surplus_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def surplus_meta_download(request):
     """
     Download the metadata for Surplus instances as CSV.
@@ -3537,7 +3537,7 @@ class Military_expenseDetailView(generic.DetailView):
     template_name = "crisisdb/military_expense/military_expense_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def military_expense_download(request):
     """
     Download all Military_expense instances as CSV.
@@ -3566,7 +3566,7 @@ def military_expense_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def military_expense_meta_download(request):
     """
     Download the metadata for Military_expense instances as CSV.
@@ -3757,7 +3757,7 @@ class Silver_inflowDetailView(generic.DetailView):
     template_name = "crisisdb/silver_inflow/silver_inflow_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def silver_inflow_download(request):
     """
     Download all Silver_inflow instances as CSV.
@@ -3786,7 +3786,7 @@ def silver_inflow_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def silver_inflow_meta_download(request):
     """
     Download the metadata for Silver_inflow instances as CSV.
@@ -3978,7 +3978,7 @@ class Silver_stockDetailView(generic.DetailView):
     template_name = "crisisdb/silver_stock/silver_stock_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def silver_stock_download(request):
     """
     Download all Silver_stock instances as CSV.
@@ -4007,7 +4007,7 @@ def silver_stock_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def silver_stock_meta_download(request):
     """
     Download the metadata for Silver_stock instances as CSV.
@@ -4201,7 +4201,7 @@ class Total_populationDetailView(generic.DetailView):
     template_name = "crisisdb/total_population/total_population_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def total_population_download(request):
     """
     Download all Total_population instances as CSV.
@@ -4230,7 +4230,7 @@ def total_population_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def total_population_meta_download(request):
     """
     Download the metadata for Total_population instances as CSV.
@@ -4425,7 +4425,7 @@ class Gdp_per_capitaDetailView(generic.DetailView):
     template_name = "crisisdb/gdp_per_capita/gdp_per_capita_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def gdp_per_capita_download(request):
     """
     Download all Gdp_per_capita instances as CSV.
@@ -4454,7 +4454,7 @@ def gdp_per_capita_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def gdp_per_capita_meta_download(request):
     """
     Download the metadata for Gdp_per_capita instances as CSV.
@@ -4648,7 +4648,7 @@ class Drought_eventDetailView(generic.DetailView):
     template_name = "crisisdb/drought_event/drought_event_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def drought_event_download(request):
     """
     Download all Drought_event instances as CSV.
@@ -4677,7 +4677,7 @@ def drought_event_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def drought_event_meta_download(request):
     """
     Download the metadata for Drought_event instances as CSV.
@@ -4868,7 +4868,7 @@ class Locust_eventDetailView(generic.DetailView):
     template_name = "crisisdb/locust_event/locust_event_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def locust_event_download(request):
     """
     Download all Locust_event instances as CSV.
@@ -4897,7 +4897,7 @@ def locust_event_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def locust_event_meta_download(request):
     """
     Download the metadata for Locust_event instances as CSV.
@@ -5088,7 +5088,7 @@ class Socioeconomic_turmoil_eventDetailView(generic.DetailView):
     template_name = "crisisdb/socioeconomic_turmoil_event/socioeconomic_turmoil_event_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def socioeconomic_turmoil_event_download(request):
     """
     Download all Socioeconomic_turmoil_event instances as CSV.
@@ -5117,7 +5117,7 @@ def socioeconomic_turmoil_event_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def socioeconomic_turmoil_event_meta_download(request):
     """
     Download the metadata for Socioeconomic_turmoil_event instances as CSV.
@@ -5309,7 +5309,7 @@ class Crop_failure_eventDetailView(generic.DetailView):
     template_name = "crisisdb/crop_failure_event/crop_failure_event_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def crop_failure_event_download(request):
     """
     Download all Crop_failure_event instances as CSV.
@@ -5338,7 +5338,7 @@ def crop_failure_event_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def crop_failure_event_meta_download(request):
     """
     Download the metadata for Crop_failure_event instances as CSV.
@@ -5528,7 +5528,7 @@ class Famine_eventDetailView(generic.DetailView):
     template_name = "crisisdb/famine_event/famine_event_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def famine_event_download(request):
     """
     Download all Famine_event instances as CSV.
@@ -5557,7 +5557,7 @@ def famine_event_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def famine_event_meta_download(request):
     """
     Download the metadata for Famine_event instances as CSV.
@@ -5748,7 +5748,7 @@ class Disease_outbreakDetailView(generic.DetailView):
     template_name = "crisisdb/disease_outbreak/disease_outbreak_detail.html"
 
 
-@permission_required('core.view_capital')
+@login_required
 def disease_outbreak_download(request):
     """
     Download all Disease_outbreak instances as CSV.
@@ -5777,7 +5777,7 @@ def disease_outbreak_download(request):
 
     return response
 
-@permission_required('core.view_capital')
+@login_required
 def disease_outbreak_meta_download(request):
     """
     Download the metadata for Disease_outbreak instances as CSV.
@@ -6185,7 +6185,7 @@ class UsViolenceUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('us_violence_paginated')
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_american_violence(request):
     """
     Download all Us_violence instances as CSV.
@@ -6221,7 +6221,7 @@ def download_csv_all_american_violence(request):
     return response
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_american_violence2(request):
     """
     Download all Us_violence instances as CSV.

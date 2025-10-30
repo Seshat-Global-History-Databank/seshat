@@ -1784,3 +1784,4 @@ class GADMProvinces(models.Model):
 
     def __str__(self):
         return "Name: %s" % self.name
+    

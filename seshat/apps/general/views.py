@@ -14,6 +14,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart, SeshatComment, SeshatCommentPart, ScpThroughCtn
 
+from ..core.terms_utils import require_terms_acceptance
+
+
 from seshat.apps.accounts.models import Seshat_Expert
 from django.utils.dateparse import parse_date
 from collections import Counter
@@ -37,7 +40,7 @@ from django.contrib import messages
 
 from django.core.paginator import Paginator
 
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse, Http404
 
 from django.forms.models import model_to_dict
 
@@ -509,7 +512,7 @@ def generalvarsold(request):
     return render(request, 'general/generalvars.html', context=context)
 
 
-@permission_required('core.view_capital')
+@login_required
 def download_csv_all_general(request):
     """
     Download a CSV file of all general variables. This includes all models in the "general" app.
@@ -2102,7 +2105,7 @@ def delete_object_view(request, model_class, pk, var_name):
     
     return redirect(success_url)
 
-
+@login_required
 def generic_download(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
     #items = model_class.objects.all()

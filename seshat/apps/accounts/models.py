@@ -15,6 +15,29 @@ from datetime import datetime
 #         validators=[validate_email_with_dots, EmailValidator(message="Enter a valid email address.")],
 #     )
 
+from django.conf import settings
+
+class TermsVersion(models.Model):
+    slug = models.SlugField(unique=True)              # e.g. "tos-2025-10-01"
+    title = models.CharField(max_length=200)
+    body_html = models.TextField()                    # paste rendered HTML (e.g., your terms.html body)
+    is_active = models.BooleanField(default=True)
+    published_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-published_at"]
+
+class TermsAcceptance(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    terms = models.ForeignKey(TermsVersion, on_delete=models.PROTECT)
+    accepted_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ("user", "terms")
+        ordering = ["-accepted_at"]
+
 class Profile(models.Model):
     """
     Model representing a user profile.
