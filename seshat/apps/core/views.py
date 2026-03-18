@@ -3481,13 +3481,13 @@ def signup_traditional(request):
                 'token': account_activation_token.make_token(user)
             })
 
-            # send_mail(
-            #     'Seshat-DB Email Verification',
-            #     message,
-            #     'seshatdb@gmail.com',  # Replace with your sender email
-            #     [user.email],  # Replace with recipient email(s)
-            #     fail_silently=False,
-            # )
+            send_mail(
+                'Seshat-DB Email Verification',
+                message,
+                'seshatdb@gmail.com',  # Replace with your sender email
+                [user.email],  # Replace with recipient email(s)
+                fail_silently=False,
+            )
             #user.email_user(subject, message)
             # to_be_sent_email = EmailMessage(subject=subject, body=message,
             #                                 from_email=settings.EMAIL_FROM_USER, to=[user.email])
