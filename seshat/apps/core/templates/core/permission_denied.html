@@ -7,10 +7,9 @@
 <div class="container pt-4">
         <h1 class="error-title"> <i class="fa-solid fa-ban"></i> Permission Denied</h1>
         <p class="error-message">You do not have permission to access this data.</p>
-        <p class="error-info">If you think this is an error, please contact our administrator: <b>benam@csh.ac.at</b></p>
+        <p class="error-info">If you think this is an error, please contact our administrator: <b>seshat.admin@csh.ac.at</b></p>
         <a href="{{ request.META.HTTP_REFERER|default:'/' }}"  class="btn btn-teal" >Back to the Previous Page</a>
         <a href="/"  class="btn btn-secondary">Back to Home</a>
     </div>
 
 {% endblock content-home %}
-
