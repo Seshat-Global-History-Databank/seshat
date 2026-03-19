@@ -61,7 +61,8 @@ from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrifice
 
 
 BATCH_1_END = timezone.make_aware(datetime.datetime(2025, 3, 29))
-BATCH_2_END =timezone.make_aware(datetime.datetime(2025, 4, 11))
+BATCH_2_END = timezone.make_aware(datetime.datetime(2025, 4, 11))
+BATCH_3_END = timezone.make_aware(datetime.datetime(2026, 3, 1))
 
 
 # Create View
@@ -6389,7 +6390,12 @@ def instability_analytics(request):
                 created_date__lt=BATCH_2_END
             )
         elif selected_batch == "Batch 3":
-            queryset = queryset.filter(created_date__gte=BATCH_2_END)
+            queryset = queryset.filter(
+                created_date__gte=BATCH_2_END,
+                created_date__lt=BATCH_3_END
+            )
+        elif selected_batch == "Batch 4":
+            queryset = queryset.filter(created_date__gte=BATCH_3_END)
     # Filter by selected expert
     selected_expert_id = request.GET.get('expert')
     if selected_expert_id:
@@ -6525,8 +6531,10 @@ def instability_analytics(request):
             return "Batch 1"
         elif BATCH_1_END <= created_date < BATCH_2_END:
             return "Batch 2"
-        else:
+        elif BATCH_2_END <= created_date < BATCH_3_END:
             return "Batch 3"
+        else:
+            return "Batch 4"
     # Step 1: Assign batch label per event
     batch_labels = [
             get_batch_label(dt) for dt in queryset.values_list("created_date", flat=True)
@@ -6736,4 +6744,3 @@ def instability_analytics(request):
     context['unreliable_polities'] = Polity.objects.filter(unreliable_instability_events=True).order_by('new_name')
 
     return render(request, "crisisdb/instability_analytics.html", context)
-

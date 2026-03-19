@@ -481,8 +481,10 @@ class Instability_event(SeshatCommon):
             return "Batch 1"
         elif self.created_date.date() < date(2025, 4, 11):
             return "Batch 2"
-        else:
+        elif self.created_date.date() < date(2026, 3, 1):
             return "Batch 3"
+        else:
+            return "Batch 4"
         
     @property
     def batch_tooltip(self):
@@ -492,8 +494,10 @@ class Instability_event(SeshatCommon):
             return "Generated in March 2025."
         elif self.created_date.date() < date(2025, 4, 11):
             return "Generated from March 28th, to April 28th, 2025."
-        else:
+        elif self.created_date.date() < date(2026, 3, 1):
             return "Generated after April 28th, 2025."
+        else:
+            return "Generated on or after March 1st, 2026."
 
 
     def __str__(self) -> str:

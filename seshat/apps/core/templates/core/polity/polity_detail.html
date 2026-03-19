@@ -2406,8 +2406,10 @@
                                                     <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#D3D3D3; border-radius:5px; color:white;"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
                                                   {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
                                                     <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#ADD8E6; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
-                                                  {% else %}
+                                                  {% elif obj.created_date|date:"Y-m-d" < "2026-03-01" %}
                                                     <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#a8dcab; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+                                                  {% else %}
+                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#d9b26f; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated on or after March 1st, 2026.">Batch 4</span>
                                                   {% endif %}
                                                 </small>
                                                 <small style="vertical-align: center;  display:inline-block;">

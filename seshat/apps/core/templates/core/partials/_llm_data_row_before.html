@@ -52,8 +52,10 @@
             <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
           {% elif form.instance.created_date|date:"Y-m-d" < "2025-04-11" %}
             <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
-          {% else %}
+          {% elif form.instance.created_date|date:"Y-m-d" < "2026-03-01" %}
             <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+          {% else %}
+            <span class="badge" style="background:#d9b26f;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated on or after March 1st, 2026.">Batch 4</span>
           {% endif %}
         </small>
 

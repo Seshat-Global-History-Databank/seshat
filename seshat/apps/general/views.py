@@ -69,14 +69,17 @@ from ..rt.models import Widespread_religion, Official_religion, Elites_religion,
 
 BATCH_1_END = datetime.date(2025, 3, 29)
 BATCH_2_END = datetime.date(2025, 4, 11)
+BATCH_3_END = datetime.date(2026, 3, 1)
 
 def get_batch_tag(created_date):
     if created_date < BATCH_1_END:
         return "Batch 1"
     elif created_date < BATCH_2_END:
         return "Batch 2"
-    else:
+    elif created_date < BATCH_3_END:
         return "Batch 3"
+    else:
+        return "Batch 4"
 
 
 # Define a custom test function to check for the 'core.add_capital' permission
@@ -1829,7 +1832,12 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
                 created_date__lt=BATCH_2_END
             )
         elif selected_batch == "Batch 3":
-            object_list = object_list.filter(created_date__gte=BATCH_2_END)
+            object_list = object_list.filter(
+                created_date__gte=BATCH_2_END,
+                created_date__lt=BATCH_3_END
+            )
+        elif selected_batch == "Batch 4":
+            object_list = object_list.filter(created_date__gte=BATCH_3_END)
 
 
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
@@ -2028,7 +2036,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
                 batches.add(batch)
 
             # Convert to sorted list for display order
-            batch_list = sorted(batches, key=lambda t: ["Batch 1", "Batch 2", "Batch 3"].index(t))
+            batch_order = ["Batch 1", "Batch 2", "Batch 3", "Batch 4", "Unknown"]
+            batch_list = sorted(
+                batches,
+                key=lambda t: batch_order.index(t) if t in batch_order else len(batch_order)
+            )
             setattr(polity, 'batch_list', batch_list)
             my_polities.append(polity)
             context['polities'] = my_polities
