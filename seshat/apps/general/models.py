@@ -539,49 +539,54 @@ def return_citations(self):
     return ', '.join(['<a href="' + citation.zoteroer() + '">' + citation.__str__() + ' </a>' for citation in self.citations.all()[:2]])
 
 
-def clean_times(self):
+def clean_times(self, start_field='year_from', end_field='year_to'):
     """
-    This function is used to validate the year_from and year_to fields of the
-    model instance (called from each model's clean method).
+    This function is used to validate a start/end year pair on the model
+    instance (called from each model's clean method).
 
     Note:
         The model instance must have the following attributes:
-        - year_from
-        - year_to
+        - a start year field
+        - an end year field
         - polity (and polity.start_year and polity.end_year)
 
     Args:
         self (model instance): The model instance.
+        start_field (str): The name of the start year field to validate.
+        end_field (str): The name of the end year field to validate.
 
     Returns:
         None
 
     Raises:
-        ValidationError: If the year_from is greater than the year_to.
-        ValidationError: If the year_from is out of range.
-        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-        ValidationError: If the year_to is later than the end year of the corresponding polity.
-        ValidationError: If the year_to is out of range.
+        ValidationError: If the start year is greater than the end year.
+        ValidationError: If the start year is out of range.
+        ValidationError: If the start year is earlier than the start year of the corresponding polity.
+        ValidationError: If the end year is later than the end year of the corresponding polity.
+        ValidationError: If the end year is out of range.
     """
-    if (self.year_from and self.year_to) and self.year_from > self.year_to:
+    start_value = getattr(self, start_field)
+    end_value = getattr(self, end_field)
+
+    if (start_value and end_value) and start_value > end_value:
         raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
+            start_field: mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
         })
-    if self.year_from and (self.year_from > date.today().year):
+    if start_value and (start_value > date.today().year):
         raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'),
+            start_field: mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'),
         })
-    if self.year_from and (self.year_from < self.polity.start_year):
+    if start_value and (start_value < self.polity.start_year):
         raise ValidationError({
-            'year_from': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'),
+            start_field: mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'),
         })
-    if self.year_to and (self.year_to > self.polity.end_year):
+    if end_value and (end_value > self.polity.end_year):
         raise ValidationError({
-            'year_to':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'),
+            end_field: mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'),
         })
-    if self.year_to and (self.year_to > date.today().year):
+    if end_value and (end_value > date.today().year):
         raise ValidationError({
-            'year_to': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'),
+            end_field: mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'),
         })
 
 ########## End of Function Definitions for General (Vars) Models
@@ -1011,6 +1016,7 @@ class Polity_duration(SeshatCommon):
             ValidationError: If the year_to is out of range.
         """
         clean_times(self)
+        clean_times(self, 'polity_year_from', 'polity_year_to')
 
     def clean_name(self):
         """
@@ -1045,6 +1051,8 @@ class Polity_duration(SeshatCommon):
         Returns:
             str: The duration of the polity (or " - " if it does not exist on the instance).
         """
+        if self.polity_year_from is None:
+            return f"[{self.polity.start_year}, {self.polity.end_year}]"
         if self.polity_year_from == self.polity_year_to:
             if self.polity_year_from < 0:
                 return f'{abs(self.polity_year_from)}' + " BCE" 
@@ -1158,6 +1166,7 @@ class Polity_peak_years(SeshatCommon):
             ValidationError: If the year_to is out of range.
         """
         clean_times(self)
+        clean_times(self, 'peak_year_from', 'peak_year_to')
 
     def clean_name(self):
         """
@@ -1192,6 +1201,8 @@ class Polity_peak_years(SeshatCommon):
         Returns:
             str: The peak years of the polity (or " - " if it does not exist on the instance).
         """
+        if self.peak_year_from is None:
+            return f"[{self.polity.start_year}, {self.polity.end_year}]"
         if self.peak_year_from == self.peak_year_to:
             if self.peak_year_from < 0:
                 return f'{abs(self.peak_year_from)}' + " BCE" 
