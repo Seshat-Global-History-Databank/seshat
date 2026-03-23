@@ -82,6 +82,109 @@ def get_batch_tag(created_date):
         return "Batch 4"
 
 
+def apply_instability_event_filters(queryset, request):
+    year_from_min = request.GET.get('year_from_min')
+    year_to_max = request.GET.get('year_to_max')
+    created_before = request.GET.get('created_before')
+    selected_batch = request.GET.get('selected_batch')
+    polity_id = request.GET.get('polity')
+    inst_type_ids = request.GET.getlist("inst_type")
+    ra_check_ids = request.GET.getlist("ra_check")
+    inst_extent = request.GET.get("inst_extent")
+    inst_intensity = request.GET.get("inst_intensity")
+    selected_macro = request.GET.get('macro_event')
+    name_query = request.GET.get('searched_name', '').strip()
+
+    if inst_type_ids:
+        queryset = queryset.filter(inst_type__in=inst_type_ids).distinct()
+
+    if ra_check_ids:
+        queryset = queryset.filter(ra_check__in=ra_check_ids).distinct()
+
+    if inst_extent:
+        queryset = queryset.filter(inst_extent=inst_extent)
+
+    if inst_intensity:
+        queryset = queryset.filter(inst_intensity=inst_intensity)
+
+    if polity_id:
+        queryset = queryset.filter(polity__id=polity_id)
+
+    if selected_macro:
+        desired_str = '(macro event: ' + selected_macro.lower()
+        queryset = queryset.filter(llm_name__icontains=desired_str)
+
+    if name_query:
+        queryset = queryset.filter(name__icontains=name_query)
+
+    queryset = queryset.annotate(
+        start_year_effective=Coalesce('year_from', F('polity__start_year')),
+        end_year_effective=Coalesce('year_to', F('polity__end_year')),
+    )
+
+    if year_from_min:
+        queryset = queryset.filter(start_year_effective__gte=int(year_from_min))
+
+    if year_to_max:
+        queryset = queryset.filter(end_year_effective__lte=int(year_to_max))
+
+    if created_before:
+        parsed_date = parse_date(created_before)
+        if parsed_date:
+            queryset = queryset.filter(created_date__lt=parsed_date)
+
+    if selected_batch:
+        if selected_batch == "Batch 1":
+            queryset = queryset.filter(created_date__lt=BATCH_1_END)
+        elif selected_batch == "Batch 2":
+            queryset = queryset.filter(
+                created_date__gte=BATCH_1_END,
+                created_date__lt=BATCH_2_END
+            )
+        elif selected_batch == "Batch 3":
+            queryset = queryset.filter(
+                created_date__gte=BATCH_2_END,
+                created_date__lt=BATCH_3_END
+            )
+        elif selected_batch == "Batch 4":
+            queryset = queryset.filter(created_date__gte=BATCH_3_END)
+
+    return queryset
+
+
+def apply_instability_event_ordering(queryset, orderby):
+    queryset = queryset.annotate(
+        inst_intensity_num=Cast(F('inst_intensity'), output_field=IntegerField()),
+        inst_extent_num=Cast(F('inst_extent'), output_field=IntegerField())
+    )
+
+    if not orderby:
+        return queryset
+
+    if orderby.lstrip('-') == 'year_from':
+        field = 'start_year_effective'
+    elif orderby.lstrip('-') == 'year_to':
+        field = 'end_year_effective'
+    else:
+        field = orderby.lstrip('-')
+
+    if orderby in ['inst_intensity', '-inst_intensity']:
+        order_field = 'inst_intensity_num'
+        if orderby.startswith('-'):
+            return queryset.order_by(F(order_field).desc())
+        return queryset.order_by(F(order_field).asc())
+
+    if orderby in ['inst_extent', '-inst_extent']:
+        order_field = 'inst_extent_num'
+        if orderby.startswith('-'):
+            return queryset.order_by(F(order_field).desc())
+        return queryset.order_by(F(order_field).asc())
+
+    if orderby.startswith('-'):
+        return queryset.order_by(F(field).desc(nulls_last=True))
+    return queryset.order_by(F(field).asc(nulls_last=True))
+
+
 # Define a custom test function to check for the 'core.add_capital' permission
 def has_add_capital_permission(user):
     return user.has_perm('core.add_capital')
@@ -1780,64 +1883,25 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
 
 
-    if inst_type_ids:
-        object_list = object_list.filter(inst_type__in=inst_type_ids).distinct()
+    if var_name in ['instability_event',]:
+        object_list = apply_instability_event_filters(object_list, request)
+    else:
+        # Annotate fallback values
+        object_list = object_list.annotate(
+            start_year_effective=Coalesce('year_from', F('polity__start_year')),
+            end_year_effective=Coalesce('year_to', F('polity__end_year')),
+        )
 
-    if ra_check_ids:
-        object_list = object_list.filter(ra_check__in=ra_check_ids).distinct()
+        if year_from_min:
+            object_list = object_list.filter(start_year_effective__gte=int(year_from_min))
 
-    if inst_extent:
-        object_list = object_list.filter(inst_extent=inst_extent)
+        if year_to_max:
+            object_list = object_list.filter(end_year_effective__lte=int(year_to_max))
 
-    if inst_intensity:
-        object_list = object_list.filter(inst_intensity=inst_intensity)
-
-    if polity_id:
-        object_list = object_list.filter(polity__id=polity_id)
-
-    
-    # Filter manually if selected
-    if selected_macro:
-        desired_str = '(macro event: ' + selected_macro.lower()
-        object_list = object_list.filter(llm_name__icontains=desired_str)
-
-    if name_query:
-        object_list = object_list.filter(name__icontains=name_query)
-
-
-    # Annotate fallback values
-    object_list = object_list.annotate(
-        start_year_effective=Coalesce('year_from', F('polity__start_year')),
-        end_year_effective=Coalesce('year_to', F('polity__end_year')),
-    )
-
-    if year_from_min:
-        object_list = object_list.filter(start_year_effective__gte=int(year_from_min))
-
-    if year_to_max:
-        object_list = object_list.filter(end_year_effective__lte=int(year_to_max))
-
-    if created_before:
-        parsed_date = parse_date(created_before)
-        if parsed_date:
-            object_list = object_list.filter(created_date__lt=parsed_date)
-
-
-    if selected_batch:
-        if selected_batch == "Batch 1":
-            object_list = object_list.filter(created_date__lt=BATCH_1_END)
-        elif selected_batch == "Batch 2":
-            object_list = object_list.filter(
-                created_date__gte=BATCH_1_END,
-                created_date__lt=BATCH_2_END
-            )
-        elif selected_batch == "Batch 3":
-            object_list = object_list.filter(
-                created_date__gte=BATCH_2_END,
-                created_date__lt=BATCH_3_END
-            )
-        elif selected_batch == "Batch 4":
-            object_list = object_list.filter(created_date__gte=BATCH_3_END)
+        if created_before:
+            parsed_date = parse_date(created_before)
+            if parsed_date:
+                object_list = object_list.filter(created_date__lt=parsed_date)
 
 
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
@@ -1858,44 +1922,26 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     orderby = request.GET.get('orderby', None)
     is_descending = False
 
-    if var_name in ['instability_event',]:
-        object_list = object_list.annotate(
-            inst_intensity_num=Cast(F('inst_intensity'), output_field=IntegerField()),
-            inst_extent_num=Cast(F('inst_extent'), output_field=IntegerField())
-        )
-
-
-
     if orderby:   
-        if orderby.lstrip('-') == 'year_from':
-            field = 'start_year_effective'
-        elif orderby.lstrip('-') == 'year_to':
-            field = 'end_year_effective'
-        else:
-            field = orderby.lstrip('-')
-
-        # Handle descending
-        if orderby in ['inst_intensity', '-inst_intensity']:
-            order_field = 'inst_intensity_num'
-            if orderby.startswith('-'):
-                object_list = object_list.order_by(F(order_field).desc())
-                is_descending = True
-            else:
-                object_list = object_list.order_by(F(order_field).asc())
-                is_descending = False
-
-        elif orderby in ['inst_extent', '-inst_extent']:
-            order_field = 'inst_extent_num'
-            if orderby.startswith('-'):
-                object_list = object_list.order_by(F(order_field).desc())
-                is_descending = True
-            else:
-                object_list = object_list.order_by(F(order_field).asc())
-                is_descending = False
+        if var_name in ['instability_event',]:
+            object_list = apply_instability_event_ordering(object_list, orderby)
+            is_descending = orderby.startswith('-')
         elif orderby.startswith('-'):
+            if orderby.lstrip('-') == 'year_from':
+                field = 'start_year_effective'
+            elif orderby.lstrip('-') == 'year_to':
+                field = 'end_year_effective'
+            else:
+                field = orderby.lstrip('-')
             object_list = object_list.order_by(F(field).desc(nulls_last=True))
             is_descending = True
         else:
+            if orderby.lstrip('-') == 'year_from':
+                field = 'start_year_effective'
+            elif orderby.lstrip('-') == 'year_to':
+                field = 'end_year_effective'
+            else:
+                field = orderby.lstrip('-')
             object_list = object_list.order_by(F(field).asc(nulls_last=True))
             is_descending = False
 
@@ -2123,7 +2169,9 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
     #items = model_class.objects.all()
 
     if var_name in ["instability_event",]:
-        items = model_class.objects.filter(polity__unreliable_instability_events=False)
+        items = model_class.objects.filter(polity__unreliable_instability_events=False).order_by('polity_id', 'year_from', 'id')
+        items = apply_instability_event_filters(items, request)
+        items = apply_instability_event_ordering(items, request.GET.get('orderby'))
     else:
         items = model_class.objects.all()
 
