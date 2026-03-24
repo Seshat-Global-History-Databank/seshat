@@ -137,7 +137,6 @@ class Command(BaseCommand):
                 )
 
             created_count = 0
-            skipped_count = 0
             processed_count = 0
 
             for row_index, row in enumerate(reader, start=1):
@@ -163,27 +162,11 @@ class Command(BaseCommand):
                         f"Row {row_index}: bad year value(s) '{year_from_raw}' / '{year_to_raw}'."
                     ) from exc
 
-                duplicate_qs = Instability_event.objects.filter(
-                    polity=polity,
-                    name=name,
-                    year_from=year_from,
-                    year_to=year_to,
-                )
-                if duplicate_qs.exists():
-                    skipped_count += 1
-                    processed_count += 1
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"Skipping duplicate row {row_index}: {name} ({year_from}-{year_to})"
-                        )
-                    )
-                    continue
-
                 inst_type_names = parse_types(row.get("Type"))
                 llm_name = f"{name} (Macro Event: {macro_event})" if macro_event else name
                 llm_inst_type = "; ".join(inst_type_names) if inst_type_names else None
 
-                general_cot = build_evidence_block(
+                general_evidence = build_evidence_block(
                     "Evidence Quote",
                     "Evidence Source",
                     row.get("Evidence_Quote"),
@@ -197,7 +180,7 @@ class Command(BaseCommand):
                     row.get("Extent_Evidence_File"),
                     row.get("Extent_Evidence_Page"),
                 )
-                sorokin_rationale = build_evidence_block(
+                intensity_evidence = build_evidence_block(
                     "Intensity Evidence Quote",
                     "Intensity Evidence Source",
                     row.get("Intensity_Evidence_Quote"),
@@ -231,9 +214,9 @@ class Command(BaseCommand):
                         inst_intensity=row.get("Intensity") or None,
                         llm_inst_extent=row.get("Extent") or None,
                         llm_inst_intensity=row.get("Intensity") or None,
-                        general_cot=general_cot,
+                        general_cot=intensity_evidence,
                         classification_cot=classification_cot,
-                        sorokin_rationale=sorokin_rationale,
+                        sorokin_rationale=general_evidence,
                         real_event_check=None,
                         llm_real_event_check=None,
                         llm_inst_type=llm_inst_type,
@@ -262,6 +245,6 @@ class Command(BaseCommand):
 
         summary = (
             f"Finished CSV import for polity '{polity_name}'. "
-            f"Created: {created_count}. Skipped duplicates: {skipped_count}."
+            f"Created: {created_count}."
         )
         self.stdout.write(self.style.SUCCESS(summary))
