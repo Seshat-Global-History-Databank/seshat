@@ -5920,6 +5920,7 @@ Tags_dic = {
     'UNK': 'Unknown',
 }
 
+@login_required
 def playgrounddownload(request):
     """
     Download the data from the playground.
