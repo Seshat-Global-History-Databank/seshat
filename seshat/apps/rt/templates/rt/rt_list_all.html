@@ -15,23 +15,7 @@ title="Click to add a new coded record">
 <i class="fas fa-plus"></i>
 </a>
 
-<!-- See All Such Facts Button -->
-<a href="{% url download_url %}" 
-class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
-data-bs-toggle="tooltip" 
-data-bs-placement="top" 
-title="Click to Download all such coded records">
-<i class="fas fa-download"></i>
-</a>
-
-<!-- See All Such Facts Button -->
-<a href="{% url metadownload_url %}" 
-class="btn btn-primary btn-sm float-end mt-1 ms-1" 
-data-bs-toggle="tooltip" 
-data-bs-placement="top" 
-title="Click to Download the Metadata">
-<i class="fas fa-download"></i>
-</a>
+{% include "core/partials/_standard_export_menu.html" with include_metadata=True %}
 {% endblock download_button %}
 
 

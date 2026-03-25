@@ -591,46 +591,82 @@
               
         <table id="table_id" class="table align-middle table-hover borderless" style="padding: 0.25 rem !important;">
             <div class="row sticky-top py-0 px-0 m-0" style="background-color:#ffffff; height:40px; border-bottom:1px solid #78282311;  top: 55px; z-index:900;">
-                <legend class="sticky-top py-0 px-0 m-0 col-md-6" style="background-color:#ffffff; height:40px; border-bottom:1px solid #78282311;  top: 55px; z-index:900;">
-                    <span class="h6 bg-colorful p-1 rounded border border-1 border-dark"> {{object_list|length}}</span> 
-                    <span>{{myvar}}</span>   <small class="fs-6 text-secondary">Records</small>
+                <legend class="sticky-top py-0 px-0 m-0 col-md-6 d-flex align-items-center gap-2" style="background-color:#ffffff; height:40px; border-bottom:1px solid #78282311;  top: 55px; z-index:900;">
+                    <span class="h6 bg-colorful rounded border border-1 border-dark d-inline-flex align-items-center justify-content-center mb-0 px-2" style="min-width: 38px; height: 34px; line-height: 1;">
+                        {% if record_count is not None %}
+                            {{ record_count }}
+                        {% else %}
+                            {{ object_list|length }}
+                        {% endif %}
+                    </span>
+                    <span class="mb-0">{{myvar}}</span><small class="fs-6 text-secondary mb-0">Records</small>
     
            
                 </legend>
-                <div class="col-md-6 sticky-top " >
+                <div class="col-md-6 sticky-top" >
                     {% if paginated %}
+                    <div class="d-flex flex-wrap justify-content-end align-items-center gap-2 pt-1 pe-2">
+                        {% if per_page_options and current_per_page_value %}
+                        <form method="get" class="d-inline-flex align-items-center gap-1 mb-0">
+                            <label for="per_page_select" class="text-secondary mb-0 small">Show:</label>
+                            <select name="per_page" id="per_page_select" class="form-select form-select-sm px-2 py-0" style="width: 82px; min-width: 82px; height: 30px;" onchange="this.form.submit()">
+                                {% for per_page_option, per_page_label in per_page_options %}
+                                    <option value="{{ per_page_option }}" {% if per_page_option == current_per_page_value %}selected{% endif %}>
+                                        {{ per_page_label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
 
-                    <form method="get" style="display: inline-block; margin-left: 10px; margin-right: 10px; padding-right: 10px;">
-                        <label for="page_input" class="mt-2 text-secondary">Go to page:&nbsp;</label>
-                        <input type="number" min="1" max="{{ page_obj.paginator.num_pages }}" name="page" id="page_input"
-                               value="{{ page_obj.number }}" style="width: 60px;" class="mt-2 form-control d-inline px-1 py-0">
-                        
-                        {# Add all existing GET parameters as hidden inputs, except 'page' #}
-                        {% for key, value in request.GET.items %}
-                            {% if key != 'page' %}
-                                <input type="hidden" name="{{ key }}" value="{{ value }}">
-                            {% endif %}
-                        {% endfor %}
-                        
-                        <button type="submit" class="btn btn-secondary btn-sm mt-0 ms-1 px-2 py-0 fw-bold">Go</button>
-                    </form>
-                    
-                    <span class="pagination float-end" style="vertical-align:bottom;">
-    
-                        {% if page_obj.has_previous %}
-                        <a style="vertical-align:bottom;" href="?{% query_transform request page=page_obj.previous_page_number %}"><button class="btn btn-primary btn-sm px-1 pb-0 pt-0 mt-2"> <i class="fas fa-step-backward"></i> Prev </button></a>
-                        {% else %}
-                        <button class="btn btn-outline-primary btn-sm px-1 pb-0 pt-0 mt-2" disabled> <i class="fas fa-step-backward"></i>  Prev</button>
+                            {% for key, values in request.GET.lists %}
+                                {% if key != 'page' and key != 'per_page' %}
+                                    {% for value in values %}
+                                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </form>
                         {% endif %}
-                        <span class="page-current mt-2 text-secondary">
-                            &nbsp; Page <b class="text-dark"> {{ page_obj.number }} </b> of {{ page_obj.paginator.num_pages }}. &nbsp; 
-                        </span>
-                        {% if page_obj.has_next %}
-                            <a style="vertical-align:bottom;" href="?{% query_transform request page=page_obj.next_page_number %}"><button class="btn btn-primary btn-sm px-1 pb-0 pt-0 mt-2"> Next <i class="fas fa-step-forward"></i></button></a>
+
+                        <form method="get" class="d-inline-flex align-items-center gap-1 mb-0">
+                            <label for="page_input" class="text-secondary mb-0 small">Page:</label>
+                            <input type="number" min="1" max="{{ page_obj.paginator.num_pages }}" name="page" id="page_input"
+                                   value="{{ page_obj.number }}" style="width: 58px; height: 30px;" class="form-control form-control-sm d-inline px-1 py-0">
+                            
+                            {% for key, values in request.GET.lists %}
+                                {% if key != 'page' %}
+                                    {% for value in values %}
+                                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <button type="submit" class="btn btn-secondary btn-sm px-2 py-0 fw-bold" style="height: 30px;">Go</button>
+                        </form>
+                        
+                        <div class="d-inline-flex align-items-center gap-1">
+                            {% if page_obj.has_previous %}
+                            <a href="?{% query_transform request page=page_obj.previous_page_number %}" class="btn btn-primary btn-sm px-2 py-0">
+                                <i class="fas fa-step-backward"></i> Prev
+                            </a>
                             {% else %}
-                            <button class="btn btn-outline-primary btn-sm px-1 pb-0 pt-0 mt-2" disabled> Next <i class="fas fa-step-forward"></i></button>
-                        {% endif %}
-                      </span>
+                            <button class="btn btn-outline-primary btn-sm px-2 py-0" disabled>
+                                <i class="fas fa-step-backward"></i> Prev
+                            </button>
+                            {% endif %}
+                            <span class="page-current text-secondary small px-1">
+                                Page <b class="text-dark">{{ page_obj.number }}</b> of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            {% if page_obj.has_next %}
+                            <a href="?{% query_transform request page=page_obj.next_page_number %}" class="btn btn-primary btn-sm px-2 py-0">
+                                Next <i class="fas fa-step-forward"></i>
+                            </a>
+                            {% else %}
+                            <button class="btn btn-outline-primary btn-sm px-2 py-0" disabled>
+                                Next <i class="fas fa-step-forward"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
                     {% endif %}
 
 
