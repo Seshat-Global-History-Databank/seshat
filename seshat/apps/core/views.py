@@ -306,6 +306,7 @@ def seshatwhoweare(request):
         }
         return render(request, 'core/seshat-whoweare.html', context=context)
 
+@login_required
 def seshatolddownloads(request):
     """
     Return the Seshat "Downloads" page.
@@ -4109,6 +4110,7 @@ def polity_filter_options_view(request):
     return JsonResponse(response)
 
 
+@login_required
 def download_oldcsv(request, file_name):
     """
     Download a CSV file.
@@ -6905,6 +6907,7 @@ def polity_usage_view(request, polity_id):
 
 
 
+@login_required
 def export_seshat_regions_csv2(request):
     # Create the HTTP response with appropriate CSV header
     response = HttpResponse(content_type='text/csv')
@@ -6926,6 +6929,7 @@ def export_seshat_regions_csv2(request):
     return response
 
 
+@login_required
 def export_seshat_regions_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="seshat_regions.csv"'

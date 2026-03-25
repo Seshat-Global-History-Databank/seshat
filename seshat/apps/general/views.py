@@ -2473,6 +2473,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
     return response
 
 
+@login_required
 def generic_json_download(request, model_class, var_name, x_name, var_section, var_subsection, coded_value, db_section):
     #items = model_class.objects.all()
 
@@ -2606,6 +2607,7 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
     #return JsonResponse(data_list, safe=False)
 
 
+@login_required
 def generic_json_download_simple(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
     #items = model_class.objects.all()
@@ -2657,6 +2659,7 @@ def generic_json_download_simple(request, model_class, var_name, x_name, var_sec
     return response
 
 
+@login_required
 def generic_metadata_download(request, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="metadata_{var_name}s.csv"'

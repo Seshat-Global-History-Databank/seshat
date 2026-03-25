@@ -1,5 +1,6 @@
 {% load custom_filters %}
 
+{% if request.user.is_authenticated %}
 <div class="btn-group float-end mt-1 ms-1">
     <button
         class="btn btn-outline-primary btn-sm dropdown-toggle"
@@ -62,3 +63,4 @@
         {% endif %}
     </ul>
 </div>
+{% endif %}
