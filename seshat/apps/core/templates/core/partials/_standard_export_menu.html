@@ -1,0 +1,64 @@
+{% load custom_filters %}
+
+<div class="btn-group float-end mt-1 ms-1">
+    <button
+        class="btn btn-outline-primary btn-sm dropdown-toggle"
+        type="button"
+        id="exportMenuButton_{{ var_name|default:'list' }}"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        title="Export the current results or the full dataset."
+    >
+        <i class="fa-solid fa-file-export"></i> Export
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 16rem;" aria-labelledby="exportMenuButton_{{ var_name|default:'list' }}">
+        <li><h6 class="dropdown-header">Current Results</h6></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url download_url %}?{% query_transform request page=None %}">
+                <span class="d-inline-flex align-items-center justify-content-center text-primary" style="width: 1.25rem;">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span>Current CSV</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url json_download_url %}?{% query_transform request page=None %}">
+                <span class="d-inline-flex align-items-center justify-content-center text-primary" style="width: 1.25rem;">
+                    <i class="fa-solid fa-file-code"></i>
+                </span>
+                <span>Current JSON</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">All Records</h6></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url download_url %}">
+                <span class="d-inline-flex align-items-center justify-content-center text-secondary" style="width: 1.25rem;">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span>All CSV</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url json_download_url %}">
+                <span class="d-inline-flex align-items-center justify-content-center text-secondary" style="width: 1.25rem;">
+                    <i class="fa-solid fa-file-code"></i>
+                </span>
+                <span>All JSON</span>
+            </a>
+        </li>
+
+        {% if include_metadata and metadownload_url %}
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="{% url metadownload_url %}">
+                <span class="d-inline-flex align-items-center justify-content-center text-muted" style="width: 1.25rem;">
+                    <i class="fa-solid fa-circle-info"></i>
+                </span>
+                <span>Metadata CSV</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>

@@ -185,6 +185,54 @@ def apply_instability_event_ordering(queryset, orderby):
     return queryset.order_by(F(field).asc(nulls_last=True))
 
 
+def apply_generic_list_filters(queryset, request):
+    year_from_min = request.GET.get('year_from_min')
+    year_to_max = request.GET.get('year_to_max')
+    created_before = request.GET.get('created_before')
+    polity_ids = [
+        int(value)
+        for value in request.GET.getlist('polity')
+        if str(value).strip().isdigit()
+    ]
+
+    queryset = queryset.annotate(
+        start_year_effective=Coalesce('year_from', F('polity__start_year')),
+        end_year_effective=Coalesce('year_to', F('polity__end_year')),
+    )
+
+    if polity_ids:
+        queryset = queryset.filter(polity__id__in=polity_ids)
+
+    if year_from_min:
+        queryset = queryset.filter(start_year_effective__gte=int(year_from_min))
+
+    if year_to_max:
+        queryset = queryset.filter(end_year_effective__lte=int(year_to_max))
+
+    if created_before:
+        parsed_date = parse_date(created_before)
+        if parsed_date:
+            queryset = queryset.filter(created_date__lt=parsed_date)
+
+    return queryset
+
+
+def apply_generic_list_ordering(queryset, orderby):
+    if not orderby:
+        return queryset
+
+    if orderby.lstrip('-') == 'year_from':
+        field = 'start_year_effective'
+    elif orderby.lstrip('-') == 'year_to':
+        field = 'end_year_effective'
+    else:
+        field = orderby.lstrip('-')
+
+    if orderby.startswith('-'):
+        return queryset.order_by(F(field).desc(nulls_last=True))
+    return queryset.order_by(F(field).asc(nulls_last=True))
+
+
 # Define a custom test function to check for the 'core.add_capital' permission
 def has_add_capital_permission(user):
     return user.has_perm('core.add_capital')
@@ -1886,22 +1934,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     if var_name in ['instability_event',]:
         object_list = apply_instability_event_filters(object_list, request)
     else:
-        # Annotate fallback values
-        object_list = object_list.annotate(
-            start_year_effective=Coalesce('year_from', F('polity__start_year')),
-            end_year_effective=Coalesce('year_to', F('polity__end_year')),
-        )
-
-        if year_from_min:
-            object_list = object_list.filter(start_year_effective__gte=int(year_from_min))
-
-        if year_to_max:
-            object_list = object_list.filter(end_year_effective__lte=int(year_to_max))
-
-        if created_before:
-            parsed_date = parse_date(created_before)
-            if parsed_date:
-                object_list = object_list.filter(created_date__lt=parsed_date)
+        object_list = apply_generic_list_filters(object_list, request)
 
 
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
@@ -1926,24 +1959,9 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         if var_name in ['instability_event',]:
             object_list = apply_instability_event_ordering(object_list, orderby)
             is_descending = orderby.startswith('-')
-        elif orderby.startswith('-'):
-            if orderby.lstrip('-') == 'year_from':
-                field = 'start_year_effective'
-            elif orderby.lstrip('-') == 'year_to':
-                field = 'end_year_effective'
-            else:
-                field = orderby.lstrip('-')
-            object_list = object_list.order_by(F(field).desc(nulls_last=True))
-            is_descending = True
         else:
-            if orderby.lstrip('-') == 'year_from':
-                field = 'start_year_effective'
-            elif orderby.lstrip('-') == 'year_to':
-                field = 'end_year_effective'
-            else:
-                field = orderby.lstrip('-')
-            object_list = object_list.order_by(F(field).asc(nulls_last=True))
-            is_descending = False
+            object_list = apply_generic_list_ordering(object_list, orderby)
+            is_descending = orderby.startswith('-')
 
         order_field = orderby
     else:
@@ -2023,14 +2041,35 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         all_object_list = model_class.objects.all()
         polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
 
-    if var_name in ['instability_event',]:
-        paginator = Paginator(object_list, 50)  # Show 100 items per page
+    per_page_options = [
+        ("100", "100"),
+        ("200", "200"),
+        ("500", "500"),
+        ("1000", "1000"),
+        ("all", "All"),
+    ]
+    allowed_per_page_values = {value for value, _label in per_page_options}
+    requested_per_page = request.GET.get("per_page") or "100"
 
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        paginated = True
-        context['page_obj'] = page_obj
-        context['paginated'] = paginated
+    if requested_per_page not in allowed_per_page_values:
+        requested_per_page = "100"
+
+    total_records = object_list.count()
+    if requested_per_page == "all":
+        current_per_page = max(total_records, 1)
+    else:
+        current_per_page = int(requested_per_page)
+
+    paginator = Paginator(object_list, current_per_page)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context['page_obj'] = page_obj
+    context['paginated'] = True
+    context["current_per_page_value"] = requested_per_page
+    context["per_page_options"] = per_page_options
+    context["record_count"] = paginator.count
+
+    if var_name in ['instability_event',]:
         context["instability_types"] = Instability_type.objects.all()
         context["check_choices"] = Check_choice.objects.all()
         macro_events = sorted(set(obj.made_up_macro_event for obj in all_object_list if obj.made_up_macro_event))
@@ -2053,20 +2092,6 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         
         context["selected_inst_type_ids"] = inst_type_ids
         context["selected_ra_check_ids"] = ra_check_ids
-
-    elif var_name in ['widespread_religion',]:
-        paginator = Paginator(object_list, 100)  # Show 100 items per page
-
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        paginated = True
-        context['page_obj'] = page_obj
-        context['paginated'] = paginated
-    else:
-        context['page_obj'] = object_list
-        context['paginated'] = False
-
-
 
     # After applying all filters to object_list
     polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')
@@ -2174,6 +2199,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         items = apply_instability_event_ordering(items, request.GET.get('orderby'))
     else:
         items = model_class.objects.all()
+        items = apply_generic_list_filters(items, request)
+        items = apply_generic_list_ordering(items, request.GET.get('orderby'))
 
     # special case of RT:
     rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
@@ -2451,8 +2478,12 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
 
     if var_name in ["instability_event",]:
         items = model_class.objects.filter(polity__unreliable_instability_events=False)
+        items = apply_instability_event_filters(items, request)
+        items = apply_instability_event_ordering(items, request.GET.get('orderby'))
     else:
         items = model_class.objects.all()
+        items = apply_generic_list_filters(items, request)
+        items = apply_generic_list_ordering(items, request.GET.get('orderby'))
     # Special case of RT filtering
     rt_allowed_polities = [
         "kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", 
@@ -2484,6 +2515,9 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
 
     for objj in items:
         obj = model_to_dict(objj)  # Convert model instance to dictionary
+        polity_old_ID = objj.polity.name if objj.polity else None
+        polity_new_ID = objj.polity.new_name if objj.polity else None
+        polity_long_name = objj.polity.long_name if objj.polity else None
 
         coded_cols = {}
 
@@ -2520,9 +2554,6 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
         elif coded_value == 'preceding_entity':
             other_polity_name = objj.other_polity.new_name if objj.other_polity else None
             other_polity_long_name = objj.other_polity.long_name if objj.other_polity else None
-            polity_old_ID = objj.polity.name if objj.polity else None
-            polity_new_ID = objj.polity.new_name if objj.polity else None
-            polity_long_name = objj.polity.long_name if objj.polity else None
             coded_cols.update({
                 x_name: obj.get('other_polity'),
                 x_name_2: obj.get('merged_old_data'),
@@ -2583,6 +2614,8 @@ def generic_json_download_simple(request, model_class, var_name, x_name, var_sec
         items = model_class.objects.filter(polity__unreliable_instability_events=False)
     else:
         items = model_class.objects.all()
+        items = apply_generic_list_filters(items, request)
+        items = apply_generic_list_ordering(items, request.GET.get('orderby'))
 
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"social_complexity_{var_name}_{current_datetime}.json"
