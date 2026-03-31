@@ -650,6 +650,40 @@ class Polity(models.Model):
         else:
             return self.name
 
+
+class CoinHoard(models.Model):
+    seshat_id = models.CharField(max_length=6, unique=True)
+    external_dataset_id = models.CharField(max_length=32, unique=True, db_index=True)
+    data_source = models.CharField(max_length=128, db_index=True)
+
+    hoard_name = models.CharField(max_length=255, blank=True, default="")
+    number_of_coins = models.IntegerField(null=True, blank=True)
+
+    year_from = models.IntegerField(null=True, blank=True, db_index=True)
+    year_to = models.IntegerField(null=True, blank=True, db_index=True)
+
+    latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    region = models.CharField(max_length=255, blank=True, default="", db_index=True)
+    country = models.CharField(max_length=255, blank=True, default="")
+
+    external_url = models.URLField(blank=True, default="")
+    raw_external_id = models.CharField(max_length=32, blank=True, default="")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["data_source", "year_from", "year_to"]),
+            models.Index(fields=["region"]),
+        ]
+        ordering = ["external_dataset_id"]
+
+    def __str__(self):
+        return f"{self.external_dataset_id} - {self.hoard_name or 'Unnamed hoard'}"
+
+
 class Country(models.Model):
     """
     Model representing a country.

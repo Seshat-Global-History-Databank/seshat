@@ -1,0 +1,77 @@
+{% extends "core/seshat-base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Coinhoards</h2>
+    <p class="text-secondary">Coin Hoards of the Roman Empire</p>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="q" value="{{ q }}" placeholder="Search by ID, name, country">
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="form-control" name="region" value="{{ region }}" placeholder="Region">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="start_year" value="{{ start_year }}" placeholder="Start year">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="end_year" value="{{ end_year }}" placeholder="End year">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Coins</th>
+                    <th>Years</th>
+                    <th>Region</th>
+                    <th>Country</th>
+                    <th>Coords</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hoard in page_obj %}
+                <tr>
+                    <td><a href="{% url 'coinhoard-detail' hoard.external_dataset_id %}">{{ hoard.external_dataset_id }}</a></td>
+                    <td>{{ hoard.hoard_name|default:"-" }}</td>
+                    <td>{{ hoard.number_of_coins|default:"-" }}</td>
+                    <td>{{ hoard.year_from|default:"-" }} to {{ hoard.year_to|default:"-" }}</td>
+                    <td>{{ hoard.region|default:"-" }}</td>
+                    <td>{{ hoard.country|default:"-" }}</td>
+                    <td>{{ hoard.latitude|default:"-" }}, {{ hoard.longitude|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-secondary">No coinhoards found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

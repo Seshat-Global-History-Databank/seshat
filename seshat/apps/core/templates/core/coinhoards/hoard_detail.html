@@ -1,0 +1,33 @@
+{% extends "core/seshat-base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>{{ hoard.external_dataset_id }}</h2>
+    <p class="text-secondary">{{ hoard.hoard_name|default:"Unnamed hoard" }}</p>
+
+    <table class="table table-bordered">
+        <tr><th>Data source</th><td>{{ hoard.data_source }}</td></tr>
+        <tr><th>Seshat ID</th><td>{{ hoard.seshat_id }}</td></tr>
+        <tr><th>Raw external ID</th><td>{{ hoard.raw_external_id|default:"-" }}</td></tr>
+        <tr><th>Number of coins</th><td>{{ hoard.number_of_coins|default:"-" }}</td></tr>
+        <tr><th>Year from</th><td>{{ hoard.year_from|default:"-" }}</td></tr>
+        <tr><th>Year to</th><td>{{ hoard.year_to|default:"-" }}</td></tr>
+        <tr><th>Region</th><td>{{ hoard.region|default:"-" }}</td></tr>
+        <tr><th>Country</th><td>{{ hoard.country|default:"-" }}</td></tr>
+        <tr><th>Latitude</th><td>{{ hoard.latitude|default:"-" }}</td></tr>
+        <tr><th>Longitude</th><td>{{ hoard.longitude|default:"-" }}</td></tr>
+        <tr>
+            <th>External URL</th>
+            <td>
+                {% if hoard.external_url %}
+                <a href="{{ hoard.external_url }}" target="_blank" rel="noopener noreferrer">{{ hoard.external_url }}</a>
+                {% else %}
+                -
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <a class="btn btn-secondary" href="{% url 'coinhoards' %}">Back to list</a>
+</div>
+{% endblock %}
