@@ -652,21 +652,53 @@ class Polity(models.Model):
 
 
 class CoinHoard(models.Model):
+    DISCOVERY_METHOD_CHOICES = (
+        ("Agricultural or drainage work", "Agricultural or drainage work"),
+        ("Building work", "Building work"),
+        ("Controlled archaeological investigation", "Controlled archaeological investigation"),
+        ("Fieldwalking", "Fieldwalking"),
+        ("Gardening", "Gardening"),
+        ("Metal detector", "Metal detector"),
+        (
+            "Metal detector during controlled archaeological investigation",
+            "Metal detector during controlled archaeological investigation",
+        ),
+        ("Other chance find", "Other chance find"),
+        ("Railroad construction", "Railroad construction"),
+        ("Road construction", "Road construction"),
+    )
+    RATING_CHOICES = (("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"))
+
     seshat_id = models.CharField(max_length=6, unique=True)
     external_dataset_id = models.CharField(max_length=32, unique=True, db_index=True)
     data_source = models.CharField(max_length=128, db_index=True)
 
     hoard_name = models.CharField(max_length=255, blank=True, default="")
     number_of_coins = models.IntegerField(null=True, blank=True)
+    discovery_method = models.CharField(
+        max_length=100, choices=DISCOVERY_METHOD_CHOICES, blank=True, default=""
+    )
+    discovery_year1 = models.IntegerField(null=True, blank=True)
+    discovery_year2 = models.IntegerField(null=True, blank=True)
+    opening_year1 = models.IntegerField(null=True, blank=True)
+    opening_year2 = models.IntegerField(null=True, blank=True)
 
     year_from = models.IntegerField(null=True, blank=True, db_index=True)
     year_to = models.IntegerField(null=True, blank=True, db_index=True)
+    find_spot_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
+    contextual_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
+    numismatic_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
 
     latitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    altitude = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    city = models.CharField(max_length=255, blank=True, default="")
+    county = models.CharField(max_length=255, blank=True, default="")
     region = models.CharField(max_length=255, blank=True, default="", db_index=True)
     country = models.CharField(max_length=255, blank=True, default="")
+    summary = models.TextField(blank=True, default="")
 
+    external_source_text = models.CharField(max_length=255, blank=True, default="")
     external_url = models.URLField(blank=True, default="")
     raw_external_id = models.CharField(max_length=32, blank=True, default="")
 

@@ -1,6 +1,162 @@
 {% extends "core/seshat-base.html" %}
 
 {% block content %}
+<style>
+    .ratings-grid {
+        display: grid;
+        grid-template-columns: minmax(72px, 1fr) 12px minmax(72px, 1fr) 12px minmax(72px, 1fr);
+        align-items: center;
+        column-gap: 0;
+    }
+    .ratings-grid .sep {
+        text-align: center;
+        color: #8c8c8c;
+    }
+    .ratings-grid .cell {
+        text-align: center;
+    }
+    .years-grid {
+        display: grid;
+        grid-template-columns: minmax(88px, 1fr) 12px minmax(88px, 1fr) 12px minmax(88px, 1fr);
+        align-items: center;
+        column-gap: 0;
+    }
+    .years-grid .sep {
+        text-align: center;
+        color: #8c8c8c;
+    }
+    .years-grid .cell {
+        text-align: center;
+    }
+    .year-pill {
+        border: none;
+        border-radius: 0.45rem;
+        padding: 0.28rem 0.5rem 0.18rem 0.5rem;
+        line-height: 1;
+        color: #5c5c5c;
+        font-weight: 400;
+        border-bottom: 2px solid #d8d8d8;
+
+    }
+    .year-pill .year-num {
+        font-weight: 400;
+    }
+    .year-pill .year-era {
+        font-weight: 300;
+        color: #8a8a8a;
+    }
+    .coords-grid {
+        display: grid;
+        grid-template-columns: minmax(70px, 1fr) 12px minmax(70px, 1fr) 12px minmax(70px, 1fr);
+        align-items: center;
+        column-gap: 0;
+    }
+    .coords-grid .sep {
+        text-align: center;
+        color: #8c8c8c;
+    }
+    .coords-grid .cell {
+        text-align: center;
+    }
+    .coord-pill {
+        border: none;
+        border-radius: 0.45rem;
+        padding: 0.28rem 0.5rem 0.18rem 0.5rem;
+        line-height: 1;
+        background: #fffdf2;
+        color: #5c5c5c;
+        font-weight: 500;
+        border-bottom: 2px solid #d8d8d8;
+    }
+    .year-arrow {
+        color: #8c8c8c;
+        font-size: 0.85rem;
+        vertical-align: middle;
+        padding: 0 1px;
+    }
+    .rating-pill {
+        border: 1px solid #d8d8d8;
+        border-radius: 0.45rem;
+        padding: 0.2rem 0.3rem 0.18rem 0.3rem;
+        line-height: 1;
+    }
+    .rating-poor {
+        background-color: #f8d7da;
+        color: #842029;
+        border-color: #84202933;
+    }
+    .rating-fair {
+        background-color: #fdebd0;
+        color: #8a4b08;
+        border-color: #8a4b0833;
+    }
+    .rating-good {
+        background-color: #fff3cd;
+        color: #7a5b00;
+        border-color: #7a5b0033;
+    }
+    .rating-excellent {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border-color: #0f513233;
+    }
+    .rating-empty {
+        background-color: #f2f2f2;
+        color: #555;
+    }
+    .coin-cell {
+        text-align: center;
+    }
+    .coin-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        padding: 0 6px;
+        border: 1px solid #9a6a1f;
+        color: #5b3b09;
+        font-weight: 600;
+        line-height: 1;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    .col-with-left-border {
+        border-left: 1px solid #d8d8d8;
+        padding-left: 10px;
+    }
+    .table-responsive {
+        max-height: 72vh;
+        overflow: auto;
+    }
+    .table-responsive thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #fff;
+        box-shadow: inset 0 -1px 0 #d8d8d8;
+    }
+
+    /* Keep table readable on narrow screens / high zoom */
+    @media (max-width: 1400px) {
+        .years-grid,
+        .ratings-grid,
+        .coords-grid {
+            grid-template-columns: 1fr !important;
+            row-gap: 4px;
+        }
+        .years-grid .sep,
+        .ratings-grid .sep,
+        .coords-grid .sep {
+            display: none;
+        }
+        .years-grid .cell,
+        .ratings-grid .cell,
+        .coords-grid .cell {
+            text-align: left;
+        }
+    }
+</style>
 <div class="container py-4">
     <h2>Coinhoards</h2>
     <p class="text-secondary">Coin Hoards of the Roman Empire</p>
@@ -23,17 +179,60 @@
         </div>
     </form>
 
+    <div class="mb-3 p-2 rounded" style="background:#fffdf2; border:1px solid #eadfbe;">
+        <small class="text-secondary me-2">Rating guide:</small>
+        <span class="badge rating-pill" style="background-color:#f8d7da; color:#842029; border:1px solid #84202933;">Poor</span>
+        <span class="badge rating-pill" style="background-color:#fdebd0; color:#8a4b08; border:1px solid #8a4b0833;">Fair</span>
+        <span class="badge rating-pill" style="background-color:#fff3cd; color:#7a5b00; border:1px solid #7a5b0033;">Good</span>
+        <span class="badge rating-pill" style="background-color:#d1e7dd; color:#0f5132; border:1px solid #0f513233;">Excellent</span>
+    </div>
+    <div class="mb-3 p-2 rounded" style="background:#fffdf2; border:1px solid #eadfbe;">
+        <small class="text-secondary">
+            <b>Year meaning:</b>
+            <b>Terminal</b> = date range of latest coin issue in hoard;
+            <b>Discovery</b> = when the hoard was discovered;
+            <b>Opening</b> = first year the hoard appears/opened in source chronology.
+        </small>
+    </div>
+
     <div class="table-responsive">
-        <table class="table table-sm table-striped table-hover">
+        <table class="table table-sm table-hover">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Coins</th>
-                    <th>Years</th>
-                    <th>Region</th>
-                    <th>Country</th>
-                    <th>Coords</th>
+                    <th class="col-with-left-border">
+                        Years
+                        <div class="mt-1 text-secondary fw-normal years-grid" style="font-size:0.8rem; border-top:1px dashed #d8d8d8; padding-top:3px;">
+                            <span class="cell">Opening</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Terminal</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Discovery</span>
+                        </div>
+                    </th>
+                    <th class="col-with-left-border">
+                        Ratings
+                        <div class="mt-1 text-secondary fw-normal ratings-grid" style="font-size:0.8rem; border-top:1px dashed #d8d8d8; padding-top:3px;">
+                            <span class="cell">Findspot</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Context</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Numismatic</span>
+                        </div>
+                    </th>
+                    <th class="col-with-left-border">
+                        Coordinates
+                        <div class="mt-1 text-secondary fw-normal coords-grid" style="font-size:0.8rem; border-top:1px dashed #d8d8d8; padding-top:3px;">
+                            <span class="cell">Latitude</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Longitude</span>
+                            <span class="sep">|</span>
+                            <span class="cell">Altitude</span>
+                        </div>
+                    </th>
+                    <th>Links</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,11 +240,109 @@
                 <tr>
                     <td><a href="{% url 'coinhoard-detail' hoard.external_dataset_id %}">{{ hoard.external_dataset_id }}</a></td>
                     <td>{{ hoard.hoard_name|default:"-" }}</td>
-                    <td>{{ hoard.number_of_coins|default:"-" }}</td>
-                    <td>{{ hoard.year_from|default:"-" }} to {{ hoard.year_to|default:"-" }}</td>
-                    <td>{{ hoard.region|default:"-" }}</td>
-                    <td>{{ hoard.country|default:"-" }}</td>
-                    <td>{{ hoard.latitude|default:"-" }}, {{ hoard.longitude|default:"-" }}</td>
+                    <td class="coin-cell">
+                        {% if hoard.number_of_coins %}
+                            <span class="coin-badge">{{ hoard.number_of_coins }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="col-with-left-border">
+                        <div class="years-grid">
+                            <span class="cell">
+                                <span class="badge year-pill">
+                                    {% if hoard.opening_year1 and hoard.opening_year2 %}
+                                        {% if hoard.opening_year1 == hoard.opening_year2 %}
+                                            {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% else %}
+                                            {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                            <span class="year-arrow">&rarr;</span>
+                                            {% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% endif %}
+                                    {% elif hoard.opening_year1 %}
+                                        {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% elif hoard.opening_year2 %}
+                                        {% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </span>
+                            </span>
+                            <span class="sep"></span>
+                            <span class="cell">
+                                <span class="badge year-pill">
+                                    {% if hoard.year_from and hoard.year_to %}
+                                        {% if hoard.year_from == hoard.year_to %}
+                                            {% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% else %}
+                                            {% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %}
+                                            <span class="year-arrow">&rarr;</span>
+                                            {% if hoard.year_to < 0 %}<span class="year-num">{{ hoard.year_to|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_to }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% endif %}
+                                    {% elif hoard.year_from %}
+                                        {% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% elif hoard.year_to %}
+                                        {% if hoard.year_to < 0 %}<span class="year-num">{{ hoard.year_to|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_to }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </span>
+                            </span>
+                            <span class="sep"></span>
+                            <span class="cell">
+                                <span class="badge year-pill">
+                                    {% if hoard.discovery_year1 and hoard.discovery_year2 %}
+                                        {% if hoard.discovery_year1 == hoard.discovery_year2 %}
+                                            {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% else %}
+                                            {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                            <span class="year-arrow">&rarr;</span>
+                                            {% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}
+                                        {% endif %}
+                                    {% elif hoard.discovery_year1 %}
+                                        {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% elif hoard.discovery_year2 %}
+                                        {% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="col-with-left-border">
+                        <div class="ratings-grid">
+                            <span class="cell"><span class="badge rating-pill {{ hoard.findspot_class }}">{{ hoard.findspot_label.title }}</span></span>
+                            <span class="sep"></span>
+                            <span class="cell"><span class="badge rating-pill {{ hoard.context_class }}">{{ hoard.context_label.title }}</span></span>
+                            <span class="sep"></span>
+                            <span class="cell"><span class="badge rating-pill {{ hoard.numismatic_class }}">{{ hoard.numismatic_label.title }}</span></span>
+                        </div>
+                    </td>
+                    <td class="col-with-left-border">
+                        <div class="coords-grid">
+                            <span class="cell"><span class="badge coord-pill">{{ hoard.latitude|floatformat:2|default:"-" }}</span></span>
+                            <span class="sep"></span>
+                            <span class="cell"><span class="badge coord-pill">{{ hoard.longitude|floatformat:2|default:"-" }}</span></span>
+                            <span class="sep"></span>
+                            <span class="cell"><span class="badge coord-pill">{{ hoard.altitude|floatformat:2|default:"-" }}</span></span>
+                        </div>
+                    </td>
+                    <td class="col-with-left-border p-2">
+                        {% if hoard.chre_url %}
+                            <a class="greenlink pe-2" href="{{ hoard.chre_url }}" target="_blank" rel="noopener noreferrer" title="Open CHRE record">
+                                <i class="fa-solid fa-up-right-from-square text-primary"></i>
+                            </a>
+                        {% endif %}
+                        {% if hoard.external_url %}
+                            <a href="{{ hoard.external_url }}" target="_blank" rel="noopener noreferrer" title="Open external source">
+                                <i class="fa-solid fa-up-right-from-square text-secondary"></i>
+                            </a>
+                        {% endif %}
+                        {% if not hoard.chre_url and not hoard.external_url %}
+                            -
+                        {% endif %}
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>

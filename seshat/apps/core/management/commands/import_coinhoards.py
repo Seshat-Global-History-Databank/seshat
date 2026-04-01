@@ -1,3 +1,52 @@
+"""
+Import CHRE coin hoard CSV rows into ``core.CoinHoard``.
+
+Django management command name (from this filename): ``import_coinhoards``.
+
+Integration steps (run from the directory that contains ``manage.py``, e.g.
+``.../seshat``):
+
+1. **Apply database migrations** so ``CoinHoard`` and related fields exist::
+
+       python manage.py migrate
+
+   To see pending migrations without applying::
+
+       python manage.py showmigrations core
+
+2. **Import the CHRE export CSV** (UTF-8 with BOM is fine; the importer uses
+   ``utf-8-sig``). Example::
+
+       python manage.py import_coinhoards \\
+           --csv "/path/to/CHRE_hoard_export_YYYY_MM_DD.csv" \\
+          
+
+   Optional: adjust batch size (default 2000)::
+
+       python manage.py import_coinhoards \\
+           --csv "/path/to/your.csv" \\
+           --chunk-size 2000 \\
+          
+
+3. **Re-runs are safe**: rows are keyed by ``external_dataset_id`` (e.g.
+   ``CHRE04630`` from CSV ``id``). Existing rows are updated; new rows are
+   created and ``seshat_id`` is assigned for new records only.
+
+4. **Quick sanity check** (optional)::
+
+       python manage.py shell -c \\
+           "from seshat.apps.core.models import CoinHoard; print(CoinHoard.objects.count())"
+
+**CSV expectations**: columns such as ``id``, ``hoardName``, ``coinCount``,
+``terminalYear1``/``terminalYear2``, ``openingYear1``/``openingYear2``,
+``discoveryYear1``/``discoveryYear2``, ``permalinkOnlineDatabases`` (mixed text
+and URLs), coordinates, etc., as produced by the CHRE export.
+
+**UI**: list at ``/core/coinhoards/`` (name ``coinhoards``); canonical CHRE
+permalink for a hoard is built in views as
+``https://chre.ashmus.ox.ac.uk/hoard/<raw id>`` (see CHRE site structure, e.g.
+https://chre.ashmus.ox.ac.uk/hoard/4630).
+"""
 import csv
 import re
 from decimal import Decimal, InvalidOperation
@@ -52,6 +101,24 @@ def normalize_external_url(value):
     return ""
 
 
+def parse_external_source(value):
+    raw = normalize_str(value)
+    if not raw:
+        return "", ""
+
+    url_match = re.search(r"https?://\S+", raw)
+    if not url_match:
+        return raw, ""
+
+    url = url_match.group(0).rstrip(").,;")
+    left = raw[: url_match.start()].strip()
+    right = raw[url_match.end() :].strip()
+    source_text = left or right
+    if source_text.endswith(":"):
+        source_text = source_text[:-1].strip()
+    return source_text, url
+
+
 def make_external_dataset_id(raw_id):
     parsed = parse_int(raw_id)
     if parsed is None:
@@ -61,6 +128,11 @@ def make_external_dataset_id(raw_id):
 
 def choose_region(row):
     return normalize_str(row.get("county")) or normalize_str(row.get("region")) or normalize_str(row.get("province"))
+
+
+def normalize_choice(value, allowed_values):
+    value = normalize_str(value)
+    return value if value in allowed_values else ""
 
 
 def next_seshat_id(existing_max):
@@ -73,7 +145,7 @@ def next_seshat_id(existing_max):
 
 
 class Command(BaseCommand):
-    help = "Import CHRE CSV into core.CoinHoard"
+    help = "Import CHRE CSV into core.CoinHoard. See module docstring for migrate + import commands."
 
     def add_arguments(self, parser):
         parser.add_argument("--csv", required=True, help="Path to CHRE CSV file")
@@ -105,19 +177,44 @@ class Command(BaseCommand):
         to_update = []
 
         for row, ext_id in normalized:
+            external_source_text, external_url = parse_external_source(
+                row.get("permalinkOnlineDatabases")
+            )
             payload = {
                 "external_dataset_id": ext_id,
                 "raw_external_id": normalize_str(row.get("id")),
                 "data_source": DEFAULT_SOURCE,
                 "hoard_name": normalize_str(row.get("hoardName")),
                 "number_of_coins": parse_int(row.get("coinCount")),
+                "discovery_method": normalize_choice(
+                    row.get("discoveryMethod"),
+                    {choice[0] for choice in CoinHoard.DISCOVERY_METHOD_CHOICES},
+                ),
+                "discovery_year1": parse_int(row.get("discoveryYear1")),
+                "discovery_year2": parse_int(row.get("discoveryYear2")),
+                "opening_year1": parse_int(row.get("openingYear1")),
+                "opening_year2": parse_int(row.get("openingYear2")),
                 "year_from": parse_int(row.get("terminalYear1")),
                 "year_to": parse_int(row.get("terminalYear2")),
+                "find_spot_rating": normalize_choice(
+                    row.get("findSpotRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+                ),
+                "contextual_rating": normalize_choice(
+                    row.get("contextualRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+                ),
+                "numismatic_rating": normalize_choice(
+                    row.get("numismaticRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+                ),
                 "latitude": parse_decimal(row.get("latitude")),
                 "longitude": parse_decimal(row.get("longitude")),
+                "altitude": parse_decimal(row.get("altitude")),
+                "city": normalize_str(row.get("city")),
+                "county": normalize_str(row.get("county")),
                 "region": choose_region(row),
                 "country": normalize_str(row.get("country")),
-                "external_url": normalize_external_url(row.get("permalinkOnlineDatabases")),
+                "summary": normalize_str(row.get("summary")),
+                "external_source_text": external_source_text,
+                "external_url": external_url,
             }
 
             obj = existing.get(ext_id)
@@ -140,12 +237,25 @@ class Command(BaseCommand):
             "data_source",
             "hoard_name",
             "number_of_coins",
+            "discovery_method",
+            "discovery_year1",
+            "discovery_year2",
+            "opening_year1",
+            "opening_year2",
             "year_from",
             "year_to",
+            "find_spot_rating",
+            "contextual_rating",
+            "numismatic_rating",
             "latitude",
             "longitude",
+            "altitude",
+            "city",
+            "county",
             "region",
             "country",
+            "summary",
+            "external_source_text",
             "external_url",
             "updated_at",
         ]
