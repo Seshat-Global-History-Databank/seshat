@@ -46,6 +46,11 @@ and URLs), coordinates, etc., as produced by the CHRE export.
 permalink for a hoard is built in views as
 ``https://chre.ashmus.ox.ac.uk/hoard/<raw id>`` (see CHRE site structure, e.g.
 https://chre.ashmus.ox.ac.uk/hoard/4630).
+
+**Troubleshooting**: If Postgres raises ``value too long for type character
+varying(N)``, some CSV cell exceeds a column limit. Run ``migrate`` after pulling
+``CoinHoard`` field changes (e.g. ``external_source_text`` as ``TextField``).
+The importer also clips bounded string fields to their model limits.
 """
 import csv
 import re
@@ -69,6 +74,14 @@ def normalize_str(value):
     if value.lower() in NULL_LIKE:
         return ""
     return value
+
+
+def clip_str(value, max_len):
+    """Keep values within CharField / URLField limits (CSV rows can exceed them)."""
+    s = normalize_str(value)
+    if max_len <= 0:
+        return ""
+    return s[:max_len]
 
 
 def parse_int(value):
@@ -208,13 +221,13 @@ class Command(BaseCommand):
                 "latitude": parse_decimal(row.get("latitude")),
                 "longitude": parse_decimal(row.get("longitude")),
                 "altitude": parse_decimal(row.get("altitude")),
-                "city": normalize_str(row.get("city")),
-                "county": normalize_str(row.get("county")),
-                "region": choose_region(row),
-                "country": normalize_str(row.get("country")),
+                "city": clip_str(row.get("city"), 255),
+                "county": clip_str(row.get("county"), 255),
+                "region": clip_str(choose_region(row), 255),
+                "country": clip_str(row.get("country"), 255),
                 "summary": normalize_str(row.get("summary")),
                 "external_source_text": external_source_text,
-                "external_url": external_url,
+                "external_url": clip_str(external_url, 500),
             }
 
             obj = existing.get(ext_id)

@@ -698,8 +698,8 @@ class CoinHoard(models.Model):
     country = models.CharField(max_length=255, blank=True, default="")
     summary = models.TextField(blank=True, default="")
 
-    external_source_text = models.CharField(max_length=255, blank=True, default="")
-    external_url = models.URLField(blank=True, default="")
+    external_source_text = models.TextField(blank=True, default="")
+    external_url = models.URLField(max_length=500, blank=True, default="")
     raw_external_id = models.CharField(max_length=32, blank=True, default="")
 
     created_at = models.DateTimeField(auto_now_add=True)
