@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 
 from . import views
+from . import views_coinhoards
 
 urlpatterns = [path('', views.seshatindex, name='seshat-index'),]
 urlpatterns += [path('methods/', views.seshatmethods, name='seshat-methods'),]
@@ -228,3 +229,13 @@ urlpatterns += [path('core/provinces_and_countries', views.provinces_and_countri
 
 # Cliopatria page
 urlpatterns += [path('core/cliopatria/', views.cliopatria, name='cliopatria'),]
+
+urlpatterns += [
+    path("core/coinhoards/", views_coinhoards.hoard_list, name="coinhoards"),
+    path("core/coinhoards/json/", views_coinhoards.hoard_list_json, name="coinhoards-json"),
+    path(
+        "core/coinhoards/<str:external_dataset_id>/",
+        views_coinhoards.hoard_detail,
+        name="coinhoard-detail",
+    ),
+]
