@@ -1,5 +1,5 @@
 
-<div class="tight-group float-end">
+<div class="tight-group table-action-group">
 
 {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
 
@@ -60,14 +60,14 @@
             </span>
         </a>
         {% else %}
-        <button  class="p-0 m-0 tight-link"  
-        style="overflow: hidden; border: 0px solid red; " >
-        <span class="accordion-button collapsed badge text-dark p-1" type="button"  style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb;" 
+        <button type="button" class="p-0 m-0 tight-link bg-transparent border-0"
+        style="overflow: hidden;" >
+        <span class="collapse-toggle-badge badge text-dark p-1" style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb;"
         title="See Private Comments" 
         data-bs-toggle="collapse" 
-        data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
+        data-bs-target="#commentRow_{{ obj.clean_name }}_{{ obj.id }}"
         aria-expanded="false" 
-        aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
+        aria-controls="commentRow_{{ obj.clean_name }}_{{ obj.id }}">
         <i class="fa-solid fa-comments"></i>
     </span>
 
