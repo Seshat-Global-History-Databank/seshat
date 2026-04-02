@@ -237,10 +237,87 @@
     .accordion-body {
         padding:0px !important;
     }
-    .accordion-button {
-        background-color: #ffffff;
+    .polity-table-title {
+        background-color:#ffffff;
+        background-clip: padding-box;
+        min-height:40px;
+        height:40px;
+        top:55px;
+        z-index:1030;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        flex-wrap:nowrap;
+        overflow:hidden;
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    .polity-table-title-main {
+        font-size: calc(1.275rem + .3vw);
+        font-weight: 400;
+        line-height: 1.2;
+        min-width:0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .polity-table-title-meta {
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.4;
         text-align: right;
+        white-space: nowrap;
+        flex-shrink: 0;
+        display:inline-flex;
+        align-items:center;
+        gap:0.25rem;
+    }
+
+    @media (min-width: 1200px) {
+        .polity-table-title-main {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .polity-table-title {
+            min-height:auto;
+            height:auto;
+            flex-wrap:wrap;
+            overflow:visible;
+        }
+
+        .polity-table-title-meta {
+            white-space: normal;
+        }
+    }
+
+    .accordion-button {
+        background-color: transparent;
+        text-align: left;
         padding:0px;
+        box-shadow:none !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: inherit;
+        background-color: transparent;
+        box-shadow:none !important;
+    }
+
+    .accordion-button:focus {
+        border-color: transparent;
+        box-shadow:none !important;
+    }
+
+    .accordion-button.p-0 {
+        display:inline-flex;
+        width:auto;
+        align-items:center;
+        justify-content:center;
     }
 
     .accordion-button.p-0::after {
@@ -263,6 +340,51 @@
     table {
         border-collapse: separate; /* Don't collapse */
         border-spacing: 0;
+      }
+
+      .table-container {
+        position: relative;
+        isolation: isolate;
+        background-color:#ffffff;
+        --polity-header-top: 95px;
+      }
+
+      .table-container.has-review {
+        --polity-header-top: 165px;
+      }
+
+      .polity-detail-table > :not(caption) > * > * {
+        vertical-align: middle;
+      }
+
+      .polity-table-header-row {
+        position: sticky;
+        top: var(--polity-header-top);
+        height: 40px;
+        background-color:#ffffff;
+        z-index: 1020;
+      }
+
+      .polity-sticky-header-cell {
+        background-color: #ffffff;
+        background-clip: padding-box;
+        border-bottom: 1px solid #78282355;
+      }
+
+      .polity-table-review {
+        background-color: #ffffff;
+        background-clip: padding-box;
+        z-index: 1025;
+        width:100%;
+        box-sizing:border-box;
+      }
+
+      .polity-detail-table {
+        background-color:#ffffff;
+      }
+
+      .polity-detail-table thead {
+        background-color:#ffffff;
       }
 
       .table-hover tbody tr:hover {
@@ -376,15 +498,75 @@
     
        }
 
-       .tight-link {
+    .tight-link {
         margin: 0;
         padding: 0;
+    }
+
+    .collapse-toggle-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: none !important;
     }
 
     .tight-group {
         display: flex;
         gap: 0; /* ensures no space */
       }
+
+    .table-action-group {
+        display: inline-flex;
+        width: auto;
+        margin-left: auto;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 0.25rem;
+        white-space: nowrap;
+    }
+
+    .table-action-group .tight-link,
+    .table-action-group > span {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .table-action-group .badge,
+    .table-action-group .accordion-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        z-index: auto !important;
+    }
+
+    .table-check-badges {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        width: 100%;
+    }
+
+    .table-check-badges > * {
+        margin: 0;
+    }
+
+    .table-check-badges .badge {
+        z-index: auto !important;
+    }
+
+    .table-action-cell,
+    .table-action-column {
+        white-space: nowrap;
+        width: 1%;
+    }
+
+    .table-checks-column {
+        white-space: nowrap;
+    }
       
       .settlement-link {
         color: #dd571c;
@@ -865,7 +1047,7 @@
                                 </a>
                             </div>
 
-                            <div id="table_id_general" style="line-height:1rem;">
+                            <div class="section-index-summary" style="line-height:1rem;">
                             {% for key, values in values_m.items %}
                                 {% if values %}
                                 <div class=" mt-0 pb-0 mx-0 text-dark" >
@@ -976,7 +1158,7 @@
                                 {% endif %}
                             </a>
                         </div>
-                            <div id="table_id_sc"  style="line-height:1rem;">
+                            <div class="section-index-summary"  style="line-height:1rem;">
                             {% for key, values in values_m.items %}
                             {% if values %}
                             <div class="mt-0 pb-0 mx-0 text-dark">
@@ -1054,8 +1236,9 @@
                     {% if key_m != 'None' %}
                     <span class="fw-light">/ {{key_m}}</span> 
                     {% endif %}
+                </a>
             </div>
-                <div id="table_id_wf"  style="line-height:1rem;">
+                <div class="section-index-summary"  style="line-height:1rem;">
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <div class="mt-0 pb-0 mx-0 text-dark">
@@ -1133,8 +1316,9 @@
                     {% if key_m != 'None' %}
                     <span class="fw-light">/ {{key_m}}</span> 
                     {% endif %}
+                </a>
             </div>
-                <div id="table_id_ec"  style="line-height:1rem;">
+                <div class="section-index-summary"  style="line-height:1rem;">
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <div class="mt-0 pb-0 mx-0 text-dark">
@@ -1213,8 +1397,9 @@
                         {% if key_m != 'None' %}
                         <span class="fw-light">/ {{key_m}}</span> 
                         {% endif %}
+                    </a>
                 </div>
-                    <div id="table_id_rt"  style="line-height:1rem;">
+                    <div class="section-index-summary"  style="line-height:1rem;">
                     {% for key, values in values_m.items %}
                     {% if values %}
                     <div class="mt-0 pb-0 mx-0 text-dark">
@@ -1266,8 +1451,9 @@
                         {% if key_m != 'None' %}
                         <span class="fw-light">/ {{key_m}}</span> 
                         {% endif %}
+                    </a>
                 </div>
-                    <div id="table_id_rt"  style="line-height:1rem;">
+                    <div class="section-index-summary"  style="line-height:1rem;">
                     {% for key, values in values_m.items %}
                     {% if values %}
                     <div class="mt-0 pb-0 mx-0 text-dark">
@@ -1334,7 +1520,7 @@
         </div>
         <div class="row">
 
-                        <div id="table_id_crisis_cases"  style="line-height:1rem;">
+                        <div class="section-index-summary"  style="line-height:1rem;">
                         {% for key, values in all_crisis_cases_data.items %}
                         {% if values %}
                         <div class="mt-0 pb-0 mx-0 text-dark ms-2">
@@ -1397,7 +1583,7 @@
         </div>
         <div class="row">
 
-                        <div id="table_id_power_transitions"  style="line-height:1rem;">
+                        <div class="section-index-summary"  style="line-height:1rem;">
                         {% for key, values in all_power_transitions_data.items %}
                         {% if values %}
                         <div class="mt-0 pb-0 mx-0 text-dark ms-2">
@@ -1459,7 +1645,7 @@
         </div>
         <div class="row">
 
-                        <div id="table_id_instability"  style="line-height:1rem;">
+                        <div class="section-index-summary"  style="line-height:1rem;">
                         {% for key, values in all_instability_data.items %}
                         {% if values %}
                         <div class="mt-0 pb-0 mx-0 ms-2 text-dark">
@@ -1583,36 +1769,37 @@
         <div class="py-2 ps-0 ms-0">
         {% for key_m, values_m in values_top.items %}
             <div class="table-container pb-3">
-                <table id="table_id" class="table align-middle" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                {% with my_section='general' %}
+                    {% include 'core/partials/_table_title_polity.html' %}
+                {% endwith %}
+                <table class="table align-middle polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                     {% with my_section='general' %}
                         {% include 'core/partials/_table_header_polity.html' %}
-                    {% endwith %}                    <tbody>
+                    {% endwith %}
+                    <tbody>
             {% for key, values in values_m.items %}
-                <span id="general_{{key}}"></span>
                 {% if values %}
                     {% for obj in values %}
-                    <tr class="p-0 m-0">
-                    <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                        <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                            <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                    <tr class="p-0 m-0" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                 {% if obj.polity %}
-                                <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: center !important; border-width: 0;" id="{{key}}">
+                                <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: middle !important; border-width: 0;" id="{{key}}">
+                                    {% if forloop.first %}<span id="general_{{key}}"></span>{% endif %}
                                       
                                     {% include "core/partials/_prec_succ_ent_years.html" %}
                                 </td>
                                 {% else %}
                                 <td  colspan="1" style="text-align: left;">-</td>
                                 {% endif %}
-                                <td style="text-align: left; vertical-align: center; border-width: 0;">
+                                <td style="text-align: left; vertical-align: middle; border-width: 0;">
                                     
                                     <span 
                                     {% if obj.description or obj.comment %}
                                     class="accordion-button collapsed text-teal" 
                                     data-bs-toggle="collapse"
                                     title="See the Description."
-                                    data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                    data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                     aria-expanded="false" 
-                                    aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}"
+                                    aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                     {% endif %}
                                     >
                                         {% if key == "Polity_suprapolity_relations" %}
@@ -1666,25 +1853,22 @@
                                 {% endif %}
                     
                                 <!-- Tag tag (Disputed/Suspected etc.) -->
-                                <td style="text-align: right; vertical-align: center; border-width: 0;">
+                                <td style="text-align: right; vertical-align: middle; border-width: 0;">
                                     {% with my_app_name='general' %}
                                         {% include "core/partials/_abc_obj.html" %}
                                     {% endwith %}
                                 </td>
-                            </span>
-                            </span>
-                        </div>
                     </tr>
                     <tr class="p-0 m-0">
                         <td colspan="7" class="p-0 my-0" style="width:100%">
-                            <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                            <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                 <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                     <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                 </span>
                             </div>
                         </td>    
                     </tr>
-                    <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                    <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                         <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                             {% include "core/partials/_private_comment_inline_obj.html" %}
                         </td>
@@ -1720,35 +1904,35 @@
           <div class="py-2 ps-0 ms-0">
           {% for key_m, values_m in values_top.items %}
               <div class="table-container pb-3">
-                  <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                  {% with my_section='sc' %}
+                      {% include 'core/partials/_table_title_polity.html' %}
+                  {% endwith %}
+                  <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                     {% with my_section='sc' %}
                         {% include 'core/partials/_table_header_polity.html' %}
                     {% endwith %}
                       <tbody>
               {% for key, values in values_m.items %}
-                  <span id="sc_{{key}}"></span>
                   {% if values %}
                       {% for obj in values %}
-                      <tr class="p-0 m-0">
-                      <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                          <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                              <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                      <tr class="p-0 m-0" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                   {% if obj.polity %}
-                                  <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: center !important; border-width: 0;" id="{{key}}">
-                                      <span style="text-align: left; vertical-align: center;">{{ obj.clean_name_spaced }}</span> 
+                                  <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: middle !important; border-width: 0;" id="{{key}}">
+                                      {% if forloop.first %}<span id="sc_{{key}}"></span>{% endif %}
+                                      <span style="text-align: left; vertical-align: middle;">{{ obj.clean_name_spaced }}</span>
                                   </td>
                                   {% else %}
                                   <td  colspan="1" style="text-align: left;">-</td>
                                   {% endif %}
-                                  <td style="text-align: left; vertical-align: center; border-width: 0;">
+                                  <td style="text-align: left; vertical-align: middle; border-width: 0;">
                                     <span 
                                         {% if obj.description or obj.comment %}
                                         class="accordion-button collapsed text-teal" 
                                         data-bs-toggle="collapse"
                                         title="See the Description."
-                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                        data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         aria-expanded="false" 
-                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}"
+                                        aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         {% endif %}
                                         >
                             
@@ -1764,25 +1948,22 @@
                                   {% include "core/partials/_years_block_new_obj.html" %}
                                   <!-- Tag tag (Disputed/Suspected etc.) -->
                                   {% endif %}
-                                  <td style="text-align: right; vertical-align: center; border-width: 0;">
+                                  <td style="text-align: right; vertical-align: middle; border-width: 0;">
                                       {% with my_app_name='sc' %}
                                           {% include "core/partials/_abc_obj.html" %}
                                       {% endwith %}
                                   </td>
-                              </span>
-                              </span>
-                          </div>
                       </tr>
                       <tr class="p-0 m-0">
                           <td colspan="7" class="p-0 my-0" style="width:100%">
-                              <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                              <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                   <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                       <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                   </span>
                               </div>
                           </td>    
                       </tr>
-                      <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                      <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                           <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                               {% include "core/partials/_private_comment_inline_obj.html" %}
                           </td>
@@ -1819,14 +2000,11 @@
           <div class="py-2 ps-0 ms-0">
           {% for key_m, values_m in values_top.items %}
               <div class="table-container pb-3">
-                  <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
-                    {% with my_section='wf' %}
-                        {% include 'core/partials/_table_header_polity.html' %}
-                    {% endwith %}                 
-                     <tbody>
-                    {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
-
-                    <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                  {% with my_section='wf' %}
+                      {% include 'core/partials/_table_title_polity.html' %}
+                  {% endwith %}
+                  {% if user|in_group:"Chief Seshat Externallllll Experts" %}
+                  <form method="post" action="{% url 'bulk-verify-expert' %}" >
                         {% csrf_token %}
                         <div class="h6 mb-1 ps-1" style="font-family: Roboto Mono; color:#163832;"> 
                             
@@ -1858,18 +2036,19 @@
                         <i class="fa-solid fa-signature"></i> Sign and Save
                         </button>
                         </div>
-                        {% endif %}
+                  {% endif %}
+                  <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                    {% with my_section='wf' %}
+                        {% include 'core/partials/_table_header_polity.html' %}
+                    {% endwith %}
+                    <tbody>
 
               {% for key, values in values_m.items %}
-                  <span id="wf_{{key}}"></span>
                   {% if values %}
                                     
            
                       {% for obj in values %}
-                      <tr class="p-0 m-0">
-                      <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                          <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                              <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                      <tr class="p-0 m-0" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                   {% if obj.polity %}
                                   {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
 
@@ -1878,23 +2057,24 @@
                                   </td>
                                   {% endif %}
 
-                                    <td class="fw-bold" colspan="1" style="text-align: left; vertical-align: center; border-width: 0;" id="{{key}}">
+                                    <td class="fw-bold" colspan="1" style="text-align: left; vertical-align: middle; border-width: 0;" id="{{key}}">
+                                        {% if forloop.first %}<span id="wf_{{key}}"></span>{% endif %}
                                         
 
-                                        <span style="text-align: left; vertical-align: center;">{{ obj.clean_name_spaced }}</span> 
+                                        <span style="text-align: left; vertical-align: middle;">{{ obj.clean_name_spaced }}</span>
                                     </td>
                                   {% else %}
                                     <td  colspan="1" style="text-align: left;">-</td>
                                   {% endif %}
-                                  <td style="text-align: left; vertical-align: center; border-width: 0;">
+                                  <td style="text-align: left; vertical-align: middle; border-width: 0;">
                                     <span 
                                         {% if obj.description or obj.comment %}
                                         class="accordion-button collapsed text-teal" 
                                         data-bs-toggle="collapse"
                                         title="See the Description."
-                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                        data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         aria-expanded="false" 
-                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}"
+                                        aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         {% endif %}
                                         >
                                             <span class="highlighted-value-title fw-bold" style="display:inline-block"> 
@@ -1907,25 +2087,22 @@
                                   {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' %}
                                     {% include "core/partials/_years_block_new_obj.html" %}
                                   {% endif %}
-                                  <td style="text-align: right; vertical-align: center; border-width: 0;">
+                                  <td style="text-align: right; vertical-align: middle; border-width: 0;">
                                       {% with my_app_name='wf' %}
                                           {% include "core/partials/_abc_obj.html" %}
                                       {% endwith %}
                                   </td>
-                              </span>
-                              </span>
-                          </div>
                       </tr>
                       <tr class="p-0 m-0">
                           <td colspan="7" class="p-0 my-0" style="width:100%">
-                              <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                              <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                   <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                       <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                   </span>
                               </div>
                           </td>    
                       </tr>
-                      <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                      <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                           <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                               {% include "core/partials/_private_comment_inline_obj.html" %}
                           </td>
@@ -1938,11 +2115,11 @@
 
                   {% endif %}
               {% endfor %}
+              </tbody>
+          </table>
             {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
             </form>
             {% endif %}
-              </tbody>
-          </table>
         </div>
               {% endfor %}
       </div>
@@ -1965,34 +2142,35 @@
             <div class="py-2 ps-0 ms-0">
             {% for key_m, values_m in values_top.items %}
                 <div class="table-container pb-3">
-                    <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                    {% with my_section='ec' %}
+                        {% include 'core/partials/_table_title_polity.html' %}
+                    {% endwith %}
+                    <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                         {% with my_section='ec' %}
                             {% include 'core/partials/_table_header_polity.html' %}
-                        {% endwith %}                       <tbody>
+                        {% endwith %}
+                        <tbody>
                 {% for key, values in values_m.items %}
-                    <span id="ec_{{key}}"></span>
                     {% if values %}
                         {% for obj in values %}
-                        <tr class="p-0 m-0">
-                        <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                            <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                                <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                        <tr class="p-0 m-0" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                     {% if obj.polity %}
-                                      <td class="fw-bold" colspan="1" style="text-align: left; vertical-align: center; border-width: 0;" id="{{key}}">
-                                          <span style="text-align: left; vertical-align: center;">{{ obj.clean_name_spaced }}</span> 
+                                      <td class="fw-bold" colspan="1" style="text-align: left; vertical-align: middle; border-width: 0;" id="{{key}}">
+                                          {% if forloop.first %}<span id="ec_{{key}}"></span>{% endif %}
+                                          <span style="text-align: left; vertical-align: middle;">{{ obj.clean_name_spaced }}</span>
                                       </td>
                                     {% else %}
                                       <td  colspan="1" style="text-align: left;">-</td>
                                     {% endif %}
-                                    <td style="text-align: left; vertical-align: center; border-width: 0;">
+                                    <td style="text-align: left; vertical-align: middle; border-width: 0;">
                                         <span 
                                         {% if obj.description or obj.comment %}
                                         class="accordion-button collapsed text-teal" 
                                         data-bs-toggle="collapse"
                                         title="See the Description."
-                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                        data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         aria-expanded="false" 
-                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}"
+                                        aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                         {% endif %}
                                         >
                                             <small class="highlighted-value-title fw-bold" style="display:inline-block"> 
@@ -2004,25 +2182,22 @@
                                     {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' %}
                                       {% include "core/partials/_years_block_new_obj.html" %}
                                     {% endif %}
-                                    <td style="text-align: right; vertical-align: center; border-width: 0;">
+                                    <td style="text-align: right; vertical-align: middle; border-width: 0;">
                                         {% with my_app_name='ec' %}
                                             {% include "core/partials/_abc_obj.html" %}
                                         {% endwith %}
                                     </td>
-                                </span>
-                                </span>
-                            </div>
                         </tr>
                         <tr class="p-0 m-0">
                             <td colspan="7" class="p-0 my-0" style="width:100%">
-                                <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                     <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                         <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                     </span>
                                 </div>
                             </td>    
                         </tr>
-                        <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                        <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                             <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                                 {% include "core/partials/_private_comment_inline_obj.html" %}
                             </td>
@@ -2061,36 +2236,36 @@
                 <div class="py-2 ps-0 ms-0">
                 {% for key_m, values_m in values_top.items %}
                     <div class="table-container pb-3">
-                        <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                        {% with my_section='rt' %}
+                            {% include 'core/partials/_table_title_polity.html' %}
+                        {% endwith %}
+                        <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                             {% with my_section='rt' %}
                                 {% include 'core/partials/_table_header_polity.html' %}
                             {% endwith %}     
                     <tbody>
                     {% for key, values in values_m.items %}
-                        <span id="rt_{{key}}"></span>
                         {% if values %}
                             {% for obj in values %}
-                            <tr class="p-0 m-0" style="border-width:0;">
-                            <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                                <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                                    <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                            <tr class="p-0 m-0" style="border-width:0;" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                         {% if obj.polity %}
-                                        <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: center !important; border-width:0;" id="{{key}}">
-                                            <span style="text-align: left; vertical-align: center;">{{ obj.clean_name_spaced }}</span> 
+                                        <td class="fw-bold" colspan="1" style="text-align: left !important; vertical-align: middle !important; border-width:0;" id="{{key}}">
+                                            {% if forloop.first %}<span id="rt_{{key}}"></span>{% endif %}
+                                            <span style="text-align: left; vertical-align: middle;">{{ obj.clean_name_spaced }}</span>
                                         </td>
                                         {% else %}
                                         <td  colspan="1" style="text-align: left;">-</td>
                                         {% endif %}
-                                        <td style="text-align: left; vertical-align: center; border-width:0;">
+                                        <td style="text-align: left; vertical-align: middle; border-width:0;">
                                 
                                             <span 
                                             {% if obj.description or obj.comment %}
                                             class="accordion-button collapsed text-teal" 
                                             data-bs-toggle="collapse"
                                             title="See the Description."
-                                            data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                            data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                             aria-expanded="false" 
-                                            aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}"
+                                            aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                             {% endif %}
                                             >
                                                 <span class="highlighted-value-title fw-bold" style="display:inline-block"> 
@@ -2106,7 +2281,7 @@
                                         {% include "core/partials/_years_block_new_obj.html" %}
                                         <!-- Tag tag (Disputed/Suspected etc.) -->
                                         {% endif %}
-                                        <td style="text-align: right; vertical-align: center; border-width:0;">
+                                        <td style="text-align: right; vertical-align: middle; border-width:0;">
                                             {% if key == 'Human_sacrifice' %}
                                                 {% with my_app_name='crisisdb' %}
                                                     {% include "core/partials/_abc_obj.html" %}
@@ -2118,20 +2293,17 @@
                                             {% endif %}
 
                                         </td>
-                                    </span>
-                                    </span>
-                                </div>
                             </tr>
                             <tr class="p-0 m-0">
                                 <td colspan="7" class="p-0 my-0" style="width:100%">
-                                    <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                    <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                         <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                             <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                         </span>
                                     </div>
                                 </td>    
                             </tr>
-                            <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                            <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                                 <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                                     {% include "core/partials/_private_comment_inline_obj.html" %}
                                 </td>
@@ -2185,19 +2357,17 @@
             {% if values %}
                 {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
                     <div class="py-2 ps-0 ms-0">
-                        <div class="table-container pb-3">
-                            <table id="crisis_cases_table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                        <div class="table-container pb-3{% if user|in_group:'Chief Seshat External Experts' %} has-review{% endif %}">
+                            {% include 'core/partials/_table_title_polity_cc.html' %}
+                            <table id="crisis_cases_table_id" class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                                 {% include 'core/partials/_table_header_polity_cc.html' %}
                                 <tbody>
                         {% for obj in values%}
-                            <span id="crisis_case_{{obj.id}}"></span>
                             {% if values %}
-                                <tr class="p-0 m-0" style="border-width:0;">
-                                <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                                    <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                                        <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                <tr class="p-0 m-0" style="border-width:0;" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                             {% if obj.polity %}
-                                            <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0; width:30%;">
+                                            <td class="fw-bold" style="text-align: left !important; vertical-align: middle !important; border-width:0; width:30%;">
+                                                <span id="crisis_case_{{obj.id}}"></span>
                                       
                                                 <span class="highlighted-value-title-pred fw-normal" style="display:inline-block; text-align: left; vertical-align: bottom;">
                                                     {{ obj.name }}
@@ -2238,9 +2408,9 @@
                                                         type="button" 
                                                         data-bs-toggle="collapse"
                                                         title="See the Description."
-                                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                                        data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                                         aria-expanded="false" 
-                                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                                        aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}">
                                                 </span>
                                                 {% endif %}
                                             </td>
@@ -2253,25 +2423,22 @@
                                             </td>
     
      
-                                            <td style="text-align: right; vertical-align: center; border-width:0;">
+                                            <td style="text-align: right; vertical-align: middle; border-width:0;">
                                                 {% with my_app_name='crisisdb' %}
                                                     {% include "core/partials/_abc_obj.html" %}
                                                 {% endwith %}
                                             </td>
-                                        </span>
-                                        </span>
-                                    </div>
                                 </tr>
                                 <tr class="p-0 m-0">
                                     <td colspan="12" class="p-0 my-0" style="width:100%">
-                                        <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                        <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                             <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                                 <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                             </span>
                                         </div>
                                     </td>    
                                 </tr>
-                                <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                                <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                                     <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                                         {% include "core/partials/_private_comment_inline_obj.html" %}
                                     </td>
@@ -2322,15 +2489,11 @@
                 {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
                     <div class="py-2 ps-0 ms-0">
                         <div class="table-container pb-3">
-                            <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
-                                {% include 'core/partials/_table_header_polity_instability.html' %}
-                                <tbody>
-
-                                        {% if user|in_group:"Chief Seshat External Experts" %}   
-
-                                        <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                            {% include 'core/partials/_table_title_polity_instability.html' %}
+                            {% if user|in_group:"Chief Seshat External Experts" %}
+                            <form method="post" action="{% url 'bulk-verify-expert' %}" >
                                             {% csrf_token %}
-                                            <div class="fs-6 mb-1 ps-1 sticky-top" style="background-color:#ffffff; color:#163832;  height:70px;top: 95px; z-index:900;">
+                                            <div class="fs-6 mb-1 ps-1 sticky-top polity-table-review" style="color:#163832; height:70px; top: 95px;">
                                                 <span > 
                                                 
                                                     &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
@@ -2364,25 +2527,21 @@
                                                 </button>
                                                 </span>
                                             </div>
-                                       
-                                            {% endif %}
-
-
+                            {% endif %}
+                            <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                                {% include 'core/partials/_table_header_polity_instability.html' %}
+                                <tbody>
                         {% for obj in values%}
-                            <span id="instability_event_{{obj.id}}"></span>
                             {% if values %}
                             
 
 
 
-                                <tr class="p-0 m-0" style="border-width:0;
+                                <tr class="p-0 m-0" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}" style="border-width:0;
                                                     {% if obj.seshat_experts_list  %}
                                                     background: #843b6211;                                            
                                                     {% endif %}
                                 ">
-                                <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                                    <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                                        <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
                                             {% if user|in_group:"Chief Seshat External Experts" %}
                                  
 
@@ -2398,10 +2557,11 @@
                                               </td>
                                             {% endif %}
                                             {% if obj.polity %}
-                                            <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0;">
+                                            <td class="fw-bold" style="text-align: left !important; vertical-align: middle !important; border-width:0;">
+                                                <span id="instability_event_{{obj.id}}"></span>
 
                                        
-                                                <small style="vertical-align: center;">
+                                                <small style="vertical-align: middle;">
                                                     {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
                                                     <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#D3D3D3; border-radius:5px; color:white;"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
                                                   {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
@@ -2412,7 +2572,7 @@
                                                     <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#d9b26f; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated on or after March 1st, 2026.">Batch 4</span>
                                                   {% endif %}
                                                 </small>
-                                                <small style="vertical-align: center;  display:inline-block;">
+                                                <small style="vertical-align: middle; display:inline-block;">
                                                     <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
 
                                                     {% if obj.researchers_list  %}
@@ -2441,9 +2601,9 @@
                                                         type="button" 
                                                         data-bs-toggle="collapse"
                                                         title="See the Description."
-                                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                                        data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                                         aria-expanded="false" 
-                                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                                        aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}">
                                                 </span>
                                                 {% endif %}
 
@@ -2484,34 +2644,31 @@
                                                 </span> 
                                             </td>
     
-                                                <td  style="text-align: right; z-index:890; border-width:0; width:15%;" >
+                                                <td  style="text-align: right; vertical-align: middle; z-index:890; border-width:0; width:15%;" >
                                                     {% autoescape off %}
-                                                    <small >{{obj.get_instability_checks}}</small>
+                                                    <div class="table-check-badges">{{ obj.get_instability_checks }}</div>
                                                     {% endautoescape %}
                                                 </td>
 
                                                 
 
      
-                                            <td  style="text-align: right; vertical-align: center; border-width:0;">
+                                            <td class="table-action-cell" style="text-align: right; vertical-align: middle; border-width:0;">
                                                 {% with my_app_name='crisisdb' %}
                                                     {% include "core/partials/_abc_obj_instability.html" %}
                                                 {% endwith %}
                                             </td>
-                                        </span>
-                                        </span>
-                                    </div>
                                 </tr>
                                 <tr class="p-0 m-0">
                                     <td colspan="12" class="p-0 my-0" style="width:100%">
-                                        <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                        <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                             <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                                 <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                             </span>
                                         </div>
                                     </td>    
                                 </tr>
-                                <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                                <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                                     <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                                         {% include "core/partials/_private_comment_inline_obj.html" %}
                                     </td>
@@ -2521,12 +2678,11 @@
                             {% endif %}
                         {% endfor %}
 
+                        </tbody>
+                    </table>
                     {% if user|in_group:"Chief Seshat External Experts" %}   
                     </form>
                     {% endif %}
-
-                        </tbody>
-                    </table>
                 </div>
                 </div>
                 {% endif %}
@@ -2569,18 +2725,16 @@
             {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
                 <div class="py-2 ps-0 ms-0">
                     <div class="table-container pb-3">
-                        <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                        {% include 'core/partials/_table_title_polity_pt.html' %}
+                        <table class="table align-middle table-hover polity-detail-table" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                             {% include 'core/partials/_table_header_polity_pt.html' %}
                             <tbody>
                     {% for obj in values%}
-                        <span id="power_transition_{{obj.id}}"></span>
                         {% if values %}
-                            <tr class="p-0 m-0" style="border-width:0;">
-                            <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
-                                <span class="accordion-item  p-0 m-0" style="background-color:#ffffff;">
-                                    <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                            <tr class="p-0 m-0" style="border-width:0;" id="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                         {% if obj.polity %}
-                                        <td class="fw-bold" colspan="4" style="text-align: left !important; vertical-align: center !important; border-width:0; width:50%;">
+                                        <td class="fw-bold" colspan="4" style="text-align: left !important; vertical-align: middle !important; border-width:0; width:50%;">
+                                            <span id="power_transition_{{obj.id}}"></span>
                                   
                                             <span class="highlighted-value-title-pred fw-normal mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;">
                                                 {{ obj.predecessor }}
@@ -2601,9 +2755,9 @@
                                                     type="button" 
                                                     data-bs-toggle="collapse"
                                                     title="See the Description."
-                                                    data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                                    data-bs-target="#collapseOne_{{ obj.clean_name }}_{{ obj.id }}"
                                                     aria-expanded="false" 
-                                                    aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                                    aria-controls="collapseOne_{{ obj.clean_name }}_{{ obj.id }}">
                                             </span>
                                             {% endif %}
                                         </td>
@@ -2619,25 +2773,22 @@
 
                                         </td>
  
-                                        <td colspan="2" style="text-align: right; vertical-align: center; border-width:0;">
+                                        <td colspan="2" style="text-align: right; vertical-align: middle; border-width:0;">
                                             {% with my_app_name='crisisdb' %}
                                                 {% include "core/partials/_abc_obj.html" %}
                                             {% endwith %}
                                         </td>
-                                    </span>
-                                    </span>
-                                </div>
                             </tr>
                             <tr class="p-0 m-0">
                                 <td colspan="12" class="p-0 my-0" style="width:100%">
-                                    <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                    <div id="collapseOne_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ obj.clean_name }}_{{ obj.id }}">
                                         <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                             <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                                         </span>
                                     </div>
                                 </td>    
                             </tr>
-                            <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                            <tr id="commentRow_{{ obj.clean_name }}_{{ obj.id }}" class="accordion-collapse collapse">
                                 <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:10px; border-bottom-right-radius:10px; ">
                                     {% include "core/partials/_private_comment_inline_obj.html" %}
                                 </td>
@@ -2718,14 +2869,26 @@
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.accordion-button').forEach(function (button) {
+        document.querySelectorAll('.accordion-button[data-bs-target^="#collapseOne_"]').forEach(function (button) {
             button.addEventListener('click', function () {
-                const targetId = button.getAttribute('data-bs-target').substring(1); // Get the target element ID
-                const accordionBody = document.getElementById(targetId).querySelector('.accordion-body');
+                const targetSelector = button.getAttribute('data-bs-target');
+                if (!targetSelector) {
+                    return;
+                }
+
+                const targetElement = document.querySelector(targetSelector);
+                if (!targetElement) {
+                    return;
+                }
+
+                const accordionBody = targetElement.querySelector('.accordion-body');
     
                 if (accordionBody && !accordionBody.hasAttribute('data-loaded')) { // Avoid refetching if already loaded
                     const objId = accordionBody.getAttribute('data-obj-id');
                     const modelName = accordionBody.getAttribute('data-model-name');
+                    if (!objId || !modelName) {
+                        return;
+                    }
     
                     // Show the loading spinner
                     accordionBody.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
