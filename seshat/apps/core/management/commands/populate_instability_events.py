@@ -83,6 +83,7 @@ class Command(BaseCommand):
 
             event = Instability_event.objects.create(
                 name=event_data['event'],
+                source=Instability_event.Source.LLM,
                 llm_name=llm_new_name,
                 year_from=event_data['year_from'],
                 year_to=event_data['year_to'],

@@ -2561,39 +2561,7 @@
                                                 <span id="instability_event_{{obj.id}}"></span>
 
                                        
-                                                <small style="vertical-align: middle;">
-                                                    {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
-                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#D3D3D3; border-radius:5px; color:white;"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
-                                                  {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
-                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#ADD8E6; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
-                                                  {% elif obj.created_date|date:"Y-m-d" < "2026-03-01" %}
-                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#a8dcab; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
-                                                  {% else %}
-                                                    <span style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; background:#d9b26f; border-radius:5px; color:white;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated on or after March 1st, 2026.">Batch 4</span>
-                                                  {% endif %}
-                                                </small>
-                                                <small style="vertical-align: middle; display:inline-block;">
-                                                    <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
-
-                                                    {% if obj.researchers_list  %}
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
-                                                        </a>
-                                                    {% endif %}
-                                                    {% if obj.comment %}
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
-
-                                                    {% endif %}
-
-                                                    {% if obj.seshat_experts_list  %}
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-                                                            <span>
-                                                                <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
-                                                            </span>
-                                                        </a>
-                                                    {% endif %}
-
-                                                </small>
+                                                {% include "core/partials/_instability_event_badges.html" with event=obj %}
                                                                   
                                                 {% if obj.description or obj.comment or obj.llm_description %}
                                                 <span class="accordion-button collapsed p-0 my-0 float-end text-info" 

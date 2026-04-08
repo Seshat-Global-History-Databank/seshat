@@ -406,7 +406,16 @@ class Check_choice(models.Model):
 # Good	Everything is correct
 
 class Instability_event(SeshatCommon):
+    class Source(models.TextChoices):
+        MANUAL = "manual", "Manual"
+        LLM = "llm", "LLM Import"
+
     name = models.CharField(max_length=200)
+    source = models.CharField(
+        max_length=20,
+        choices=Source.choices,
+        default=Source.MANUAL,
+    )
     inst_type = models.ManyToManyField(Instability_type, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     ra_check = models.ManyToManyField(Check_choice, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     inst_llm_ref = models.ManyToManyField(Instability_ref, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
@@ -472,9 +481,19 @@ class Instability_event(SeshatCommon):
     @property
     def made_up_macro_event(self):
         return extract_macro_event_from_llm_name(self.llm_name or self.name)
+
+    @property
+    def is_llm_source(self):
+        return self.source == self.Source.LLM
+
+    @property
+    def is_manual_source(self):
+        return self.source == self.Source.MANUAL
     
     @property
     def batch_number(self):
+        if not self.is_llm_source:
+            return None
         if not self.created_date:
             return "Unknown"
         if self.created_date.date() < date(2025, 3, 29):
@@ -488,6 +507,8 @@ class Instability_event(SeshatCommon):
         
     @property
     def batch_tooltip(self):
+        if not self.is_llm_source:
+            return None
         if not self.created_date:
             return "Unknown creation date"
         if self.created_date.date() < date(2025, 3, 29):
