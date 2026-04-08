@@ -16,8 +16,8 @@ import sys
 # MIDDLEWARE SETTINGS
 # ==============================================================================
 
-# Override the default middleware settings in the base.py file to include the GZipMiddleware, AutoLoginMiddleware, and AuthenticationMiddleware.
-# This ensures that the environment looks as it would for a logged-in user.
+# Override the default middleware settings in the base.py file to include the
+# local-only middleware we want during development.
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -29,11 +29,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.gzip.GZipMiddleware",
-    "seshat.apps.core.middleware.AutoLoginMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
 
 ]
 """MIDDLEWARE defines the list of middleware classes that Django will use."""
+
+if os.getenv("SESHAT_ENABLE_AUTOLOGIN", "").lower() in {"1", "true", "yes"}:
+    MIDDLEWARE.insert(-1, "seshat.apps.core.middleware.AutoLoginMiddleware")
 
 # ==============================================================================
 # DATABASE SETTINGS
