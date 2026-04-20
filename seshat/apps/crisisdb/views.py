@@ -6325,7 +6325,10 @@ def delete_object_view(request, model_class, pk, var_name):
     obj.delete()
 
     # Redirect to the success URL
-    success_url_name = f'{var_name}_list'  # Adjust the success URL as needed
+    if var_name == "instability_event":
+        success_url_name = "instability_events_all"
+    else:
+        success_url_name = f'{var_name}_list'  # Adjust the success URL as needed
     success_url = reverse(success_url_name)
 
     # Display a success message
