@@ -1,0 +1,16 @@
+<div class="sticky-top py-0 px-0 m-0 polity-table-title">
+    <div class="polity-table-title-main">
+        {% if values %}
+            <span>Power Transitions</span>
+        {% endif %}
+    </div>
+    <div class="polity-table-title-meta">
+        <small class="badge bg-success-light small-knopf" title="present">Present</small>
+        <small class="badge bg-info-light small-knopf" title="inferred present">Inferred Present</small>
+        <small class="badge bg-absent-light small-knopf" title="absent">Absent</small>
+        <small class="badge bg-secondary-light small-knopf" title="inferred absent">Inferred Absent</small>
+        <small class="badge bg-unknown-light small-knopf" title="unknown">Unknown</small>
+        <small class="badge bg-warning-light small-knopf" title="suspected unknown">Suspected Unknown</small>&nbsp;&nbsp;
+        <b>{{ object.long_name }}</b> <span>({{ object.new_name }})</span>
+    </div>
+</div>

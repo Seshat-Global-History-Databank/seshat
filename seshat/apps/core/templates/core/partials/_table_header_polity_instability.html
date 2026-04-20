@@ -1,38 +1,22 @@
 <!-- templates/_table_header.html -->
 {% load custom_filters %}
-
-<legend class="sticky-top py-0 px-0 m-0" style="background-color:#ffffff; height:40px; top: 55px; z-index:900;">
-    {% if values %}
-        <span>Instability Data</span> 
-    {% endif %}
-    <span class="fs-6 float-end fw-light pt-1">
-        <b>{{ object.long_name }}</b> <span>({{ object.new_name }})</span>
-
-    </span>
-</legend>
 <thead> 
-    <tr class="sticky-top" style='background-color:#ffffff; height:40px; border: 1px solid #78282355; top: 
+    <tr class="polity-table-header-row">
         {% if user|in_group:"Chief Seshat External Experts" %}
-        165px
-        {% else %}
-        85px
-        {% endif %}
-        ; z-index:900;'>
-        {% if user|in_group:"Chief Seshat External Experts" %}
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">#</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">#</th>
         {% endif %}
 
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">Event</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: center;">Year(s)</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">Type(s)</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">MacroEvent</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">Intensity</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: left;">Extent</th>
-        <th scope="col" class="fw-light text-secondary" style="text-align: right;">Checks</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">Event</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: center;">Year(s)</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">Type(s)</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">MacroEvent</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">Intensity</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell" style="text-align: left;">Extent</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell table-checks-column" style="text-align: right;">Checks</th>
         {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-        <th scope="col" class="fw-light text-secondary" style="text-align: right;">Modify</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell table-action-column" style="text-align: right;">Modify</th>
         {% else %}
-        <th scope="col" class="fw-light text-secondary" style="text-align: right;">See More</th>
+        <th scope="col" class="fw-light text-secondary polity-sticky-header-cell table-action-column" style="text-align: right;">See More</th>
 
         {% endif %}
 
