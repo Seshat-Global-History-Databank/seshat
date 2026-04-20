@@ -8,9 +8,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.safestring import mark_safe
 from django.views.generic.list import ListView
 
-from django.utils import timezone
-
-
 from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -58,11 +55,7 @@ from .models import Power_transition, Crisis_consequence, Human_sacrifice, Exter
 
 
 from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm, CheckChoiceForm
-
-
-BATCH_1_END = timezone.make_aware(datetime.datetime(2025, 3, 29))
-BATCH_2_END = timezone.make_aware(datetime.datetime(2025, 4, 11))
-BATCH_3_END = timezone.make_aware(datetime.datetime(2026, 3, 1))
+from .instability_filters import apply_instability_batch_filter, get_batch_tag
 
 
 # Create View
@@ -6332,7 +6325,10 @@ def delete_object_view(request, model_class, pk, var_name):
     obj.delete()
 
     # Redirect to the success URL
-    success_url_name = f'{var_name}_list'  # Adjust the success URL as needed
+    if var_name == "instability_event":
+        success_url_name = "instability_events_all"
+    else:
+        success_url_name = f'{var_name}_list'  # Adjust the success URL as needed
     success_url = reverse(success_url_name)
 
     # Display a success message
@@ -6346,9 +6342,10 @@ def instability_analytics(request):
     #queryset = Instability_event.objects.all()
     #queryset = Instability_event.objects.filter(polity__unreliable_instability_events=False)
     queryset = Instability_event.objects.filter(
-        polity__unreliable_instability_events=False
+        polity__unreliable_instability_events=False,
+        source=Instability_event.Source.LLM,
     ).only(
-        'id', 'created_date', 'inst_extent', 'inst_intensity', 'real_event_check', 'inst_type', 'ra_check', 'curator', 'comment', 'private_comment'
+        'id', 'created_date', 'source', 'inst_extent', 'inst_intensity', 'real_event_check', 'inst_type', 'ra_check', 'curator', 'comment', 'private_comment'
     )
 
     all_events_count= len(queryset)
@@ -6383,20 +6380,7 @@ def instability_analytics(request):
     selected_batch = request.GET.get('selected_batch')
 
     if selected_batch:
-        if selected_batch == "Batch 1":
-            queryset = queryset.filter(created_date__lt=BATCH_1_END)
-        elif selected_batch == "Batch 2":
-            queryset = queryset.filter(
-                created_date__gte=BATCH_1_END,
-                created_date__lt=BATCH_2_END
-            )
-        elif selected_batch == "Batch 3":
-            queryset = queryset.filter(
-                created_date__gte=BATCH_2_END,
-                created_date__lt=BATCH_3_END
-            )
-        elif selected_batch == "Batch 4":
-            queryset = queryset.filter(created_date__gte=BATCH_3_END)
+        queryset = apply_instability_batch_filter(queryset, selected_batch)
     # Filter by selected expert
     selected_expert_id = request.GET.get('expert')
     if selected_expert_id:
@@ -6520,25 +6504,9 @@ def instability_analytics(request):
         for code, count in real_check_counts.items()
     ]
 
-    def get_batch_label(created_date):
-        if created_date is None:
-            return "Unknown"
-
-        # Make sure the datetime is timezone-aware
-        if timezone.is_naive(created_date):
-            created_date = timezone.make_aware(created_date)
-
-        if created_date < BATCH_1_END:
-            return "Batch 1"
-        elif BATCH_1_END <= created_date < BATCH_2_END:
-            return "Batch 2"
-        elif BATCH_2_END <= created_date < BATCH_3_END:
-            return "Batch 3"
-        else:
-            return "Batch 4"
     # Step 1: Assign batch label per event
     batch_labels = [
-            get_batch_label(dt) for dt in queryset.values_list("created_date", flat=True)
+            get_batch_tag(dt) for dt in queryset.values_list("created_date", flat=True)
     ]
 
     # Step 2: Count occurrences
@@ -6619,7 +6587,10 @@ def instability_analytics(request):
         {"label": "No Private Comments", "count": total_events - with_private_comment}
     ]
 
-    polity_ids_in_list = Instability_event.objects.filter(polity__unreliable_instability_events=False).values_list('polity_id', flat=True).distinct()
+    polity_ids_in_list = Instability_event.objects.filter(
+        polity__unreliable_instability_events=False,
+        source=Instability_event.Source.LLM,
+    ).values_list('polity_id', flat=True).distinct()
     polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')    
 
 

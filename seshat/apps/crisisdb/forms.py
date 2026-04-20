@@ -278,6 +278,14 @@ class CheckChoiceForm(forms.ModelForm):
 
 
 class Instability_eventForm(ExpertReviewedForm):
+    is_macro_event = forms.TypedChoiceField(
+        choices=((False, 'False'), (True, 'True')),
+        coerce=lambda value: value in (True, 'True', 'true', '1', 1),
+        empty_value=False,
+        required=True,
+        label='Macroevent',
+        widget=forms.Select(attrs={'class': 'form-control mb-1'}),
+    )
 
     #formset = CommentPartFormSet(prefix='commentpart')  # Include formset
     #formset.management_form  # Ensure the management form is included
@@ -302,6 +310,7 @@ class Instability_eventForm(ExpertReviewedForm):
         fields.append('inst_intensity')
         fields.append('inst_extent') 
         fields.append('name')
+        fields.append('is_macro_event')
         #fields.append('llm_inst_intensity')
         #fields.append('llm_inst_extent') 
         #fields.append('llm_name')
@@ -319,7 +328,8 @@ class Instability_eventForm(ExpertReviewedForm):
 
         labels = commonlabels.copy()
         labels['llm_description'] = "<span class='fs-6'> LLM Description: </span>"
-        labels['name'] = "<span class='fs-6'> Event Name: </span>"
+        labels['name'] = "Event Name"
+        labels['is_macro_event'] = "Macroevent"
         labels['inst_extent'] = "<span class='fs-6'> Extent: </span>"
         labels['inst_intensity'] = "<span class='fs-6'> Intensity: </span>"
         labels['general_cot'] = "<span class='fs-6'> General Chain of Thought: </span>"

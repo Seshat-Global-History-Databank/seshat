@@ -39,6 +39,16 @@
         </button>
         {% endif %}  
     {% endif %}   
+
+    {% if 'core.add_capital' in user.get_all_permissions  %}
+    <a class="p-0 m-0 tight-link"
+    style="overflow: hidden;"
+    href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}">
+        <span class="badge p-1 text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed4c" data-bs-toggle="popover" title="Add a new row of Data" >
+            <i class="fa-solid fa-plus"></i>
+        </span>
+    </a>
+    {% endif %}
  
     <span>
         <a class="p-0 m-0 tight-link"  

@@ -9,8 +9,6 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.core.validators import MinValueValidator
 
-from datetime import date
-
 import uuid
 
 from django.utils import translation
@@ -406,7 +404,17 @@ class Check_choice(models.Model):
 # Good	Everything is correct
 
 class Instability_event(SeshatCommon):
+    class Source(models.TextChoices):
+        MANUAL = "manual", "Manual"
+        LLM = "llm", "LLM Import"
+
     name = models.CharField(max_length=200)
+    is_macro_event = models.BooleanField(default=False)
+    source = models.CharField(
+        max_length=20,
+        choices=Source.choices,
+        default=Source.MANUAL,
+    )
     inst_type = models.ManyToManyField(Instability_type, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     ra_check = models.ManyToManyField(Check_choice, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     inst_llm_ref = models.ManyToManyField(Instability_ref, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
@@ -472,32 +480,30 @@ class Instability_event(SeshatCommon):
     @property
     def made_up_macro_event(self):
         return extract_macro_event_from_llm_name(self.llm_name or self.name)
+
+    @property
+    def is_llm_source(self):
+        return self.source == self.Source.LLM
+
+    @property
+    def is_manual_source(self):
+        return self.source == self.Source.MANUAL
     
     @property
     def batch_number(self):
-        if not self.created_date:
-            return "Unknown"
-        if self.created_date.date() < date(2025, 3, 29):
-            return "Batch 1"
-        elif self.created_date.date() < date(2025, 4, 11):
-            return "Batch 2"
-        elif self.created_date.date() < date(2026, 3, 1):
-            return "Batch 3"
-        else:
-            return "Batch 4"
+        if not self.is_llm_source:
+            return None
+        from .instability_filters import get_batch_tag
+
+        return get_batch_tag(self.created_date)
         
     @property
     def batch_tooltip(self):
-        if not self.created_date:
-            return "Unknown creation date"
-        if self.created_date.date() < date(2025, 3, 29):
-            return "Generated in March 2025."
-        elif self.created_date.date() < date(2025, 4, 11):
-            return "Generated from March 28th, to April 28th, 2025."
-        elif self.created_date.date() < date(2026, 3, 1):
-            return "Generated after April 28th, 2025."
-        else:
-            return "Generated on or after March 1st, 2026."
+        if not self.is_llm_source:
+            return None
+        from .instability_filters import get_batch_tooltip
+
+        return get_batch_tooltip(self.created_date)
 
 
     def __str__(self) -> str:

@@ -203,6 +203,7 @@ class Command(BaseCommand):
                     private_comment = SeshatPrivateComment.objects.create()
                     event = Instability_event.objects.create(
                         name=name,
+                        source=Instability_event.Source.LLM,
                         llm_name=llm_name,
                         polity=polity,
                         year_from=year_from,

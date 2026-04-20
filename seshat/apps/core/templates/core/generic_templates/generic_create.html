@@ -51,6 +51,27 @@
         margin-right: 3px;
     }
 
+    .inline-field-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .inline-field-header label {
+        margin-bottom: 0;
+    }
+
+    .inline-field-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1.2;
+    }
+
 </style>
 
 {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions and 'core.add_seshatprivatecommentpart' in request.user.get_all_permissions %}
@@ -347,6 +368,22 @@
 
     {% endfor %}
 
+</div>
+{% elif create_layout_mode == 'instability_event_manual' %}
+<div class="col-md-6 pb-3">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var4|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var5|as_crispy_field }}
 </div>
 {% elif extra_var and extra_var2 and extra_var3 and extra_var.name == 'other_polity' %}
 <div class="col-md-6 pb-3">

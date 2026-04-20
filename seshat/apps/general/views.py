@@ -19,7 +19,6 @@ from ..core.terms_utils import require_terms_acceptance
 
 from seshat.apps.accounts.models import Seshat_Expert
 from django.utils.dateparse import parse_date
-from collections import Counter
 
 
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
@@ -30,7 +29,7 @@ from django.http import HttpResponseRedirect, response, JsonResponse, HttpRespon
 from django.conf import settings
 
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q, F, IntegerField
+from django.db.models import F
 
 from django.views import generic
 import csv
@@ -55,7 +54,7 @@ from django.core.mail import send_mail
 from .mixins import PolityIdMixin
 from .var_defs import swapped_dict
 
-from django.db.models.functions import Coalesce, Cast
+from django.db.models.functions import Coalesce
 
 
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
@@ -63,126 +62,17 @@ from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_
 
 from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
-from ..crisisdb.models import Instability_type, Check_choice, INST_EXTENT_CHOICES, INST_INTENSITY_CHOICES
+from ..crisisdb.instability_filters import (
+    build_instability_json_coded_values,
+    build_instability_list_context,
+    get_filtered_instability_queryset,
+    get_instability_approved_description,
+    get_instability_checking_status,
+    is_llm_instability_event,
+)
+from ..crisisdb.models import Instability_event
 
 from ..rt.models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
-
-BATCH_1_END = datetime.date(2025, 3, 29)
-BATCH_2_END = datetime.date(2025, 4, 11)
-BATCH_3_END = datetime.date(2026, 3, 1)
-
-def get_batch_tag(created_date):
-    if created_date < BATCH_1_END:
-        return "Batch 1"
-    elif created_date < BATCH_2_END:
-        return "Batch 2"
-    elif created_date < BATCH_3_END:
-        return "Batch 3"
-    else:
-        return "Batch 4"
-
-
-def apply_instability_event_filters(queryset, request):
-    year_from_min = request.GET.get('year_from_min')
-    year_to_max = request.GET.get('year_to_max')
-    created_before = request.GET.get('created_before')
-    selected_batch = request.GET.get('selected_batch')
-    polity_id = request.GET.get('polity')
-    inst_type_ids = request.GET.getlist("inst_type")
-    ra_check_ids = request.GET.getlist("ra_check")
-    inst_extent = request.GET.get("inst_extent")
-    inst_intensity = request.GET.get("inst_intensity")
-    selected_macro = request.GET.get('macro_event')
-    name_query = request.GET.get('searched_name', '').strip()
-
-    if inst_type_ids:
-        queryset = queryset.filter(inst_type__in=inst_type_ids).distinct()
-
-    if ra_check_ids:
-        queryset = queryset.filter(ra_check__in=ra_check_ids).distinct()
-
-    if inst_extent:
-        queryset = queryset.filter(inst_extent=inst_extent)
-
-    if inst_intensity:
-        queryset = queryset.filter(inst_intensity=inst_intensity)
-
-    if polity_id:
-        queryset = queryset.filter(polity__id=polity_id)
-
-    if selected_macro:
-        desired_str = '(macro event: ' + selected_macro.lower()
-        queryset = queryset.filter(llm_name__icontains=desired_str)
-
-    if name_query:
-        queryset = queryset.filter(name__icontains=name_query)
-
-    queryset = queryset.annotate(
-        start_year_effective=Coalesce('year_from', F('polity__start_year')),
-        end_year_effective=Coalesce('year_to', F('polity__end_year')),
-    )
-
-    if year_from_min:
-        queryset = queryset.filter(start_year_effective__gte=int(year_from_min))
-
-    if year_to_max:
-        queryset = queryset.filter(end_year_effective__lte=int(year_to_max))
-
-    if created_before:
-        parsed_date = parse_date(created_before)
-        if parsed_date:
-            queryset = queryset.filter(created_date__lt=parsed_date)
-
-    if selected_batch:
-        if selected_batch == "Batch 1":
-            queryset = queryset.filter(created_date__lt=BATCH_1_END)
-        elif selected_batch == "Batch 2":
-            queryset = queryset.filter(
-                created_date__gte=BATCH_1_END,
-                created_date__lt=BATCH_2_END
-            )
-        elif selected_batch == "Batch 3":
-            queryset = queryset.filter(
-                created_date__gte=BATCH_2_END,
-                created_date__lt=BATCH_3_END
-            )
-        elif selected_batch == "Batch 4":
-            queryset = queryset.filter(created_date__gte=BATCH_3_END)
-
-    return queryset
-
-
-def apply_instability_event_ordering(queryset, orderby):
-    queryset = queryset.annotate(
-        inst_intensity_num=Cast(F('inst_intensity'), output_field=IntegerField()),
-        inst_extent_num=Cast(F('inst_extent'), output_field=IntegerField())
-    )
-
-    if not orderby:
-        return queryset
-
-    if orderby.lstrip('-') == 'year_from':
-        field = 'start_year_effective'
-    elif orderby.lstrip('-') == 'year_to':
-        field = 'end_year_effective'
-    else:
-        field = orderby.lstrip('-')
-
-    if orderby in ['inst_intensity', '-inst_intensity']:
-        order_field = 'inst_intensity_num'
-        if orderby.startswith('-'):
-            return queryset.order_by(F(order_field).desc())
-        return queryset.order_by(F(order_field).asc())
-
-    if orderby in ['inst_extent', '-inst_extent']:
-        order_field = 'inst_extent_num'
-        if orderby.startswith('-'):
-            return queryset.order_by(F(order_field).desc())
-        return queryset.order_by(F(order_field).asc())
-
-    if orderby.startswith('-'):
-        return queryset.order_by(F(field).desc(nulls_last=True))
-    return queryset.order_by(F(field).asc(nulls_last=True))
 
 
 def apply_generic_list_filters(queryset, request):
@@ -802,6 +692,8 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
     elif coded_value == "widespread_religion":
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif coded_value == "instability_event":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5 = "name", "inst_intensity", "inst_extent", "inst_type", "is_macro_event"
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
     elif db_section == 'ec':
@@ -827,6 +719,8 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
             logged_in_user = request.user
             new_object = my_form.save(commit=False)
+            if coded_value == "instability_event":
+                new_object.source = Instability_event.Source.MANUAL
             suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
@@ -887,6 +781,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         'var_subsection': var_subsection,
         "my_exp": my_exp,
         'db_section_mapper': db_section_mapper[db_section],
+        'create_layout_mode': None,
         #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
     }
 
@@ -925,6 +820,15 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             'extra_var13': my_form[x_name_13],
             'extra_var14': my_form[x_name_14],
 
+        })
+    elif coded_value in ['instability_event']:
+        context.update({
+            'extra_var': my_form[x_name_1],
+            'extra_var2': my_form[x_name_2],
+            'extra_var3': my_form[x_name_3],
+            'extra_var4': my_form[x_name_4],
+            'extra_var5': my_form[x_name_5],
+            'create_layout_mode': 'instability_event_manual',
         })
     elif x_name in ['lux_precious_metal'] and db_section == 'ec':
         context.update({
@@ -1270,6 +1174,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
 def dynamic_update_view(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, db_section, delete_url_name):
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
+    is_llm_instability = coded_value == "instability_event" and is_llm_instability_event(my_object)
 
     db_section_mapper = {
         'general': 'General',
@@ -1290,8 +1195,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+    elif x_name == "instability_event" and not is_llm_instability:
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5 = "name", "inst_intensity", "inst_extent", "inst_type", "is_macro_event"
     elif x_name == "instability_event":
-        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'inst_type', #'llm_name', 'llm_inst_intensity', 'llm_inst_extent', 'llm_inst_type',
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'inst_type', 'is_macro_event'
     elif db_section == 'ec':
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -1351,7 +1258,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 # create a Prvate Comment to attach parts to it:
                     father_private_comment = SeshatPrivateComment.objects.create(text="")
                     new_object.private_comment = father_private_comment
-                if x_name == "instability_event":
+                if x_name == "instability_event" and is_llm_instability:
                     seshat_private_comment_part = SeshatPrivateCommentPart(
                         private_comment_part_text=f"We have used LLM to generate a new Instability Event: '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
                         private_comment_owner=logged_in_staff, 
@@ -1444,7 +1351,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 #################################   
         #print('yyyyyyyyyyyyyy ', coded_value)
         #print('yyyyyyyyyyyyyy ', my_object.comment)
-        if coded_value in ['instability_event'] and not my_object.comment:
+        if coded_value in ['instability_event'] and is_llm_instability and not my_object.comment:
 
             # if "submit_with_formset" in request.POST:
             #     form_inline_new = SeshatCommentPartForm2(request.POST)
@@ -1631,6 +1538,14 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
             })
+        elif coded_value in ['instability_event'] and not is_llm_instability:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+            })
         elif coded_value in ['instability_event']:
             context.update({
                 'extra_var': my_form[x_name_1],
@@ -1643,6 +1558,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var8': my_form[x_name_8],
                 'extra_var9': my_form[x_name_9],
                 'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
                 'form_com': form_inline_new,
 
             })
@@ -1698,7 +1614,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         my_form = form_class(instance=my_object)
 
         init_data = ReferenceFormSet2(prefix='refs')
-        if  coded_value in ['instability_event'] and not my_object.comment:
+        if  coded_value in ['instability_event'] and is_llm_instability and not my_object.comment:
             form_inline_new = SeshatCommentPartForm2(initial={'comment_text': my_object.llm_description})
         else:
             form_inline_new = None
@@ -1765,6 +1681,14 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var14': my_form[x_name_14],
 
             })
+        elif coded_value in ['instability_event'] and not is_llm_instability:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+            })
         elif coded_value in ['instability_event']:
             context.update({
                 'extra_var': my_form[x_name_1],
@@ -1777,6 +1701,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var8': my_form[x_name_8],
                 'extra_var9': my_form[x_name_9],
                 'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
             })
         elif x_name in ['lux_precious_metal'] and db_section == 'ec':
             context.update({
@@ -1825,7 +1750,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             context.update({
                 'extra_var': my_form[coded_value],
             })
-    if coded_value in ['instability_event']:
+    if coded_value in ['instability_event'] and is_llm_instability:
         return render(request, 'core/generic_templates/generic_update_llm.html', context)
     else:
         return render(request, 'core/generic_templates/generic_update.html', context)
@@ -1910,30 +1835,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     elif var_name in ["instability_event",]:
-        object_list = model_class.objects.filter(polity__unreliable_instability_events=False).defer('general_cot', 'classification_cot', 'sorokin_rationale', 'llm_description').order_by('polity_id', 'year_from', 'id')
+        object_list = get_filtered_instability_queryset(model_class, request)
     else:
         object_list = model_class.objects.all().order_by('polity_id', 'year_from')
 
-
-
-    year_from_min = request.GET.get('year_from_min')
-    year_to_max = request.GET.get('year_to_max')
-    created_before = request.GET.get('created_before')
-    selected_batch = request.GET.get('selected_batch')
-    polity_id = request.GET.get('polity')
-    inst_type_ids = request.GET.getlist("inst_type")  # handles multiple selections
-    ra_check_ids = request.GET.getlist("ra_check")
-    inst_extent = request.GET.get("inst_extent")
-    inst_intensity = request.GET.get("inst_intensity")
-    selected_macro = request.GET.get('macro_event')
-
-    name_query = request.GET.get('searched_name', '').strip()
-
-
-
-    if var_name in ['instability_event',]:
-        object_list = apply_instability_event_filters(object_list, request)
-    else:
+    if var_name not in ['instability_event',]:
         object_list = apply_generic_list_filters(object_list, request)
 
 
@@ -1956,12 +1862,9 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     is_descending = False
 
     if orderby:   
-        if var_name in ['instability_event',]:
-            object_list = apply_instability_event_ordering(object_list, orderby)
-            is_descending = orderby.startswith('-')
-        else:
+        if var_name not in ['instability_event',]:
             object_list = apply_generic_list_ordering(object_list, orderby)
-            is_descending = orderby.startswith('-')
+        is_descending = orderby.startswith('-')
 
         order_field = orderby
     else:
@@ -2031,16 +1934,6 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #"myvar": myvar,
         #"my_exp": my_exp,
     }
-
-
-
-    if var_name in ['instability_event',]:
-        all_object_list = model_class.objects.filter(polity__unreliable_instability_events=False)
-        polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
-    else:
-        all_object_list = model_class.objects.all()
-        polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
-
     per_page_options = [
         ("100", "100"),
         ("200", "200"),
@@ -2070,54 +1963,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     context["record_count"] = paginator.count
 
     if var_name in ['instability_event',]:
-        context["instability_types"] = Instability_type.objects.all()
-        context["check_choices"] = Check_choice.objects.all()
-        macro_events = sorted(set(obj.made_up_macro_event for obj in all_object_list if obj.made_up_macro_event))
-
-        # Get all macro events from the objects
-        macro_event_list = [obj.made_up_macro_event for obj in all_object_list if obj.made_up_macro_event]
-        macro_event_counts = Counter(macro_event_list)
-
-        # Sort alphabetically by macro event name
-        macro_events_with_counts = sorted(macro_event_counts.items(), key=lambda x: (-x[1], x[0]))
-
-        context["macro_events_with_counts"] = macro_events_with_counts
-
-        context["INST_EXTENT_CHOICES"] = INST_EXTENT_CHOICES
-        context["INST_INTENSITY_CHOICES"] = INST_INTENSITY_CHOICES
-        context["selected_macro"] = selected_macro
-        context["macro_events"] = macro_events
-        context["name_query"] = name_query
-
-        
-        context["selected_inst_type_ids"] = inst_type_ids
-        context["selected_ra_check_ids"] = ra_check_ids
-
-    # After applying all filters to object_list
-    polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')
-
-    if var_name in ['instability_event',]:
-        my_polities = []
-        for polity in polities:
-            events = model_class.objects.filter(polity=polity).values_list('created_date', flat=True).distinct()
-            batches = set()
-
-            for created in events:
-                batch = get_batch_tag(created.date())
-                batches.add(batch)
-
-            # Convert to sorted list for display order
-            batch_order = ["Batch 1", "Batch 2", "Batch 3", "Batch 4", "Unknown"]
-            batch_list = sorted(
-                batches,
-                key=lambda t: batch_order.index(t) if t in batch_order else len(batch_order)
-            )
-            setattr(polity, 'batch_list', batch_list)
-            my_polities.append(polity)
-            context['polities'] = my_polities
-            context['unreliable_polities'] = Polity.objects.filter(unreliable_instability_events=True).order_by('new_name')
-
+        context.update(build_instability_list_context(model_class, request))
     else:
+        polities = Polity.objects.filter(
+            id__in=model_class.objects.all().values_list('polity_id', flat=True).distinct()
+        ).order_by('new_name')
         context['polities'] = polities
         context['unreliable_polities'] = None
 
@@ -2194,9 +2044,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
     #items = model_class.objects.all()
 
     if var_name in ["instability_event",]:
-        items = model_class.objects.filter(polity__unreliable_instability_events=False).order_by('polity_id', 'year_from', 'id')
-        items = apply_instability_event_filters(items, request)
-        items = apply_instability_event_ordering(items, request.GET.get('orderby'))
+        items = get_filtered_instability_queryset(model_class, request)
     else:
         items = model_class.objects.all()
         items = apply_generic_list_filters(items, request)
@@ -2248,7 +2096,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         elif x_name == "lux_precious_metal":
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
         elif x_name == "instability_event":
-            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 'made_up_macro_event'
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 'umbrella_event', 'is_macro_event', 'source'
         elif db_section == 'ec':
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -2316,15 +2164,9 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_1: obj[x_name_1],
             })
         elif x_name in ['instability_event']:
-            check_status_tag = 'LLM'
-            if objj.researchers_list() and objj.seshat_experts_list():
-                check_status_tag = 'Expert Checked'
-            elif objj.researchers_list() or objj.get_llm_instability_checks_str():
-                check_status_tag = 'RA Checked'
-
             coded_cols.update({
                 'event_name': obj[x_name_1],
-                'macro_event': objj.made_up_macro_event,
+                x_name_10: objj.made_up_macro_event,
                 'year_from': obj['year_from'],
                 'year_to': obj['year_to'],
                 'intensity': obj[x_name_2],
@@ -2332,9 +2174,11 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 'data_point': obj[x_name_4],
                 x_name_5: objj.get_instability_types_str(),
                 x_name_6: objj.get_llm_instability_checks_str(),
-                x_name_7: check_status_tag,
+                x_name_7: get_instability_checking_status(objj),
                 'rationale': obj[x_name_8],
                 x_name_9: obj[x_name_9],
+                x_name_11: objj.is_macro_event,
+                x_name_12: objj.source,
                 'batch_number': objj.batch_number,
             })
         elif x_name == "lux_precious_metal":
@@ -2440,12 +2284,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
             sublist_3_row = ['transition_year', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
         elif x_name in ['instability_event'] and objj.polity:
-            if objj.comment:
-                ra_comment = objj.comment.__str__().replace('\n', ' ').replace('<br>', ' ').replace('\r', ' ')
-            else:
-                ra_comment= None
             sublist_3_row = ['llm_references', 'RA_approved_description', ]
-            sublist_3 = [objj.get_llm_instability_refs_str().replace('<b>', '').replace('</b>', ''), ra_comment ]
+            sublist_3 = [objj.get_llm_instability_refs_str().replace('<b>', '').replace('</b>', ''), get_instability_approved_description(objj) ]
         else:
             sublist_3_row = ['year_from', 'year_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_from, objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
@@ -2478,9 +2318,7 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
     #items = model_class.objects.all()
 
     if var_name in ["instability_event",]:
-        items = model_class.objects.filter(polity__unreliable_instability_events=False)
-        items = apply_instability_event_filters(items, request)
-        items = apply_instability_event_ordering(items, request.GET.get('orderby'))
+        items = get_filtered_instability_queryset(model_class, request)
     else:
         items = model_class.objects.all()
         items = apply_generic_list_filters(items, request)
@@ -2522,7 +2360,9 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
 
         coded_cols = {}
 
-        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', 
+        if coded_value == "instability_event":
+            coded_cols = build_instability_json_coded_values(objj)
+        elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement',
                            "administrative_level", "settlement_hierarchy", "religious_level", 
                            "military_level", "largest_communication_distance", "fastest_individual_communication", 
                            'long_wall']:
