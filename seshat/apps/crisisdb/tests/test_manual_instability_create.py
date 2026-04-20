@@ -124,7 +124,7 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "core/generic_templates/generic_update_llm.html")
 
-    def test_manual_instability_badges_show_manual_without_ai(self):
+    def test_manual_instability_badges_show_only_manual_marker(self):
         polity = Polity.objects.create(
             name="manual_badge_polity",
             new_name="manual_badge_polity",
@@ -148,6 +148,37 @@ class InstabilityCreateViewTests(TestCase):
         self.assertIn("Manual", rendered)
         self.assertNotIn(">AI<", rendered)
         self.assertNotIn("Batch", rendered)
+        self.assertNotIn("fa-user-tie", rendered)
+        self.assertNotIn("fa-user-graduate", rendered)
+        self.assertNotIn(">D<", rendered)
+
+    def test_manual_instability_badges_stay_manual_only_even_with_comment_and_curators(self):
+        polity = Polity.objects.create(
+            name="manual_review_polity",
+            new_name="manual_review_polity",
+            long_name="Manual Review Polity",
+            start_year=100,
+            end_year=200,
+        )
+        event = Instability_event.objects.create(
+            polity=polity,
+            name="Manual Reviewed Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=150,
+            year_to=151,
+            comment=SeshatComment.objects.create(text="Manual description"),
+        )
+        event.curator.add(Seshat_Expert.objects.get(user=self.user))
+
+        rendered = render_to_string(
+            "core/partials/_instability_event_badges.html",
+            {"event": event},
+        )
+
+        self.assertIn("Manual", rendered)
+        self.assertNotIn("fa-user-tie", rendered)
+        self.assertNotIn("fa-user-graduate", rendered)
+        self.assertNotIn(">D<", rendered)
 
     def test_llm_instability_badges_show_ai_and_batch(self):
         polity = Polity.objects.create(

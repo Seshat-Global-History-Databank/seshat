@@ -9,8 +9,6 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.core.validators import MinValueValidator
 
-from datetime import date
-
 import uuid
 
 from django.utils import translation
@@ -494,31 +492,17 @@ class Instability_event(SeshatCommon):
     def batch_number(self):
         if not self.is_llm_source:
             return None
-        if not self.created_date:
-            return "Unknown"
-        if self.created_date.date() < date(2025, 3, 29):
-            return "Batch 1"
-        elif self.created_date.date() < date(2025, 4, 11):
-            return "Batch 2"
-        elif self.created_date.date() < date(2026, 3, 1):
-            return "Batch 3"
-        else:
-            return "Batch 4"
+        from .instability_filters import get_batch_tag
+
+        return get_batch_tag(self.created_date)
         
     @property
     def batch_tooltip(self):
         if not self.is_llm_source:
             return None
-        if not self.created_date:
-            return "Unknown creation date"
-        if self.created_date.date() < date(2025, 3, 29):
-            return "Generated in March 2025."
-        elif self.created_date.date() < date(2025, 4, 11):
-            return "Generated from March 28th, to April 28th, 2025."
-        elif self.created_date.date() < date(2026, 3, 1):
-            return "Generated after April 28th, 2025."
-        else:
-            return "Generated on or after March 1st, 2026."
+        from .instability_filters import get_batch_tooltip
+
+        return get_batch_tooltip(self.created_date)
 
 
     def __str__(self) -> str:

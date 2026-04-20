@@ -42,6 +42,24 @@ def get_batch_tag(created_date):
     return "Batch 4"
 
 
+def get_batch_tooltip(created_date):
+    if created_date is None:
+        return "Unknown creation date"
+
+    if isinstance(created_date, datetime.datetime):
+        if timezone.is_naive(created_date):
+            created_date = timezone.make_aware(created_date)
+        created_date = created_date.date()
+
+    if created_date < BATCH_1_END:
+        return "Generated in March 2025."
+    if created_date < BATCH_2_END:
+        return "Generated from March 28th, to April 28th, 2025."
+    if created_date < BATCH_3_END:
+        return "Generated after April 28th, 2025."
+    return "Generated on or after March 1st, 2026."
+
+
 def apply_instability_batch_filter(queryset, selected_batch):
     if not selected_batch:
         return queryset
