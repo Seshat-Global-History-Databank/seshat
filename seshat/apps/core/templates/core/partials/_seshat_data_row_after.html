@@ -59,8 +59,11 @@
           {% endif %}
         </small>   
 <br>
-Macro Event: 
-        {{form.instance.llm_name|extract_macro_event}}
+Macroevent:
+        {{ form.instance.is_macro_event|yesno:"Yes,No" }}
+<br>
+Umbrella Event:
+        {{ form.instance.made_up_macro_event|default:"-" }}
     </td>
     <td class="fw-normal text-dark" style="text-align: left; width:20%;">
        <span class="top-level-header">Polity</span> 

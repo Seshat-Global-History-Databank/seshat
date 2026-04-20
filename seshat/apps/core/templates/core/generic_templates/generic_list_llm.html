@@ -60,9 +60,14 @@ title="Go to Analytics PAge for Instability Events">
     Type(s)
 </span>
 </th>
+<th class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:8%;" scope="col">
+    <span>
+        Macroevent
+    </span>
+</th>
 <th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:10%;  " scope="col">
     <span> 
-        Macro Event
+        Umbrella Event
     </span>
 
 </th>
@@ -150,6 +155,9 @@ title="Go to Analytics PAge for Instability Events">
 
     {% endautoescape %}
 
+</td>
+<td style="text-align: center; z-index:890; border-width:0;">
+    <span class="fw-normal">{{ obj.is_macro_event|yesno:"Yes,No" }}</span>
 </td>
 {% if obj.made_up_macro_event %}
 <td  style="text-align: left; z-index:890; border-width:0;" >

@@ -18,7 +18,7 @@
         <span> {{ form.instance.llm_name|remove_macro_event}}</span>
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">        
-        {{form.instance.llm_name|extract_macro_event}}
+        {{ form.instance.made_up_macro_event|default:"-" }}
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
         {% if form.instance.polity.long_name %}

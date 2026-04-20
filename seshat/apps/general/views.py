@@ -693,7 +693,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
     elif coded_value == "widespread_religion":
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
     elif coded_value == "instability_event":
-        x_name_1, x_name_2, x_name_3, x_name_4 = "name", "inst_intensity", "inst_extent", "inst_type"
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5 = "name", "inst_intensity", "inst_extent", "inst_type", "is_macro_event"
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
     elif db_section == 'ec':
@@ -827,6 +827,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             'extra_var2': my_form[x_name_2],
             'extra_var3': my_form[x_name_3],
             'extra_var4': my_form[x_name_4],
+            'extra_var5': my_form[x_name_5],
             'create_layout_mode': 'instability_event_manual',
         })
     elif x_name in ['lux_precious_metal'] and db_section == 'ec':
@@ -1195,9 +1196,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
     elif x_name == "instability_event" and not is_llm_instability:
-        x_name_1, x_name_2, x_name_3, x_name_4 = "name", "inst_intensity", "inst_extent", "inst_type"
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5 = "name", "inst_intensity", "inst_extent", "inst_type", "is_macro_event"
     elif x_name == "instability_event":
-        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'inst_type', #'llm_name', 'llm_inst_intensity', 'llm_inst_extent', 'llm_inst_type',
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'inst_type', 'is_macro_event'
     elif db_section == 'ec':
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -1543,6 +1544,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var2': my_form[x_name_2],
                 'extra_var3': my_form[x_name_3],
                 'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
             })
         elif coded_value in ['instability_event']:
             context.update({
@@ -1556,6 +1558,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var8': my_form[x_name_8],
                 'extra_var9': my_form[x_name_9],
                 'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
                 'form_com': form_inline_new,
 
             })
@@ -1684,6 +1687,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var2': my_form[x_name_2],
                 'extra_var3': my_form[x_name_3],
                 'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
             })
         elif coded_value in ['instability_event']:
             context.update({
@@ -1697,6 +1701,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var8': my_form[x_name_8],
                 'extra_var9': my_form[x_name_9],
                 'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
             })
         elif x_name in ['lux_precious_metal'] and db_section == 'ec':
             context.update({
@@ -2091,7 +2096,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         elif x_name == "lux_precious_metal":
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
         elif x_name == "instability_event":
-            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 'made_up_macro_event', 'source'
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 'umbrella_event', 'is_macro_event', 'source'
         elif db_section == 'ec':
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -2161,7 +2166,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         elif x_name in ['instability_event']:
             coded_cols.update({
                 'event_name': obj[x_name_1],
-                'macro_event': objj.made_up_macro_event,
+                x_name_10: objj.made_up_macro_event,
                 'year_from': obj['year_from'],
                 'year_to': obj['year_to'],
                 'intensity': obj[x_name_2],
@@ -2172,7 +2177,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_7: get_instability_checking_status(objj),
                 'rationale': obj[x_name_8],
                 x_name_9: obj[x_name_9],
-                x_name_11: objj.source,
+                x_name_11: objj.is_macro_event,
+                x_name_12: objj.source,
                 'batch_number': objj.batch_number,
             })
         elif x_name == "lux_precious_metal":

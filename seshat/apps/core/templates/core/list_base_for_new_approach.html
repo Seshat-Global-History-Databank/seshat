@@ -270,7 +270,7 @@
 
       
       
-    {% if object_list or request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event %}
+    {% if object_list or request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event or request.GET.is_macro_event %}
     <div class="row d-flex">
         <div class="col-md-9">
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
@@ -359,7 +359,7 @@
             </div>
             {% if var_name_display == 'Instability Event' %}
             <div class="col-md-4 pb-2">
-                <label for="macro_event" class="text-secondary">Macro Event:</label>
+                <label for="macro_event" class="text-secondary">Umbrella Event:</label>
                 <br>
                 <select name="macro_event" id="macro_event"  class="form-select js-example-basic-single " onchange="this.form.submit()">
                   <option value="">All</option>
@@ -369,6 +369,15 @@
 
                     </option>
                   {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 pb-2">
+                <label for="is_macro_event" class="text-secondary">Macroevent:</label>
+                <br>
+                <select name="is_macro_event" id="is_macro_event" class="form-select js-example-basic-single" onchange="this.form.submit()">
+                  <option value="">All</option>
+                  <option value="true" {% if selected_is_macro_event == "true" %}selected{% endif %}>True</option>
+                  <option value="false" {% if selected_is_macro_event == "false" %}selected{% endif %}>False</option>
                 </select>
             </div>
             <div class="col-md-2 pb-2">
@@ -478,7 +487,7 @@
           <input type="date" name="created_before" class="form-control" value="{{ request.GET.created_before }}">
         </div> -->
         <div class="col-auto align-self-end pb-0 mb-0">
-          {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.source or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event %}
+          {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.source or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event or request.GET.is_macro_event %}
 
           <div class="py-1 px-0  d-inline-block" >
             <strong class="pb-2">Filters applied:</strong>
@@ -540,10 +549,16 @@
       {% if request.GET.macro_event %}
  
         <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
-            <small class="fw-light">Macro Event:</small>  <span class="fw-bold"> {{ request.GET.macro_event }}</span>
+            <small class="fw-light">Umbrella Event:</small>  <span class="fw-bold"> {{ request.GET.macro_event }}</span>
             <a href="?{% query_transform request macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
         </li>
 
+    {% endif %}
+    {% if request.GET.is_macro_event %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
+            <small class="fw-light">Macroevent:</small>  <span class="fw-bold">{{ request.GET.is_macro_event|title }}</span>
+            <a href="?{% query_transform request is_macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
     {% endif %}
         
         {% for check in check_choices %}

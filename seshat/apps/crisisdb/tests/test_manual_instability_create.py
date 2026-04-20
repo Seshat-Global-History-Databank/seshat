@@ -42,6 +42,7 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.context["extra_var2"].name, "inst_intensity")
         self.assertEqual(response.context["extra_var3"].name, "inst_extent")
         self.assertEqual(response.context["extra_var4"].name, "inst_type")
+        self.assertEqual(response.context["extra_var5"].name, "is_macro_event")
 
     def test_instability_list_page_shows_create_button_for_editors(self):
         response = self.client.get(reverse("instability_events_all"))
@@ -102,6 +103,7 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.context["extra_var2"].name, "inst_intensity")
         self.assertEqual(response.context["extra_var3"].name, "inst_extent")
         self.assertEqual(response.context["extra_var4"].name, "inst_type")
+        self.assertEqual(response.context["extra_var5"].name, "is_macro_event")
 
     def test_llm_instability_update_keeps_llm_template(self):
         polity = Polity.objects.create(
@@ -123,6 +125,7 @@ class InstabilityCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "core/generic_templates/generic_update_llm.html")
+        self.assertEqual(response.context["extra_var11"].name, "is_macro_event")
 
     def test_manual_instability_badges_show_only_manual_marker(self):
         polity = Polity.objects.create(
@@ -297,6 +300,37 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.context["macro_events_with_counts"], [("Manual Macro", 1)])
         self.assertContains(response, "Source:")
 
+    def test_is_macro_event_filter_returns_only_matching_events(self):
+        polity = Polity.objects.create(
+            name="macro_filter_polity",
+            new_name="macro_filter_polity",
+            long_name="Macro Filter Polity",
+            start_year=100,
+            end_year=200,
+        )
+        macro_event = Instability_event.objects.create(
+            polity=polity,
+            name="Macro Event",
+            source=Instability_event.Source.MANUAL,
+            is_macro_event=True,
+            year_from=150,
+            year_to=151,
+        )
+        Instability_event.objects.create(
+            polity=polity,
+            name="Non Macro Event",
+            source=Instability_event.Source.MANUAL,
+            is_macro_event=False,
+            year_from=152,
+            year_to=153,
+        )
+
+        response = self.client.get(reverse("instability_events_all"), {"is_macro_event": "true"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [macro_event])
+        self.assertEqual(response.context["selected_is_macro_event"], "true")
+
     def test_instability_analytics_only_includes_llm_events(self):
         polity = Polity.objects.create(
             name="analytics_polity",
@@ -351,6 +385,7 @@ class InstabilityCreateViewTests(TestCase):
             polity=polity,
             name="Manual JSON Event (Macro Event: Manual JSON Macro)",
             source=Instability_event.Source.MANUAL,
+            is_macro_event=True,
             year_from=150,
             year_to=151,
         )
@@ -361,6 +396,7 @@ class InstabilityCreateViewTests(TestCase):
             polity=polity,
             name="LLM JSON Event",
             source=Instability_event.Source.LLM,
+            is_macro_event=False,
             year_from=152,
             year_to=153,
             real_event_check="Real",
@@ -397,6 +433,7 @@ class InstabilityCreateViewTests(TestCase):
             "Manual JSON Event (Macro Event: Manual JSON Macro)",
         )
         self.assertEqual(manual_entry["coded_values"]["macro_event"], "Manual JSON Macro")
+        self.assertTrue(manual_entry["coded_values"]["is_macro_event"])
         self.assertEqual(manual_entry["coded_values"]["inst_types"], "Urban Riot")
         self.assertEqual(manual_entry["coded_values"]["checking_status"], "")
         self.assertIsNone(manual_entry["coded_values"]["batch_number"])
@@ -405,6 +442,7 @@ class InstabilityCreateViewTests(TestCase):
         llm_entry = entries_by_source["llm"]
         self.assertEqual(llm_entry["coded_values"]["name"], "LLM JSON Event")
         self.assertEqual(llm_entry["coded_values"]["macro_event"], "LLM JSON Macro")
+        self.assertFalse(llm_entry["coded_values"]["is_macro_event"])
         self.assertEqual(llm_entry["coded_values"]["inst_types"], "Urban Riot")
         self.assertEqual(llm_entry["coded_values"]["ra_checks"], "Needs Review")
         self.assertEqual(llm_entry["coded_values"]["checking_status"], "RA Checked")

@@ -202,7 +202,37 @@
     .tab.active a {
         color: white;
     }
-    
+
+    .inline-field-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.25rem;
+        flex-wrap: wrap;
+    }
+
+    .inline-field-header label {
+        margin-bottom: 0;
+    }
+
+    .inline-field-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1.2;
+    }
+
+    .inline-field-header .form-check {
+        min-height: 0;
+        margin-bottom: 0;
+    }
+
+    .inline-field-header .form-check-label {
+        margin-right: 0;
+    }
+
     .arrow {
         font-size: 24px;
         margin: 0 10px;
@@ -465,36 +495,41 @@
                 </ul>
                 <hr class="bg-colorful">
                 {% endif %}
-                <div class="row pt-2 ps-2">
-                    <div class="col-sm-12 row">
-                        <div class="col-sm-3">
+                <div class="row g-3 pt-2 ps-2">
+                    <div class="col-sm-12 row g-3 align-items-start">
+                        <div class="col-lg-4 col-md-6 pb-3">
                             {{ extra_var|as_crispy_field }}
                         </div>
-                        <div class="col-sm-1 pb-0">
+                        <div class="col-lg-2 col-md-3 col-sm-6 pb-3">
                             {{ form.year_from|as_crispy_field }}
-                          </div>
-                          <div class="col-sm-1 pb-0">
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-6 pb-3">
                             {{ form.year_to|as_crispy_field }}
-                          </div>
-                        <div class="col-sm-7 pb-1" >
+                        </div>
+                        <div class="col-lg-4 col-md-12 pb-3">
                             {{ extra_var10|as_crispy_field }}
                         </div>
 
 
-                          <div class="col-sm-4 pb-0">
+                        <div class="col-lg-3 col-md-6 pb-3">
                             {{ form.polity|as_crispy_field }}
                         </div>
 
-                        <div class="col-sm-12 pb-3" style="display:none;">
+                        <div class="col-sm-12 d-none">
                             {{ extra_var4|as_crispy_field }}
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-lg-2 col-md-4 pb-3">
                             {{ extra_var2|as_crispy_field }}
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-lg-3 col-md-4 pb-3">
                             {{ extra_var3|as_crispy_field }}
                         </div>
-                        <div class="col-sm-1 pb-3">
+                        {% if extra_var11 %}
+                        <div class="col-lg-2 col-md-2 col-sm-6 pb-3">
+                            {{ extra_var11|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                        <div class="col-lg-2 col-md-2 pb-3">
                             {{ form.real_event_check|as_crispy_field }}
                         </div>
                         {% if not form.instance.comment %}

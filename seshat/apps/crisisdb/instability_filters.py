@@ -107,6 +107,7 @@ def apply_instability_event_filters(queryset, request):
     inst_extent = request.GET.get("inst_extent")
     inst_intensity = request.GET.get("inst_intensity")
     selected_macro = request.GET.get("macro_event")
+    selected_is_macro_event = request.GET.get("is_macro_event")
     name_query = request.GET.get("searched_name", "").strip()
 
     if inst_type_ids:
@@ -131,6 +132,9 @@ def apply_instability_event_filters(queryset, request):
         queryset = queryset.filter(
             Q(llm_name__icontains=desired_str) | Q(name__icontains=desired_str)
         )
+
+    if selected_is_macro_event in {"true", "false"}:
+        queryset = queryset.filter(is_macro_event=(selected_is_macro_event == "true"))
 
     if name_query:
         queryset = queryset.filter(name__icontains=name_query)
@@ -230,6 +234,7 @@ def build_instability_json_coded_values(event):
     return {
         "name": event.name,
         "macro_event": event.made_up_macro_event,
+        "is_macro_event": event.is_macro_event,
         "inst_intensity": event.inst_intensity,
         "inst_extent": event.inst_extent,
         "real_event_check": event.real_event_check,
@@ -304,6 +309,7 @@ def build_instability_list_context(model_class, request):
         "macro_events_with_counts": macro_events_with_counts,
         "macro_events": [event for event, _count in macro_events_with_counts],
         "selected_macro": request.GET.get("macro_event"),
+        "selected_is_macro_event": request.GET.get("is_macro_event"),
         "name_query": request.GET.get("searched_name", "").strip(),
         "selected_source": selected_source,
         "selected_batch": selected_batch,

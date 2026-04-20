@@ -2592,10 +2592,13 @@
                                             <td  style="border-width:0; width:15%;">
                                                 {{ obj.get_instability_types }}                                                
                                             </td>
+                                            <td style="border-width:0; text-align:center;">
+                                                <small class="fw-normal">{{ obj.is_macro_event|yesno:"Yes,No" }}</small>
+                                            </td>
                                             <td>
 
                                                 {% autoescape off %}
-                                                <small class="fw-normal" >{{obj.llm_name|extract_macro_event}}     
+                                                <small class="fw-normal" >{{ obj.made_up_macro_event|default:"-" }}
                                                     
                                                 </small>
                                                 {% endautoescape %}

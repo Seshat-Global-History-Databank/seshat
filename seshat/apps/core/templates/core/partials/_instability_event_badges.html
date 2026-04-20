@@ -1,4 +1,4 @@
-<small style="vertical-align: center;">
+<small style="vertical-align: middle;">
     {% if event.is_llm_source and event.batch_number %}
         <span
             style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; border-radius:5px; color:white;{% if event.batch_number == 'Batch 1' %} background:#D3D3D3;{% elif event.batch_number == 'Batch 2' %} background:#ADD8E6;{% elif event.batch_number == 'Batch 3' %} background:#a8dcab;{% else %} background:#d9b26f;{% endif %}"
@@ -20,7 +20,7 @@
     {% endif %}
 </small>
 {% if event.is_llm_source %}
-<small style="vertical-align: center; display:inline-block;">
+<small style="vertical-align: middle; display:inline-block;">
     <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs.">
         <span class="text-secondary border border-1 rounded border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px;">AI</span>
     </a>
