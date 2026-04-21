@@ -6,7 +6,9 @@
 {% load custom_filters %}
 
 {% block download_button %}
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
     <a href="{% url 'crisis_consequence-create' %}" class="btn btn-outline-success mx-3 my-4 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
+    {% endif %}
     <a href="{% url 'crisis_consequence-download' %}" class="btn btn-outline-primary mx-3 my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
     <a href="{% url 'crisis_consequences' %}" class="btn btn-outline-danger mx-3 my-4 float-end"><i class="fa-solid fa-file-lines"></i> &nbsp; See Spreadsheet Mode</a>
     <a href="{% url 'crisis_consequence-metadownload' %}" class="btn btn-outline-info mx-3 my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download MetaData</a>
@@ -314,6 +316,7 @@
     </div>
     {% endif %}
     {% endwith %}
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
     <div class="row" style="text-align: right;">
         <div class="col-md-12 pb-4">
             <span class="text-secondary">
@@ -321,6 +324,7 @@
             </span>
         </div>
     </div>
+    {% endif %}
 
 </td>
 

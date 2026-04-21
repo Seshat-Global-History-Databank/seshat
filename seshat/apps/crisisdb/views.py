@@ -315,16 +315,15 @@ class Crisis_consequenceDelete(PermissionRequiredMixin, DeleteView):
     template_name = "core/delete_general.html"
     permission_required = 'core.add_capital'
 
-class Crisis_consequenceListView(PermissionRequiredMixin, generic.ListView):
+class Crisis_consequenceListView(generic.ListView):
     """
     View for listing all Crisis_consequence instances.
 
     Note:
-        This view is only accessible to users with the 'add_capital' permission.
+        This view is publicly accessible.
     """
     model = Crisis_consequence
     template_name = "crisisdb/crisis_consequence/crisis_consequence_list.html"
-    permission_required = 'core.add_capital'
 
     #paginate_by = 50
 
@@ -382,16 +381,15 @@ class Crisis_consequenceListView(PermissionRequiredMixin, generic.ListView):
 
         return context
     
-class Crisis_consequenceListViewAll(PermissionRequiredMixin, generic.ListView):
+class Crisis_consequenceListViewAll(generic.ListView):
     """
     View for listing all Crisis_consequence instances.
 
     Note:
-        This view is only accessible to users with the 'add_capital' permission.
+        This view is publicly accessible.
     """
     model = Crisis_consequence
     template_name = "crisisdb/crisis_consequence/crisis_consequence_list_all.html"
-    permission_required = 'core.add_capital'
 
     #paginate_by = 50
 

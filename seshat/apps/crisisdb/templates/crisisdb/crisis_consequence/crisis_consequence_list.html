@@ -5,7 +5,9 @@
 {% load mathfilters %}
 
 {% block download_button %}
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
     <a href="{% url 'crisis_consequence-create' %}" class="btn btn-outline-success mx-3 my-4 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
+    {% endif %}
     <a href="{% url 'crisis_consequence-download' %}" class="btn btn-outline-primary mx-3 my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
     <a href="{% url 'crisis_consequences_all' %}" class="btn btn-outline-danger mx-3 my-4 float-end"><i class="fa-solid fa-file-lines"></i> &nbsp; See Detailed Mode</a>
 {% endblock download_button %}
@@ -69,7 +71,9 @@
 <th class = "fw-bold  px-2 text-danger" style="text-align: center;" scope="col"><h5><span class="badge rounded-pill bg-success">suffrage</h5></span> </th>
 <th class = "fw-bold  px-2 text-danger" style="text-align: center;" scope="col"><h5><span class="badge rounded-pill bg-success">public goods</h5></span> </th>
 <th class = "fw-bold  px-2 text-danger" style="text-align: center;" scope="col"><h5><span class="badge rounded-pill bg-success">religion</h5></span> </th>
+{% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
 <th class = "fw-bold  px-2 text-danger" style="text-align: center;" scope="col"><h5><span class="badge rounded-pill bg-success">Edit</h5></span> </th>
+{% endif %}
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
@@ -171,9 +175,11 @@
 
 <!-- Update Button -->
 {% block update_button %}
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
     <td style="text-align: center;">
         <span class="fw-bold text-danger">
             <a href="{% url 'crisis_consequence-update' obj.id %}">Edit</a>
         </span>
     </td>
+    {% endif %}
 {% endblock update_button %}
