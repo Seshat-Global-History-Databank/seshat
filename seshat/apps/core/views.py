@@ -79,7 +79,8 @@ from urllib.parse import urlparse, urlunparse, quote
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
 from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level, Polity_territory, Polity_population
 
-from ..crisisdb.models import Power_transition
+from ..crisisdb.models import Instability_event, Power_transition
+from ..crisisdb.instability_filters import get_polity_instability_queryset
 
 from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion, HabitationSite, CityPolityRelation
 
@@ -3099,6 +3100,17 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         elif 'new_name' in self.kwargs:
             my_pol = Polity.objects.get(new_name=self.kwargs['new_name'])
             context['pk'] = my_pol.pk
+        selected_instability_batch = self.request.GET.get("selected_batch", "")
+        selected_instability_source = self.request.GET.get("source", "")
+        if selected_instability_source not in {
+            Instability_event.Source.LLM,
+            Instability_event.Source.MANUAL,
+        }:
+            selected_instability_source = ""
+        context["selected_instability_batch"] = selected_instability_batch
+        context["selected_instability_source"] = selected_instability_source
+        context["show_instability_source_filter"] = bool(selected_instability_source)
+        context["show_instability_batch_filter"] = bool(selected_instability_batch)
         try:
             context["all_data"] = get_all_data_for_a_polity(self.object.pk, "crisisdb") 
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
@@ -3108,7 +3120,22 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.request, self.object.pk)
             context["all_crisis_cases_data"] = get_all_crisis_cases_data_for_a_polity(self.object.pk)
             context["all_power_transitions_data"] = get_all_power_transitions_data_for_a_polity(self.object.pk)
-            context["all_instability_data"] = get_all_instability_data_for_a_polity(self.object.pk)
+            context["all_instability_data"] = get_all_instability_data_for_a_polity(
+                self.object.pk,
+                selected_source=selected_instability_source,
+                selected_batch=selected_instability_batch,
+            )
+            context["show_instability_source_filter"] = bool(
+                selected_instability_source
+                or get_polity_instability_queryset(
+                    self.object.pk,
+                    selected_source=Instability_event.Source.MANUAL,
+                ).exists()
+            )
+            context["show_instability_batch_filter"] = bool(
+                selected_instability_source != Instability_event.Source.MANUAL
+                and (context["all_instability_data"] or selected_instability_batch)
+            )
             all_Ras = Polity_research_assistant.objects.filter(polity_id=self.object.pk)
             all_Ras_ids = all_Ras.values_list('polity_ra_id', flat=True)
             experts = Seshat_Expert.objects.filter(id__in=all_Ras_ids)

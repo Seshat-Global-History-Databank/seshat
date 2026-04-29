@@ -3,6 +3,7 @@ from seshat.apps.core.models import Polity, Variablehierarchy, Section, Subsecti
 import django.apps
 import pprint
 from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice, Instability_event
+from seshat.apps.crisisdb.instability_filters import get_polity_instability_queryset
 
 from seshat.apps.general.models import Polity_degree_of_centralization, Polity_suprapolity_relations
 # from seshat.apps.crisisdb.models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
@@ -913,12 +914,13 @@ def get_all_power_transitions_data_for_a_polity(polity_id):
     #print(a_data_dic)
     return a_data_dic
 
-def get_all_instability_data_for_a_polity(polity_id):
+def get_all_instability_data_for_a_polity(polity_id, selected_source=None, selected_batch=None):
     a_data_dic = {}
-    my_data = Instability_event.objects.filter(
-        polity__id=polity_id,
-        polity__unreliable_instability_events=False
-    ).order_by('year_from')
+    my_data = get_polity_instability_queryset(
+        polity_id,
+        selected_source=selected_source,
+        selected_batch=selected_batch,
+    )
 
     if my_data:
         #a_data_dic["power_transitions"] = my_data
@@ -1235,8 +1237,6 @@ def polity_detail_data_collector(polity_id):
             final_response = {}
     #print(final_response)
     return final_response
-
-
 
 
 

@@ -2480,6 +2480,47 @@
                 </div>
 
             </div>
+
+            {% if show_instability_batch_filter or show_instability_source_filter %}
+                {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
+                    <form method="get" action="{% url 'polity-detail-main' object.id %}#instability_event_var" class="row align-items-end g-2 py-1">
+                        {% if show_instability_source_filter %}
+                            <div class="col-auto">
+                                <label for="instability_source" class="text-secondary small mb-0">Source</label>
+                                <select name="source" id="instability_source" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                                    <option value="">All</option>
+                                    <option value="llm" {% if selected_instability_source == "llm" %}selected{% endif %}>LLM</option>
+                                    <option value="manual" {% if selected_instability_source == "manual" %}selected{% endif %}>Manual</option>
+                                </select>
+                            </div>
+                        {% endif %}
+                        {% if show_instability_batch_filter %}
+                            <div class="col-auto">
+                                <label for="selected_batch" class="text-secondary small mb-0">LLM Batch</label>
+                                <select name="selected_batch" id="selected_batch" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                                    <option value="">All</option>
+                                    <option value="Batch 1" {% if selected_instability_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
+                                    <option value="Batch 2" {% if selected_instability_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
+                                    <option value="Batch 3" {% if selected_instability_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
+                                    <option value="Batch 4" {% if selected_instability_batch == "Batch 4" %}selected{% endif %}>Batch 4</option>
+                                </select>
+                            </div>
+                        {% endif %}
+                        {% if selected_instability_batch or selected_instability_source %}
+                            <div class="col-auto">
+                                <a href="{% url 'polity-detail-main' object.id %}#instability_event_var" class="btn btn-outline-secondary btn-sm">Clear filters</a>
+                            </div>
+                        {% endif %}
+                    </form>
+                    {% if selected_instability_batch or selected_instability_source %}
+                    {% if not all_instability_data %}
+                        <div class="alert alert-light border text-secondary py-2" role="status">
+                            No instability events in this polity match the selected filters.
+                        </div>
+                    {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
     
             {% if all_instability_data %}
             {% for key, values in all_instability_data.items %}
