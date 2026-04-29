@@ -81,6 +81,22 @@ def apply_instability_batch_filter(queryset, selected_batch):
     return queryset
 
 
+def get_polity_instability_queryset(polity_id, selected_source=None, selected_batch=None):
+    queryset = Instability_event.objects.filter(
+        polity__id=polity_id,
+        polity__unreliable_instability_events=False,
+    ).order_by("year_from")
+
+    if selected_source in {Instability_event.Source.LLM, Instability_event.Source.MANUAL}:
+        queryset = queryset.filter(source=selected_source)
+
+    if selected_batch and selected_source != Instability_event.Source.MANUAL:
+        queryset = queryset.filter(source=Instability_event.Source.LLM)
+        queryset = apply_instability_batch_filter(queryset, selected_batch)
+
+    return queryset
+
+
 def get_selected_instability_source(request):
     selected_source = request.GET.get("source")
     if selected_source in {Instability_event.Source.LLM, Instability_event.Source.MANUAL}:

@@ -1,10 +1,14 @@
+import datetime
+
 from django.contrib.auth.models import Permission, User
 from django.test import TestCase
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils import timezone
 
 from seshat.apps.accounts.models import Seshat_Expert
 from seshat.apps.core.models import Polity, SeshatComment
+from seshat.apps.crisisdb.instability_filters import get_polity_instability_queryset
 from seshat.apps.crisisdb.models import (
     Check_choice,
     Instability_event,
@@ -258,6 +262,126 @@ class InstabilityCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["object_list"]), [manual_event])
+
+    def test_polity_instability_queryset_filters_by_batch(self):
+        polity = Polity.objects.create(
+            name="polity_batch_filter",
+            new_name="polity_batch_filter",
+            long_name="Polity Batch Filter",
+            start_year=100,
+            end_year=200,
+        )
+        batch_one_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch One Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        batch_four_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch Four Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        manual_event = Instability_event.objects.create(
+            polity=polity,
+            name="Manual Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=154,
+            year_to=155,
+        )
+        batch_one_date = timezone.make_aware(datetime.datetime(2025, 3, 1))
+        batch_four_date = timezone.make_aware(datetime.datetime(2026, 3, 2))
+        Instability_event.objects.filter(pk=batch_one_event.pk).update(created_date=batch_one_date)
+        Instability_event.objects.filter(pk=manual_event.pk).update(created_date=batch_one_date)
+        Instability_event.objects.filter(pk=batch_four_event.pk).update(created_date=batch_four_date)
+
+        unfiltered_events = list(get_polity_instability_queryset(polity.id))
+        batch_one_events = list(
+            get_polity_instability_queryset(polity.id, selected_batch="Batch 1")
+        )
+        manual_events = list(
+            get_polity_instability_queryset(
+                polity.id,
+                selected_source=Instability_event.Source.MANUAL,
+                selected_batch="Batch 1",
+            )
+        )
+        llm_batch_one_events = list(
+            get_polity_instability_queryset(
+                polity.id,
+                selected_source=Instability_event.Source.LLM,
+                selected_batch="Batch 1",
+            )
+        )
+
+        self.assertEqual(unfiltered_events, [batch_one_event, batch_four_event, manual_event])
+        self.assertEqual(batch_one_events, [batch_one_event])
+        self.assertEqual(manual_events, [manual_event])
+        self.assertEqual(llm_batch_one_events, [batch_one_event])
+
+    def test_polity_detail_instability_batch_filter_renders(self):
+        polity = Polity.objects.create(
+            name="polity_detail_batch_filter",
+            new_name="polity_detail_batch_filter",
+            long_name="Polity Detail Batch Filter",
+            start_year=100,
+            end_year=200,
+        )
+        batch_one_event = Instability_event.objects.create(
+            polity=polity,
+            name="Polity Detail Batch One Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        batch_four_event = Instability_event.objects.create(
+            polity=polity,
+            name="Polity Detail Batch Four Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        manual_event = Instability_event.objects.create(
+            polity=polity,
+            name="Polity Detail Manual Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=154,
+            year_to=155,
+        )
+        Instability_event.objects.filter(pk=batch_one_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 3, 1))
+        )
+        Instability_event.objects.filter(pk=batch_four_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2026, 3, 2))
+        )
+        Instability_event.objects.filter(pk=manual_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 3, 1))
+        )
+
+        response = self.client.get(
+            reverse("polity-detail-main", args=[polity.id]),
+            {"selected_batch": "Batch 1"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Source")
+        self.assertContains(response, "LLM Batch")
+        self.assertContains(response, "Polity Detail Batch One Event")
+        self.assertNotContains(response, "Polity Detail Batch Four Event")
+        self.assertNotContains(response, "Polity Detail Manual Event")
+
+        manual_response = self.client.get(
+            reverse("polity-detail-main", args=[polity.id]),
+            {"source": "manual", "selected_batch": "Batch 1"},
+        )
+
+        self.assertEqual(manual_response.status_code, 200)
+        self.assertContains(manual_response, "Polity Detail Manual Event")
+        self.assertNotContains(manual_response, "Polity Detail Batch One Event")
+        self.assertNotContains(manual_response, "LLM Batch")
 
     def test_source_filter_scopes_filter_options_and_chip(self):
         manual_polity = Polity.objects.create(
