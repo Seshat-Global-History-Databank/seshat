@@ -136,6 +136,69 @@
         background: #fff;
         box-shadow: inset 0 -1px 0 #d8d8d8;
     }
+    .jump-pager {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.2rem 0;
+        border-radius: 10px;
+        background: transparent;
+    }
+    .jump-pager .pagination {
+        margin-bottom: 0;
+    }
+    .jump-pager .page-link {
+        border: none;
+        color: #6b4b14;
+        background: #fffef9;
+        min-height: calc(1.5em + 0.5rem + 2px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .jump-pager .page-item.active .page-link,
+    .jump-pager .page-link:hover {
+        background: #f5ead2;
+        border: none;
+        color: #5b3b09;
+        size: 1.4rem;
+    }
+    .jump-pager .page-item.disabled .page-link {
+        color: #b6a68a;
+        background: #fbf7ee;
+        display: none;
+    }
+    .jump-pager .jump-form {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        min-height: calc(1.5em + 0.5rem + 2px);
+    }
+    .jump-pager .jump-input {
+        width: 4rem;
+        text-align: center;
+        padding: 0.25rem 0.4rem;
+        font-size: 0.9rem;
+        height: calc(1.5em + 0.5rem + 2px);
+        border-color: #d7c9a7;
+        background: #fffefb;
+        appearance: textfield;
+        -moz-appearance: textfield;
+    }
+    .jump-pager .jump-input::-webkit-outer-spin-button,
+    .jump-pager .jump-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .jump-pager .page-inline-meta {
+        color: #6e6455;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
 
     /* Keep table readable on narrow screens / high zoom */
     @media (max-width: 1400px) {
@@ -158,8 +221,7 @@
     }
 </style>
 <div class="container py-4">
-    <h2>Coinhoards</h2>
-    <p class="text-secondary">Coin Hoards of the Roman Empire</p>
+    <h2>Coin Hoards</h2>
 
     <form method="get" class="row g-2 mb-3">
         <div class="col-md-4">
@@ -191,8 +253,55 @@
             <b>Year meaning:</b>
             <b>Terminal</b> = date range of latest coin issue in hoard;
             <b>Discovery</b> = when the hoard was discovered;
-            <b>Opening</b> = first year the hoard appears/opened in source chronology.
+            <b>Opening</b> = date range of the earliest coin issue in the hoard.
         </small>
+    </div>
+
+    <div class="jump-pager mb-2">
+        <ul class="pagination">
+            {% if page_obj.number > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="First page">&laquo;&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
+            {% endif %}
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Previous page">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            <li class="page-item">
+                
+                <form method="get" class="jump-form page-link p-1 px-2">
+                    <input type="hidden" name="q" value="{{ q }}">
+                    <input type="hidden" name="region" value="{{ region }}">
+                    <input type="hidden" name="start_year" value="{{ start_year }}">
+                    <input type="hidden" name="end_year" value="{{ end_year }}">
+                    <label for="page-jump-top" class="visually-hidden">Jump to page</label>
+                    <span class="page-inline-meta">Page</span>
+                    <input id="page-jump-top" class="form-control form-control-sm jump-input" type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
+                    <span class="page-inline-meta">of {{ page_obj.paginator.num_pages }}</span>
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                </form>
+            </li>
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Next page">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+            {% if page_obj.number < page_obj.paginator.num_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Last page">&raquo;&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
+            {% endif %}
+        </ul>
     </div>
 
     <div class="table-responsive">
@@ -353,22 +462,50 @@
         </table>
     </div>
 
-    <nav>
+    <div class="jump-pager mt-3">
         <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}">Previous</a>
-            </li>
+            {% if page_obj.number > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="First page">&laquo;&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
             {% endif %}
-            <li class="page-item disabled">
-                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Previous page">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+            <li class="page-item">
+                <form method="get" class="jump-form page-link p-1 px-2">
+                    <input type="hidden" name="q" value="{{ q }}">
+                    <input type="hidden" name="region" value="{{ region }}">
+                    <input type="hidden" name="start_year" value="{{ start_year }}">
+                    <input type="hidden" name="end_year" value="{{ end_year }}">
+                    <label for="page-jump-bottom" class="visually-hidden">Jump to page</label>
+                    <span class="page-inline-meta">Page</span>
+                    <input id="page-jump-bottom" class="form-control form-control-sm jump-input" type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
+                    <span class="page-inline-meta">of {{ page_obj.paginator.num_pages }}</span>
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Go</button>
+                </form>
             </li>
             {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}">Next</a>
-            </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Next page">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+            {% if page_obj.number < page_obj.paginator.num_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Last page">&raquo;&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
             {% endif %}
         </ul>
-    </nav>
+    </div>
 </div>
 {% endblock %}
