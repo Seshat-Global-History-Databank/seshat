@@ -173,6 +173,161 @@
         padding: 0.2rem 0.5rem;
     }
 
+    .codebook-layout {
+        align-items: flex-start;
+    }
+
+    .codebook-sidebar {
+        position: sticky;
+        top: 5.5rem;
+        align-self: flex-start;
+    }
+
+    .codebook-toc {
+        max-height: calc(100vh - 7rem);
+        overflow-y: auto;
+        border: 1px solid rgba(0, 128, 128, 0.18);
+        border-left: 5px solid rgba(0, 128, 128, 0.35);
+        background: #fffdf8;
+    }
+
+    .codebook-toc-title {
+        font-family: 'Courier New', Courier, monospace;
+        letter-spacing: 0.01em;
+    }
+
+    .codebook-toc a {
+        color: #155e63;
+        text-decoration: none;
+    }
+
+    .codebook-toc a:hover,
+    .codebook-toc a:focus {
+        color: teal;
+        text-decoration: underline;
+    }
+
+    .codebook-toc-list,
+    .codebook-toc-list ul {
+        list-style: none;
+        margin: 0;
+        padding-left: 0;
+    }
+
+    .codebook-toc-list ul {
+        margin-top: 0.15rem;
+        padding-left: 0.9rem;
+        border-left: 1px solid rgba(0, 128, 128, 0.14);
+    }
+
+    .codebook-drilldown-button,
+    .codebook-back-button {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: #155e63;
+        text-align: left;
+    }
+
+    .codebook-drilldown-button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 0.45rem;
+        padding: 0.45rem 0.55rem;
+        font-weight: 700;
+    }
+
+    .codebook-drilldown-button:hover,
+    .codebook-drilldown-button:focus {
+        background: rgba(0, 128, 128, 0.09);
+        color: teal;
+    }
+
+    .codebook-drilldown-button i {
+        color: rgba(0, 128, 128, 0.65);
+        font-size: 0.8rem;
+    }
+
+    .codebook-back-button {
+        border-bottom: 1px solid rgba(0, 128, 128, 0.14);
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-bottom: 0.55rem;
+        padding: 0 0 0.45rem 0;
+    }
+
+    .codebook-back-button:hover,
+    .codebook-back-button:focus {
+        color: teal;
+        text-decoration: underline;
+    }
+
+    .codebook-panel-title {
+        display: inline-block;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.45rem;
+    }
+
+    .codebook-toc details {
+        margin: 0;
+    }
+
+    .codebook-toc summary {
+        cursor: pointer;
+        list-style-position: outside;
+        padding: 0.12rem 0;
+    }
+
+    .codebook-toc summary::marker {
+        color: teal;
+        font-size: 0.85em;
+    }
+
+    .codebook-toc-summary-link {
+        font-weight: 600;
+    }
+
+    .codebook-toc-db {
+        margin-bottom: 0.65rem;
+    }
+
+    .codebook-toc-section {
+        margin-top: 0.25rem;
+    }
+
+    .codebook-toc-subsection {
+        margin-top: 0.2rem;
+    }
+
+    .codebook-toc-subsection-link {
+        display: inline-block;
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+    }
+
+    .codebook-anchor {
+        scroll-margin-top: 5.75rem;
+    }
+
+    .variable-card:target {
+        border-left-color: teal !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.12);
+    }
+
+    @media (max-width: 991.98px) {
+        .codebook-sidebar {
+            position: static;
+        }
+
+        .codebook-toc {
+            max-height: 24rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
 </style>
 
 <div class="container pt-2">
@@ -206,145 +361,307 @@
         </a>
     </div>
 
-    {% for db_section, section_dict in hierarchy_tree.items %}
-        <h1 class="mt-4"><i class="fa-solid fa-square-caret-right text-secondary"></i>&nbsp;{{ db_section }}</h1>
-        {% for section_name, subsection_dict in section_dict.items %}
-            {% if section_name != 'No Section' %}
-                <h3 class="tree-indent mt-3"><i class="fa-solid fa-caret-right text-secondary"></i>&nbsp;{{ section_name }}</h3>
-            {% endif %}
-            {% for subsection_name, variable_list in subsection_dict.items %}
-                {% if subsection_name != 'No Subsection' %}
-                    <h5 class="tree-subindent text-muted pt-3"><i class="fa-solid fa-angles-right"></i>&nbsp;&nbsp;{{ subsection_name }}</h5>
-                {% endif %}
-                <div class="tree-subindent">
-                    {% for var in variable_list %}
-                        <div class="card variable-card" style="border-left:5px solid rgba(0, 128, 128, 0.238);">
-                            <span class="card-header p-2 m-0">
-                                <a class="toggle-link fw-bold" data-bs-toggle="collapse" href="#var-{{ var.id }}" role="button"
-                                   aria-expanded="false" aria-controls="var-{{ var.id }}">
-                                    {{ var.name }}
-                                </a>
-                                    {% if var.data_type == "A/P/U/~" %}
-                                        <small class="bg-teal-light px-1 rounded fw-normal">{{ var.data_type }}</small>
-                                    {% elif var.data_type == "RANGE" %}
-                                        <small class="bg-salmon-light px-1 rounded fw-normal">{{ var.data_type }}</small>
-                                    {% elif var.data_type == "COMPLEX" %}
-                                        <small class="bg-orange-light px-1 rounded fw-normal">{{ var.data_type }}</small>
-                                    {% elif var.data_type == "CHOICES" %}
-                                        <small class="bg-blue-light px-1 rounded fw-normal">{{ var.data_type }}</small>
-                                    {% elif var.data_type == "TEXT" %}
-                                        <small class="bg-yellow-light px-1 rounded fw-normal">{{ var.data_type }}</small>
-                                    {% else %}
-                                        <small class="bg-yellow-light px-1 rounded fw-normal">-</small>
+    <div class="row g-4 codebook-layout">
+        <aside class="col-lg-3 codebook-sidebar">
+            <nav class="codebook-toc rounded p-3" aria-label="Variable hierarchy table of contents">
+                <div class="codebook-toc-title fw-bold text-secondary mb-2">
+                    <i class="fa-solid fa-list-ul"></i>&nbsp; Contents
+                </div>
+                <div class="codebook-toc-panel" id="codebook-panel-overview">
+                    <ul class="codebook-toc-list">
+                        {% for db_section, section_dict in hierarchy_tree.items %}
+                            {% with db_counter=forloop.counter %}
+                                <li class="codebook-toc-db">
+                                    <button class="codebook-drilldown-button" type="button" data-codebook-panel-target="codebook-panel-db-{{ db_counter }}" data-codebook-anchor="#codebook-db-{{ db_counter }}">
+                                        <span>{{ db_section }}</span>
+                                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                                    </button>
+                                </li>
+                            {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {% for db_section, section_dict in hierarchy_tree.items %}
+                    {% with db_counter=forloop.counter %}
+                        <div class="codebook-toc-panel d-none" id="codebook-panel-db-{{ db_counter }}">
+                            <button class="codebook-back-button" type="button" data-codebook-panel-target="codebook-panel-overview">
+                                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>&nbsp; All sections
+                            </button>
+                            <a class="codebook-panel-title" href="#codebook-db-{{ db_counter }}">{{ db_section }}</a>
+                            <ul class="codebook-toc-list">
+                                {% for section_name, subsection_dict in section_dict.items %}
+                                    {% with section_counter=forloop.counter %}
+                                        <li class="codebook-toc-section">
+                                            {% if section_name != 'No Section' %}
+                                                <details>
+                                                    <summary>
+                                                        <a class="codebook-toc-summary-link" href="#codebook-section-{{ db_counter }}-{{ section_counter }}">{{ section_name }}</a>
+                                                    </summary>
+                                                    <ul>
+                                                        {% for subsection_name, variable_list in subsection_dict.items %}
+                                                            {% with subsection_counter=forloop.counter %}
+                                                                <li class="codebook-toc-subsection">
+                                                                    {% if subsection_name != 'No Subsection' %}
+                                                                        <a class="codebook-toc-subsection-link text-secondary" href="#codebook-subsection-{{ db_counter }}-{{ section_counter }}-{{ subsection_counter }}">{{ subsection_name }}</a>
+                                                                    {% endif %}
+                                                                </li>
+                                                            {% endwith %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </details>
+                                            {% else %}
+                                                <ul>
+                                                    {% for subsection_name, variable_list in subsection_dict.items %}
+                                                        {% with subsection_counter=forloop.counter %}
+                                                            <li class="codebook-toc-subsection">
+                                                                {% if subsection_name != 'No Subsection' %}
+                                                                    <a class="codebook-toc-subsection-link text-secondary" href="#codebook-subsection-{{ db_counter }}-{{ section_counter }}-{{ subsection_counter }}">{{ subsection_name }}</a>
+                                                                {% endif %}
+                                                            </li>
+                                                        {% endwith %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </li>
+                                    {% endwith %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </nav>
+        </aside>
+
+        <div class="col-lg-9">
+            {% for db_section, section_dict in hierarchy_tree.items %}
+                {% with db_counter=forloop.counter %}
+                    <h1 id="codebook-db-{{ db_counter }}" class="mt-4 codebook-anchor"><i class="fa-solid fa-square-caret-right text-secondary"></i>&nbsp;{{ db_section }}</h1>
+                    {% for section_name, subsection_dict in section_dict.items %}
+                        {% with section_counter=forloop.counter %}
+                            {% if section_name != 'No Section' %}
+                                <h3 id="codebook-section-{{ db_counter }}-{{ section_counter }}" class="tree-indent mt-3 codebook-anchor"><i class="fa-solid fa-caret-right text-secondary"></i>&nbsp;{{ section_name }}</h3>
+                            {% endif %}
+                            {% for subsection_name, variable_list in subsection_dict.items %}
+                                {% with subsection_counter=forloop.counter %}
+                                    {% if subsection_name != 'No Subsection' %}
+                                        <h5 id="codebook-subsection-{{ db_counter }}-{{ section_counter }}-{{ subsection_counter }}" class="tree-subindent text-muted pt-3 codebook-anchor"><i class="fa-solid fa-angles-right"></i>&nbsp;&nbsp;{{ subsection_name }}</h5>
                                     {% endif %}
+                                    <div class="tree-subindent">
+                                        {% for var in variable_list %}
+                                            <div id="codebook-var-{{ var.id }}" class="card variable-card codebook-anchor" style="border-left:5px solid rgba(0, 128, 128, 0.238);">
+                                                <span class="card-header p-2 m-0">
+                                                    <a class="toggle-link fw-bold" data-bs-toggle="collapse" href="#var-{{ var.id }}" role="button"
+                                                       aria-expanded="false" aria-controls="var-{{ var.id }}">
+                                                        {{ var.name }}
+                                                    </a>
+                                                        {% if var.data_type == "A/P/U/~" %}
+                                                            <small class="bg-teal-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                                        {% elif var.data_type == "RANGE" %}
+                                                            <small class="bg-salmon-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                                        {% elif var.data_type == "COMPLEX" %}
+                                                            <small class="bg-orange-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                                        {% elif var.data_type == "CHOICES" %}
+                                                            <small class="bg-blue-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                                        {% elif var.data_type == "TEXT" %}
+                                                            <small class="bg-yellow-light px-1 rounded fw-normal">{{ var.data_type }}</small>
+                                                        {% else %}
+                                                            <small class="bg-yellow-light px-1 rounded fw-normal">-</small>
+                                                        {% endif %}
 
 
-                                    {% if var.who_can_access == "public" %}
-                                        <small class="bg-green-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
-                                    {% elif var.who_can_access == "some_polities_are_public" %}
-                                        <small class="bg-skyblue-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
-                                    {% elif var.who_can_access == "private" %}
-                                        <small class="bg-pink-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
-                                    {% else %}
-                                        <small class="bg-brown-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
-                                    {% endif %}
+                                                        {% if var.who_can_access == "public" %}
+                                                            <small class="bg-green-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                                        {% elif var.who_can_access == "some_polities_are_public" %}
+                                                            <small class="bg-skyblue-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                                        {% elif var.who_can_access == "private" %}
+                                                            <small class="bg-pink-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                                        {% else %}
+                                                            <small class="bg-brown-light px-1 rounded fw-normal">{{ var.who_can_access }}</small>
+                                                        {% endif %}
 
                         
-                                <a class="btn btn-outline-secondary fw-bold btn-sm float-end px-1 py-0 m-0"
-                                href="{% url 'update_variable' var.id %}">
-                                 <i class="fa-solid fa-pen fa-sm"></i> Edit
-                             </a>
-                            </span>
-                            <div class="collapse variable-collapse" id="var-{{ var.id }}">
-                                <div class="card-body" >
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            {% if var.data_unit %}
-                                                <div>
-                                                    <small class="bg-gray-light rounded fw-normal">Unit</small>
-                                                    <small class="text-secondary fw-normal">
-                                                        {% autoescape off %}
-                                                        {{ var.data_unit|make_references_look_nicer }}
-                                                    {% endautoescape off %}
-                                                    </small>
+                                                    <a class="btn btn-outline-secondary fw-bold btn-sm float-end px-1 py-0 m-0"
+                                                    href="{% url 'update_variable' var.id %}">
+                                                     <i class="fa-solid fa-pen fa-sm"></i> Edit
+                                                 </a>
+                                                </span>
+                                                <div class="collapse variable-collapse" id="var-{{ var.id }}">
+                                                    <div class="card-body" >
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                {% if var.data_unit %}
+                                                                    <div>
+                                                                        <small class="bg-gray-light rounded fw-normal">Unit</small>
+                                                                        <small class="text-secondary fw-normal">
+                                                                            {% autoescape off %}
+                                                                            {{ var.data_unit|make_references_look_nicer }}
+                                                                        {% endautoescape off %}
+                                                                        </small>
                                     
-                                                </div>
-                                            {% endif %}
-                                            {% if var.data_type_definition %}
-                                                <div>
-                                                    <small class="bg-gray-light rounded fw-normal">Data Type Definition</small>
-                                                    <small class="text-secondary fw-normal">
-                                                        {% autoescape off %}
-                                                        {{ var.data_type_definition|make_references_look_nicer }}
-                                                    {% endautoescape off %}
-                                                    </small>
+                                                                    </div>
+                                                                {% endif %}
+                                                                {% if var.data_type_definition %}
+                                                                    <div>
+                                                                        <small class="bg-gray-light rounded fw-normal">Data Type Definition</small>
+                                                                        <small class="text-secondary fw-normal">
+                                                                            {% autoescape off %}
+                                                                            {{ var.data_type_definition|make_references_look_nicer }}
+                                                                        {% endautoescape off %}
+                                                                        </small>
                                        
-                                                </div>
-                                            {% endif %}
+                                                                    </div>
+                                                                {% endif %}
 
-                                            {% if var.explanation %}
-                                            <div>
-                                                {% autoescape off %}
+                                                                {% if var.explanation %}
+                                                                <div>
+                                                                    {% autoescape off %}
 
-                                                <small class="bg-gray-light rounded fw-normal">Explanation</small>
-                                                {{ var.explanation|make_references_look_nicer }}
-                                                {% endautoescape off %}
-                                            </div>
-                                            {% endif %}
+                                                                    <small class="bg-gray-light rounded fw-normal">Explanation</small>
+                                                                    {{ var.explanation|make_references_look_nicer }}
+                                                                    {% endautoescape off %}
+                                                                </div>
+                                                                {% endif %}
                                     
                                
 
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div>
-                                                <small>   <small class="bg-gray-light rounded fw-normal">API</small>
-                                                    {% if var.api_endpoint %}
-                                                        <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}"
-                                                           target="_blank" rel="noopener noreferrer">{{ var.api_endpoint }}</a>
-                                                    {% else %}
-                                                        -
-                                                    {% endif %}
-                                                </small>
-                                            </div>
-                                            <div><small>
-                                                <small class="bg-gray-light rounded fw-normal">Canonical Name</small>
-                                                {{ var.canonical_name }}</small></div>
-                                        </div>
-                                    </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div>
+                                                                    <small>   <small class="bg-gray-light rounded fw-normal">API</small>
+                                                                        {% if var.api_endpoint %}
+                                                                            <a href="{{ request.scheme }}://{{ request.get_host }}{{ var.api_endpoint }}"
+                                                                               target="_blank" rel="noopener noreferrer">{{ var.api_endpoint }}</a>
+                                                                        {% else %}
+                                                                            -
+                                                                        {% endif %}
+                                                                    </small>
+                                                                </div>
+                                                                <div><small>
+                                                                    <small class="bg-gray-light rounded fw-normal">Canonical Name</small>
+                                                                    {{ var.canonical_name }}</small></div>
+                                                            </div>
+                                                        </div>
            
                              
                       
                          
 
-                                </div>
-                            </div>
-                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endwith %}
+                            {% endfor %}
+                        {% endwith %}
                     {% endfor %}
-                </div>
+                {% endwith %}
             {% endfor %}
-        {% endfor %}
-    {% endfor %}
+        </div>
+    </div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
       const toggleSwitch = document.getElementById("toggleAllAccordion");
       const collapsibles = document.querySelectorAll(".variable-collapse");
-      const accordionButtons = document.querySelectorAll(".accordion-button");
-      const accordionBodies = document.querySelectorAll(".accordion-collapse");
       const accordionState = document.getElementById("accordionState");
+      const toc = document.querySelector(".codebook-toc");
+      const tocPanels = document.querySelectorAll(".codebook-toc-panel");
+
+      function showTocPanel(panelId) {
+        const targetPanel = document.getElementById(panelId);
+        if (!targetPanel) {
+          return;
+        }
+
+        tocPanels.forEach(panel => {
+          panel.classList.toggle("d-none", panel !== targetPanel);
+        });
+
+        if (toc) {
+          toc.scrollTop = 0;
+        }
+      }
+
+      function showVariableCollapse(collapseId) {
+        const collapse = document.getElementById(collapseId);
+        if (!collapse || !window.bootstrap) {
+          return;
+        }
+
+        bootstrap.Collapse.getOrCreateInstance(collapse, { toggle: false }).show();
+      }
+
+      function revealTocLink(hash) {
+        if (!hash) {
+          return;
+        }
+
+        const tocLink = document.querySelector(`.codebook-toc a[href="${hash}"]`);
+        if (!tocLink) {
+          return;
+        }
+
+        const targetPanel = tocLink.closest(".codebook-toc-panel");
+        if (targetPanel) {
+          showTocPanel(targetPanel.id);
+        }
+
+        let parentDetails = tocLink.parentElement ? tocLink.parentElement.closest("details") : null;
+        while (parentDetails) {
+          parentDetails.setAttribute("open", "");
+          parentDetails = parentDetails.parentElement ? parentDetails.parentElement.closest("details") : null;
+        }
+      }
   
-      toggleSwitch.addEventListener("change", function () {
-        collapsibles.forEach(collapse => {
-          const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapse);
-          if (toggleSwitch.checked) {
-            bsCollapse.show();
-          } else {
-            bsCollapse.hide();
+      if (toggleSwitch) {
+        toggleSwitch.addEventListener("change", function () {
+          collapsibles.forEach(collapse => {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapse, { toggle: false });
+            if (toggleSwitch.checked) {
+              bsCollapse.show();
+            } else {
+              bsCollapse.hide();
+            }
+          });
+          accordionState.textContent = toggleSwitch.checked ? "Expanded" : "Collapsed";
+        });
+      }
+
+      document.querySelectorAll("[data-codebook-panel-target]").forEach(button => {
+        button.addEventListener("click", function () {
+          showTocPanel(button.dataset.codebookPanelTarget);
+
+          if (button.dataset.codebookAnchor) {
+            const anchorTarget = document.querySelector(button.dataset.codebookAnchor);
+            if (anchorTarget) {
+              anchorTarget.scrollIntoView({ block: "start" });
+              window.history.replaceState(null, "", button.dataset.codebookAnchor);
+            }
           }
         });
-        accordionState.textContent = toggleSwitch.checked ? "Expanded" : "Collapsed";
       });
+
+      document.querySelectorAll(".codebook-toc-summary-link").forEach(link => {
+        link.addEventListener("click", function (event) {
+          event.stopPropagation();
+          revealTocLink(link.hash);
+        });
+      });
+
+      if (window.location.hash) {
+        revealTocLink(window.location.hash);
+
+        if (window.location.hash.startsWith("#codebook-var-")) {
+          const targetCard = document.querySelector(window.location.hash);
+          const targetCollapse = targetCard ? targetCard.querySelector(".variable-collapse") : null;
+          if (targetCollapse) {
+            showVariableCollapse(targetCollapse.id);
+          }
+        }
+      }
     });
   </script>
   
