@@ -6757,8 +6757,28 @@ def variable_hierarchy_view(request):
 
     sorted_hierarchy_tree = sort_hierarchy(hierarchy_tree)
 
+    toc_tree = []
+    for db_counter, (db_section, section_dict) in enumerate(sorted_hierarchy_tree.items(), start=1):
+        toc_sections = []
+        for section_counter, (section_name, subsection_dict) in enumerate(section_dict.items(), start=1):
+            if section_name == "No Section":
+                continue
+
+            toc_sections.append({
+                "name": section_name,
+                "anchor": f"codebook-section-{db_counter}-{section_counter}",
+            })
+
+        toc_tree.append({
+            "name": db_section,
+            "anchor": f"codebook-db-{db_counter}",
+            "panel_id": f"codebook-panel-db-{db_counter}",
+            "sections": toc_sections,
+        })
+
     context = {
         'hierarchy_tree': sorted_hierarchy_tree,
+        'toc_tree': toc_tree,
     }
     return render(request, 'core/polity/var_hier_tree.html', context)
 
