@@ -271,23 +271,10 @@
         margin-bottom: 0.45rem;
     }
 
-    .codebook-toc details {
-        margin: 0;
-    }
-
-    .codebook-toc summary {
-        cursor: pointer;
-        list-style-position: outside;
-        padding: 0.12rem 0;
-    }
-
-    .codebook-toc summary::marker {
-        color: teal;
-        font-size: 0.85em;
-    }
-
-    .codebook-toc-summary-link {
+    .codebook-toc-section-link {
+        display: inline-block;
         font-weight: 600;
+        margin-top: 0.25rem;
     }
 
     .codebook-toc-db {
@@ -296,16 +283,6 @@
 
     .codebook-toc-section {
         margin-top: 0.25rem;
-    }
-
-    .codebook-toc-subsection {
-        margin-top: 0.2rem;
-    }
-
-    .codebook-toc-subsection-link {
-        display: inline-block;
-        font-size: 0.9rem;
-        margin-top: 0.2rem;
     }
 
     .codebook-anchor {
@@ -369,66 +346,33 @@
                 </div>
                 <div class="codebook-toc-panel" id="codebook-panel-overview">
                     <ul class="codebook-toc-list">
-                        {% for db_section, section_dict in hierarchy_tree.items %}
-                            {% with db_counter=forloop.counter %}
-                                <li class="codebook-toc-db">
-                                    <button class="codebook-drilldown-button" type="button" data-codebook-panel-target="codebook-panel-db-{{ db_counter }}" data-codebook-anchor="#codebook-db-{{ db_counter }}">
-                                        <span>{{ db_section }}</span>
-                                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-                                    </button>
-                                </li>
-                            {% endwith %}
+                        {% for db_section in toc_tree %}
+                            <li class="codebook-toc-db">
+                                <button class="codebook-drilldown-button" type="button" data-codebook-panel-target="{{ db_section.panel_id }}" data-codebook-anchor="#{{ db_section.anchor }}">
+                                    <span>{{ db_section.name }}</span>
+                                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                                </button>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
 
-                {% for db_section, section_dict in hierarchy_tree.items %}
-                    {% with db_counter=forloop.counter %}
-                        <div class="codebook-toc-panel d-none" id="codebook-panel-db-{{ db_counter }}">
-                            <button class="codebook-back-button" type="button" data-codebook-panel-target="codebook-panel-overview">
-                                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>&nbsp; All sections
-                            </button>
-                            <a class="codebook-panel-title" href="#codebook-db-{{ db_counter }}">{{ db_section }}</a>
-                            <ul class="codebook-toc-list">
-                                {% for section_name, subsection_dict in section_dict.items %}
-                                    {% with section_counter=forloop.counter %}
-                                        <li class="codebook-toc-section">
-                                            {% if section_name != 'No Section' %}
-                                                <details>
-                                                    <summary>
-                                                        <a class="codebook-toc-summary-link" href="#codebook-section-{{ db_counter }}-{{ section_counter }}">{{ section_name }}</a>
-                                                    </summary>
-                                                    <ul>
-                                                        {% for subsection_name, variable_list in subsection_dict.items %}
-                                                            {% with subsection_counter=forloop.counter %}
-                                                                <li class="codebook-toc-subsection">
-                                                                    {% if subsection_name != 'No Subsection' %}
-                                                                        <a class="codebook-toc-subsection-link text-secondary" href="#codebook-subsection-{{ db_counter }}-{{ section_counter }}-{{ subsection_counter }}">{{ subsection_name }}</a>
-                                                                    {% endif %}
-                                                                </li>
-                                                            {% endwith %}
-                                                        {% endfor %}
-                                                    </ul>
-                                                </details>
-                                            {% else %}
-                                                <ul>
-                                                    {% for subsection_name, variable_list in subsection_dict.items %}
-                                                        {% with subsection_counter=forloop.counter %}
-                                                            <li class="codebook-toc-subsection">
-                                                                {% if subsection_name != 'No Subsection' %}
-                                                                    <a class="codebook-toc-subsection-link text-secondary" href="#codebook-subsection-{{ db_counter }}-{{ section_counter }}-{{ subsection_counter }}">{{ subsection_name }}</a>
-                                                                {% endif %}
-                                                            </li>
-                                                        {% endwith %}
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        </li>
-                                    {% endwith %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endwith %}
+                {% for db_section in toc_tree %}
+                    <div class="codebook-toc-panel d-none" id="{{ db_section.panel_id }}">
+                        <button class="codebook-back-button" type="button" data-codebook-panel-target="codebook-panel-overview">
+                            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>&nbsp; All sections
+                        </button>
+                        <a class="codebook-panel-title" href="#{{ db_section.anchor }}">{{ db_section.name }}</a>
+                        <ul class="codebook-toc-list">
+                            {% for section in db_section.sections %}
+                                <li class="codebook-toc-section">
+                                    {% if section.name != 'No Section' %}
+                                        <a class="codebook-toc-section-link" href="#{{ section.anchor }}">{{ section.name }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endfor %}
             </nav>
         </aside>
@@ -609,11 +553,6 @@
           showTocPanel(targetPanel.id);
         }
 
-        let parentDetails = tocLink.parentElement ? tocLink.parentElement.closest("details") : null;
-        while (parentDetails) {
-          parentDetails.setAttribute("open", "");
-          parentDetails = parentDetails.parentElement ? parentDetails.parentElement.closest("details") : null;
-        }
       }
   
       if (toggleSwitch) {
@@ -641,13 +580,6 @@
               window.history.replaceState(null, "", button.dataset.codebookAnchor);
             }
           }
-        });
-      });
-
-      document.querySelectorAll(".codebook-toc-summary-link").forEach(link => {
-        link.addEventListener("click", function (event) {
-          event.stopPropagation();
-          revealTocLink(link.hash);
         });
       });
 
