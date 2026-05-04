@@ -716,6 +716,46 @@ class CoinHoard(models.Model):
         return f"{self.external_dataset_id} - {self.hoard_name or 'Unnamed hoard'}"
 
 
+class CoinHoardPolityMapping(models.Model):
+    """
+    Stores spatial+temporal mapping results between a coin hoard and one polity.
+    """
+
+    coin_hoard = models.ForeignKey(
+        CoinHoard, on_delete=models.CASCADE, related_name="polity_mappings"
+    )
+    polity = models.ForeignKey(
+        Polity, on_delete=models.CASCADE, related_name="coinhoard_mappings"
+    )
+    cliopatria_shape = models.ForeignKey(
+        "Cliopatria",
+        on_delete=models.SET_NULL,
+        related_name="coinhoard_mappings",
+        null=True,
+        blank=True,
+    )
+    overlap_year_from = models.IntegerField(null=True, blank=True)
+    overlap_year_to = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["coin_hoard", "polity", "cliopatria_shape"],
+                name="uniq_coinhoard_polity_shape_mapping",
+            )
+        ]
+        indexes = [
+            models.Index(fields=["coin_hoard", "polity"]),
+            models.Index(fields=["overlap_year_from", "overlap_year_to"]),
+        ]
+        ordering = ["coin_hoard__external_dataset_id", "polity__long_name", "polity__name"]
+
+    def __str__(self):
+        return f"{self.coin_hoard.external_dataset_id} -> {self.polity.long_name or self.polity.name}"
+
+
 class Country(models.Model):
     """
     Model representing a country.

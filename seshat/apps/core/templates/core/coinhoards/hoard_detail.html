@@ -168,6 +168,9 @@
         <a class="btn btn-secondary btn-sm" href="{% url 'coinhoards' %}">Back to list</a>
     </div>
     <p class="text-secondary">{{ hoard.hoard_name|default:"Unnamed hoard" }}</p>
+    <div class="mb-2">
+        <small class="text-secondary">Data read date: <b>9 March 2026</b></small>
+    </div>
     <div class="mb-3 d-flex gap-2">
         {% if hoard.chre_url %}
             <a class="btn btn-sm btn-outline-dark" href="{{ hoard.chre_url }}" target="_blank" rel="noopener noreferrer">Open Original CHRE Record</a>
@@ -206,7 +209,7 @@
                     <tr><th>County</th><td>{{ hoard.county|default:"-" }}</td></tr>
                     <tr><th>Region</th><td>{{ hoard.region|default:"-" }}</td></tr>
                     <tr><th>Country</th><td>{{ hoard.country|default:"-" }}</td></tr>
-                    <tr><th>Lat / long / alt</th><td>{{ hoard.latitude|floatformat:2|default:"-" }} / {{ hoard.longitude|floatformat:2|default:"-" }} / {{ hoard.altitude|floatformat:2|default:"-" }}</td></tr>
+                    <tr><th>Lat / long / alt</th><td>{{ hoard.latitude|floatformat:3|default:"-" }} / {{ hoard.longitude|floatformat:3|default:"-" }} / {{ hoard.altitude|floatformat:2|default:"-" }}</td></tr>
                 </table>
 
                 <p class="detail-section-title">Ratings</p>
@@ -242,6 +245,65 @@
                     <tr>
                         <th>CHRE canonical URL</th>
                         <td>{% if hoard.chre_url %}<a href="{{ hoard.chre_url }}" target="_blank" rel="noopener noreferrer">{{ hoard.chre_url }}</a>{% else %}-{% endif %}</td>
+                    </tr>
+                </table>
+
+                <p class="detail-section-title">Mapped polities</p>
+                <table class="table table-sm table-borderless mb-0 detail-record-table">
+                    <tr>
+                        <th>Polity</th>
+                        <td>
+                            {% if hoard.polity_mapping_rows %}
+                                {% for row in hoard.polity_mapping_rows %}
+                                    <div>
+                                        {% if row.polity_new_name %}
+                                            <a href="{% url 'polity-detail-new-name' row.polity_new_name %}">{{ row.polity_name }}</a>
+                                            <span class="text-secondary small">({{ row.polity_new_name }})</span>
+                                        {% else %}
+                                            <a href="{% url 'polity-detail-main' row.polity_id %}">{{ row.polity_name }}</a>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Polity years</th>
+                        <td>
+                            {% if hoard.polity_mapping_rows %}
+                                {% for row in hoard.polity_mapping_rows %}
+                                    <div>{{ row.polity_year_from|default:"-" }} to {{ row.polity_year_to|default:"-" }}</div>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Matched year</th>
+                        <td>
+                            {% if hoard.polity_mapping_rows %}
+                                {% for row in hoard.polity_mapping_rows %}
+                                    <div>{{ row.overlap_year_from|default:"-" }}</div>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Shape</th>
+                        <td>
+                            {% if hoard.polity_mapping_rows %}
+                                {% for row in hoard.polity_mapping_rows %}
+                                    <div>{{ row.shape_name|default:"-" }}</div>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
                     </tr>
                 </table>
             </div>

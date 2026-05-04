@@ -2,22 +2,9 @@
 
 {% block content %}
 <style>
-    .ratings-grid {
-        display: grid;
-        grid-template-columns: minmax(72px, 1fr) 12px minmax(72px, 1fr) 12px minmax(72px, 1fr);
-        align-items: center;
-        column-gap: 0;
-    }
-    .ratings-grid .sep {
-        text-align: center;
-        color: #8c8c8c;
-    }
-    .ratings-grid .cell {
-        text-align: center;
-    }
     .years-grid {
         display: grid;
-        grid-template-columns: minmax(88px, 1fr) 12px minmax(88px, 1fr) 12px minmax(88px, 1fr);
+        grid-template-columns: minmax(88px, 1fr);
         align-items: center;
         column-gap: 0;
     }
@@ -31,10 +18,11 @@
     .year-pill {
         border: none;
         border-radius: 0.45rem;
-        padding: 0.28rem 0.5rem 0.18rem 0.5rem;
+        padding: 0.38rem 0.62rem 0.28rem 0.62rem;
         line-height: 1;
         color: #5c5c5c;
         font-weight: 400;
+        font-size: 0.98rem;
         border-bottom: 2px solid #d8d8d8;
 
     }
@@ -47,7 +35,7 @@
     }
     .coords-grid {
         display: grid;
-        grid-template-columns: minmax(70px, 1fr) 12px minmax(70px, 1fr) 12px minmax(70px, 1fr);
+        grid-template-columns: minmax(70px, 1fr) 12px minmax(70px, 1fr);
         align-items: center;
         column-gap: 0;
     }
@@ -74,36 +62,6 @@
         vertical-align: middle;
         padding: 0 1px;
     }
-    .rating-pill {
-        border: 1px solid #d8d8d8;
-        border-radius: 0.45rem;
-        padding: 0.2rem 0.3rem 0.18rem 0.3rem;
-        line-height: 1;
-    }
-    .rating-poor {
-        background-color: #f8d7da;
-        color: #842029;
-        border-color: #84202933;
-    }
-    .rating-fair {
-        background-color: #fdebd0;
-        color: #8a4b08;
-        border-color: #8a4b0833;
-    }
-    .rating-good {
-        background-color: #fff3cd;
-        color: #7a5b00;
-        border-color: #7a5b0033;
-    }
-    .rating-excellent {
-        background-color: #d1e7dd;
-        color: #0f5132;
-        border-color: #0f513233;
-    }
-    .rating-empty {
-        background-color: #f2f2f2;
-        color: #555;
-    }
     .coin-cell {
         text-align: center;
     }
@@ -124,6 +82,12 @@
     .col-with-left-border {
         border-left: 1px solid #d8d8d8;
         padding-left: 10px;
+    }
+    .row-num-cell {
+        width: 2.75rem;
+        text-align: right;
+        color: #6c757d;
+        font-variant-numeric: tabular-nums;
     }
     .table-responsive {
         max-height: 72vh;
@@ -199,22 +163,73 @@
         font-size: 0.9rem;
         font-weight: 500;
     }
+    .filter-chip-row {
+        min-height: 2rem;
+        margin-top: 0.4rem;
+    }
+    .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        margin-right: 0.25rem;
+        margin-bottom: 0.2rem;
+        padding: 0.2rem 0.5rem;
+        border: 1px solid #e6d5ac;
+        background: #fff9ea;
+        border-radius: 999px;
+        color: #5d4a21;
+        text-decoration: none;
+    }
+    .filter-chip-remove {
+        color: #8f6a18;
+        font-weight: 700;
+        line-height: 1;
+        font-size: 0.98rem;
+    }
+    .filter-chip-remove-link {
+        color: inherit;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1rem;
+        min-height: 1rem;
+    }
+    .filter-panel {
+        background: linear-gradient(180deg, #fffefb 0%, #fffdf7 100%);
+        border: 1px solid #eadfbe;
+        border-radius: 0.6rem;
+        padding: 0.9rem 0.9rem 0.75rem 0.9rem;
+    }
+    .filter-col {
+        align-self: start;
+    }
+    .filter-action-row {
+        border-top: 1px dashed #e7dcc0;
+        padding-top: 0.55rem;
+    }
+    .filter-submit-btn {
+        min-width: 8.5rem;
+        min-height: 2.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.45rem 1rem;
+        border-radius: 0.5rem;
+    }
 
     /* Keep table readable on narrow screens / high zoom */
     @media (max-width: 1400px) {
         .years-grid,
-        .ratings-grid,
         .coords-grid {
             grid-template-columns: 1fr !important;
             row-gap: 4px;
         }
         .years-grid .sep,
-        .ratings-grid .sep,
         .coords-grid .sep {
             display: none;
         }
         .years-grid .cell,
-        .ratings-grid .cell,
         .coords-grid .cell {
             text-align: left;
         }
@@ -223,52 +238,141 @@
 <div class="container py-4">
     <h2>Coin Hoards</h2>
 
-    <form method="get" class="row g-2 mb-3">
-        <div class="col-md-4">
-            <input type="text" class="form-control" name="q" value="{{ q }}" placeholder="Search by ID, name, country">
+    <form method="get" class="mb-3 filter-panel">
+        <div class="row g-2 align-items-start">
+            <div class="col-md-4 filter-col">
+                <label for="filter-q" class="form-label small text-secondary mb-0">Search</label>
+                <input id="filter-q" type="text" class="form-control" name="q" value="{{ q }}" placeholder="ID, name, country">
+                <div class="filter-chip-row">
+                    {% if q %}
+                        <span class="filter-chip">
+                            search: "{{ q }}"
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove search filter">x</a>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4 filter-col">
+                <label for="filter-polity" class="form-label small text-secondary mb-0">Mapped polity</label>
+                <select id="filter-polity" class="form-select" name="polity_picker" title="Select a polity to add as a filter">
+                    <option value="">Add a polity filter...</option>
+                    {% for opt in coinhoard_polity_options %}
+                        <option value="{{ opt.id }}">{{ opt.label }}</option>
+                    {% endfor %}
+                </select>
+                <div id="selected-polity-hidden-inputs">
+                    {% for pid in selected_polity_ids %}
+                        <input type="hidden" name="polity" value="{{ pid }}">
+                    {% endfor %}
+                </div>
+                <div class="filter-chip-row">
+                    {% for item in selected_polity_items %}
+                        <span class="filter-chip">
+                            {{ item.label }}
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}{% if pid != item.id %}&polity={{ pid }}{% endif %}{% endfor %}" aria-label="Remove polity filter {{ item.label }}">x</a>
+                        </span>
+                    {% endfor %}
+                </div>
+                <div class="form-text">Pick one polity at a time; each selection is added right away.</div>
+            </div>
+            <div class="col-md-2 filter-col">
+                <label for="filter-start-year" class="form-label small text-secondary mb-0">Start year</label>
+                <input id="filter-start-year" type="number" class="form-control" name="start_year" value="{{ start_year }}" placeholder="Start">
+                <div class="filter-chip-row">
+                    {% if start_year %}
+                        <span class="filter-chip">
+                            start: {{ start_year }}
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove start year filter">x</a>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-2 filter-col">
+                <label for="filter-end-year" class="form-label small text-secondary mb-0">End year</label>
+                <input id="filter-end-year" type="number" class="form-control" name="end_year" value="{{ end_year }}" placeholder="End">
+                <div class="filter-chip-row">
+                    {% if end_year %}
+                        <span class="filter-chip">
+                            end: {{ end_year }}
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&start_year={{ start_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove end year filter">x</a>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="col-md-2">
-            <input type="text" class="form-control" name="region" value="{{ region }}" placeholder="Region">
-        </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" name="start_year" value="{{ start_year }}" placeholder="Start year">
-        </div>
-        <div class="col-md-2">
-            <input type="number" class="form-control" name="end_year" value="{{ end_year }}" placeholder="End year">
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        <div class="row g-2 mt-2 filter-action-row">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary filter-submit-btn">Filter</button>
+            </div>
         </div>
     </form>
+    <details class="mb-3 border rounded" style="background:#fffefb; border-color:#eadfbe !important;">
+        <summary class="px-3 py-2 fw-semibold" style="cursor:pointer;">Download CSV (filtered results)</summary>
+        <form method="get" action="{% url 'coinhoards-export-csv' %}" class="px-3 pb-3 pt-2 border-top" style="border-color:#eadfbe;">
+            <input type="hidden" name="q" value="{{ q }}">
+            <input type="hidden" name="start_year" value="{{ start_year }}">
+            <input type="hidden" name="end_year" value="{{ end_year }}">
+            {% for pid in selected_polity_ids %}
+                <input type="hidden" name="polity" value="{{ pid }}">
+            {% endfor %}
+            <div class="mb-3 rounded-2 px-3 py-3 border shadow-sm" role="note" style="background:linear-gradient(165deg, #fff4dc 0%, #fff9ed 55%, #fffdf5 100%); border-color:#c9a227 !important; border-width:2px; color:#3a2f12;">
+                <p class="small fw-semibold mb-2" style="line-height:1.45;">
+                    The file name includes a timestamp. Export uses the same filters as above (not limited to the current page).
+                </p>
+                <p class="small fw-semibold mb-0" style="line-height:1.45;">
+                    Tick the fields you want in the file; anything left unchecked is left out of the download. A few are pre-selected—you can change them before downloading.
+                </p>
+            </div>
+            <div class="row g-2 align-items-end mb-2">
+                <div class="col-md-3">
+                    <label for="csv-delimiter" class="form-label small mb-0">Delimiter</label>
+                    <select id="csv-delimiter" class="form-select form-select-sm" name="delimiter">
+                        <option value="comma">Comma (,)</option>
+                        <option value="semicolon">Semicolon (;)</option>
+                        <option value="tab">Tab</option>
+                        <option value="pipe" selected>Pipe (|)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Download</button>
+                </div>
+            </div>
+            <div class="small fw-semibold mb-2">Columns</div>
+            <div class="csv-column-groups rounded border px-2 py-2" style="max-height:min(55vh, 26rem); overflow-y:auto; border-color:#e8dfc8 !important; background:#fffdf8;">
+                {% for group_title, columns in coinhoard_csv_column_groups %}
+                    <fieldset class="mb-3 pb-2 {% if not forloop.last %}border-bottom{% endif %}" style="border-color:#efe6d4 !important;">
+                        <legend class="float-none w-auto px-0 mb-2 small fw-semibold text-secondary">{{ group_title }}</legend>
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-6 g-1">
+                            {% for key, label in columns %}
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="col" value="{{ key }}" id="csv-col-{{ key }}"
+                                            {% if key in coinhoard_csv_default_cols %}checked{% endif %}>
+                                        <label class="form-check-label small" for="csv-col-{{ key }}">{{ label }}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                {% endfor %}
+            </div>
+        </form>
+    </details>
 
-    <div class="mb-3 p-2 rounded" style="background:#fffdf2; border:1px solid #eadfbe;">
-        <small class="text-secondary me-2">Rating guide:</small>
-        <span class="badge rating-pill" style="background-color:#f8d7da; color:#842029; border:1px solid #84202933;">Poor</span>
-        <span class="badge rating-pill" style="background-color:#fdebd0; color:#8a4b08; border:1px solid #8a4b0833;">Fair</span>
-        <span class="badge rating-pill" style="background-color:#fff3cd; color:#7a5b00; border:1px solid #7a5b0033;">Good</span>
-        <span class="badge rating-pill" style="background-color:#d1e7dd; color:#0f5132; border:1px solid #0f513233;">Excellent</span>
-    </div>
-    <div class="mb-3 p-2 rounded" style="background:#fffdf2; border:1px solid #eadfbe;">
-        <small class="text-secondary">
-            <b>Year meaning:</b>
-            <b>Terminal</b> = date range of latest coin issue in hoard;
-            <b>Discovery</b> = when the hoard was discovered;
-            <b>Opening</b> = date range of the earliest coin issue in the hoard.
-        </small>
-    </div>
+
 
     <div class="jump-pager mb-2">
         <ul class="pagination">
             {% if page_obj.number > 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="First page">&laquo;&laquo;</a>
+                    <a class="page-link" href="?page=1&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
             {% endif %}
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Previous page">&laquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -277,9 +381,11 @@
                 
                 <form method="get" class="jump-form page-link p-1 px-2">
                     <input type="hidden" name="q" value="{{ q }}">
-                    <input type="hidden" name="region" value="{{ region }}">
                     <input type="hidden" name="start_year" value="{{ start_year }}">
                     <input type="hidden" name="end_year" value="{{ end_year }}">
+                    {% for pid in selected_polity_ids %}
+                        <input type="hidden" name="polity" value="{{ pid }}">
+                    {% endfor %}
                     <label for="page-jump-top" class="visually-hidden">Jump to page</label>
                     <span class="page-inline-meta">Page</span>
                     <input id="page-jump-top" class="form-control form-control-sm jump-input" type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
@@ -289,14 +395,14 @@
             </li>
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Next page">&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
             {% endif %}
             {% if page_obj.number < page_obj.paginator.num_pages %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Last page">&raquo;&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
@@ -308,27 +414,15 @@
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
+                    <th class="row-num-cell">#</th>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Mapped polities</th>
                     <th>Coins</th>
                     <th class="col-with-left-border">
                         Years
                         <div class="mt-1 text-secondary fw-normal years-grid" style="font-size:0.8rem; border-top:1px dashed #d8d8d8; padding-top:3px;">
-                            <span class="cell">Opening</span>
-                            <span class="sep">|</span>
                             <span class="cell">Terminal</span>
-                            <span class="sep">|</span>
-                            <span class="cell">Discovery</span>
-                        </div>
-                    </th>
-                    <th class="col-with-left-border">
-                        Ratings
-                        <div class="mt-1 text-secondary fw-normal ratings-grid" style="font-size:0.8rem; border-top:1px dashed #d8d8d8; padding-top:3px;">
-                            <span class="cell">Findspot</span>
-                            <span class="sep">|</span>
-                            <span class="cell">Context</span>
-                            <span class="sep">|</span>
-                            <span class="cell">Numismatic</span>
                         </div>
                     </th>
                     <th class="col-with-left-border">
@@ -337,8 +431,6 @@
                             <span class="cell">Latitude</span>
                             <span class="sep">|</span>
                             <span class="cell">Longitude</span>
-                            <span class="sep">|</span>
-                            <span class="cell">Altitude</span>
                         </div>
                     </th>
                     <th>Links</th>
@@ -347,8 +439,25 @@
             <tbody>
                 {% for hoard in page_obj %}
                 <tr>
+                    <td class="row-num-cell">{{ page_obj.start_index|add:forloop.counter0 }}</td>
                     <td><a href="{% url 'coinhoard-detail' hoard.external_dataset_id %}">{{ hoard.external_dataset_id }}</a></td>
                     <td>{{ hoard.hoard_name|default:"-" }}</td>
+                    <td>
+                        {% if hoard.mapped_polities %}
+                            {% for p in hoard.mapped_polities %}
+                                <span class="d-inline-block me-1 mb-1">
+                                    {% if p.new_name %}
+                                        <a href="{% url 'polity-detail-new-name' p.new_name %}">{{ p.display }}</a>
+                                        <span class="text-secondary small">({{ p.new_name }})</span>
+                                    {% else %}
+                                        <a href="{% url 'polity-detail-main' p.polity_id %}">{{ p.display }}</a>
+                                    {% endif %}
+                                </span>{% if not forloop.last %}<span class="text-secondary">,</span>{% endif %}
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td class="coin-cell">
                         {% if hoard.number_of_coins %}
                             <span class="coin-badge">{{ hoard.number_of_coins }}</span>
@@ -358,26 +467,6 @@
                     </td>
                     <td class="col-with-left-border">
                         <div class="years-grid">
-                            <span class="cell">
-                                <span class="badge year-pill">
-                                    {% if hoard.opening_year1 and hoard.opening_year2 %}
-                                        {% if hoard.opening_year1 == hoard.opening_year2 %}
-                                            {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                        {% else %}
-                                            {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                            <span class="year-arrow">&rarr;</span>
-                                            {% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}
-                                        {% endif %}
-                                    {% elif hoard.opening_year1 %}
-                                        {% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                    {% elif hoard.opening_year2 %}
-                                        {% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </span>
-                            </span>
-                            <span class="sep"></span>
                             <span class="cell">
                                 <span class="badge year-pill">
                                     {% if hoard.year_from and hoard.year_to %}
@@ -397,44 +486,13 @@
                                     {% endif %}
                                 </span>
                             </span>
-                            <span class="sep"></span>
-                            <span class="cell">
-                                <span class="badge year-pill">
-                                    {% if hoard.discovery_year1 and hoard.discovery_year2 %}
-                                        {% if hoard.discovery_year1 == hoard.discovery_year2 %}
-                                            {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                        {% else %}
-                                            {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                            <span class="year-arrow">&rarr;</span>
-                                            {% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}
-                                        {% endif %}
-                                    {% elif hoard.discovery_year1 %}
-                                        {% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}
-                                    {% elif hoard.discovery_year2 %}
-                                        {% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </span>
-                            </span>
-                        </div>
-                    </td>
-                    <td class="col-with-left-border">
-                        <div class="ratings-grid">
-                            <span class="cell"><span class="badge rating-pill {{ hoard.findspot_class }}">{{ hoard.findspot_label.title }}</span></span>
-                            <span class="sep"></span>
-                            <span class="cell"><span class="badge rating-pill {{ hoard.context_class }}">{{ hoard.context_label.title }}</span></span>
-                            <span class="sep"></span>
-                            <span class="cell"><span class="badge rating-pill {{ hoard.numismatic_class }}">{{ hoard.numismatic_label.title }}</span></span>
                         </div>
                     </td>
                     <td class="col-with-left-border">
                         <div class="coords-grid">
-                            <span class="cell"><span class="badge coord-pill">{{ hoard.latitude|floatformat:2|default:"-" }}</span></span>
+                            <span class="cell"><span class="badge coord-pill">{{ hoard.latitude|floatformat:3|default:"-" }}</span></span>
                             <span class="sep"></span>
-                            <span class="cell"><span class="badge coord-pill">{{ hoard.longitude|floatformat:2|default:"-" }}</span></span>
-                            <span class="sep"></span>
-                            <span class="cell"><span class="badge coord-pill">{{ hoard.altitude|floatformat:2|default:"-" }}</span></span>
+                            <span class="cell"><span class="badge coord-pill">{{ hoard.longitude|floatformat:3|default:"-" }}</span></span>
                         </div>
                     </td>
                     <td class="col-with-left-border p-2">
@@ -455,7 +513,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="text-center text-secondary">No coinhoards found.</td>
+                    <td colspan="8" class="text-center text-secondary">No coinhoards found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -466,14 +524,14 @@
         <ul class="pagination">
             {% if page_obj.number > 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="First page">&laquo;&laquo;</a>
+                    <a class="page-link" href="?page=1&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
             {% endif %}
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Previous page">&laquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -481,9 +539,11 @@
             <li class="page-item">
                 <form method="get" class="jump-form page-link p-1 px-2">
                     <input type="hidden" name="q" value="{{ q }}">
-                    <input type="hidden" name="region" value="{{ region }}">
                     <input type="hidden" name="start_year" value="{{ start_year }}">
                     <input type="hidden" name="end_year" value="{{ end_year }}">
+                    {% for pid in selected_polity_ids %}
+                        <input type="hidden" name="polity" value="{{ pid }}">
+                    {% endfor %}
                     <label for="page-jump-bottom" class="visually-hidden">Jump to page</label>
                     <span class="page-inline-meta">Page</span>
                     <input id="page-jump-bottom" class="form-control form-control-sm jump-input" type="number" name="page" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}">
@@ -493,14 +553,14 @@
             </li>
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Next page">&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
             {% endif %}
             {% if page_obj.number < page_obj.paginator.num_pages %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&region={{ region }}&start_year={{ start_year }}&end_year={{ end_year }}" aria-label="Last page">&raquo;&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
@@ -508,4 +568,27 @@
         </ul>
     </div>
 </div>
+<script>
+    (function () {
+        var politySelect = document.getElementById("filter-polity");
+        var hiddenContainer = document.getElementById("selected-polity-hidden-inputs");
+        var filterForm = politySelect ? politySelect.form : null;
+        if (!filterForm || !politySelect || !hiddenContainer) return;
+
+        politySelect.addEventListener("change", function () {
+            var value = politySelect.value;
+            if (!value) return;
+            var existing = hiddenContainer.querySelector('input[name="polity"][value="' + value + '"]');
+            if (!existing) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "polity";
+                input.value = value;
+                hiddenContainer.appendChild(input);
+            }
+            politySelect.value = "";
+            filterForm.submit();
+        });
+    })();
+</script>
 {% endblock %}
