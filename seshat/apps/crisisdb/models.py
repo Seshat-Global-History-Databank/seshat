@@ -41,6 +41,8 @@ INST_INTENSITY_CHOICES = (
 ('10', '10. Hundreds of thousands killed'), 
 ('11', '11. Hundreds of thousands or Millions killed'),
 ('12', '12. Millions killed'),
+('13', '13. Millions or Tens of millions killed'),
+('14', '14. Tens of millions killed'),
 )
 
 REAL_EVENT_CHECK_CHOICES = (
