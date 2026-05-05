@@ -233,6 +233,7 @@ urlpatterns += [path('core/cliopatria/', views.cliopatria, name='cliopatria'),]
 urlpatterns += [
     path("core/coinhoards/", views_coinhoards.hoard_list, name="coinhoards"),
     path("core/coinhoards/json/", views_coinhoards.hoard_list_json, name="coinhoards-json"),
+    path("core/coinhoards/export/", views_coinhoards.hoard_export_csv, name="coinhoards-export-csv"),
     path(
         "core/coinhoards/<str:external_dataset_id>/",
         views_coinhoards.hoard_detail,

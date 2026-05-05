@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Macro_region, Seshat_region, Polity, CoinHoard, Country, Section, Subsection, Citation, Reference, Variablehierarchy, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Religion
+from .models import Macro_region, Seshat_region, Polity, CoinHoard, CoinHoardPolityMapping, Country, Section, Subsection, Citation, Reference, Variablehierarchy, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Religion
 
 admin.site.register(Macro_region)
 admin.site.register(Seshat_region)
@@ -9,6 +9,7 @@ admin.site.register(Subsection)
 admin.site.register(Variablehierarchy)
 admin.site.register(Polity)
 admin.site.register(CoinHoard)
+admin.site.register(CoinHoardPolityMapping)
 admin.site.register(Country)
 admin.site.register(Citation)
 admin.site.register(Reference)
