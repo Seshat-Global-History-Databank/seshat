@@ -8,7 +8,10 @@ from django.utils import timezone
 
 from seshat.apps.accounts.models import Seshat_Expert
 from seshat.apps.core.models import Polity, SeshatComment
-from seshat.apps.crisisdb.instability_filters import get_polity_instability_queryset
+from seshat.apps.crisisdb.instability_filters import (
+    GOOD_ROW_FILTER,
+    get_polity_instability_queryset,
+)
 from seshat.apps.crisisdb.models import (
     Check_choice,
     Instability_event,
@@ -262,6 +265,141 @@ class InstabilityCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["object_list"]), [manual_event])
+
+    def test_instability_list_can_filter_multiple_polities(self):
+        first_polity = Polity.objects.create(
+            name="multi_polity_one",
+            new_name="multi_polity_one",
+            long_name="Multi Polity One",
+            start_year=100,
+            end_year=200,
+        )
+        second_polity = Polity.objects.create(
+            name="multi_polity_two",
+            new_name="multi_polity_two",
+            long_name="Multi Polity Two",
+            start_year=100,
+            end_year=200,
+        )
+        third_polity = Polity.objects.create(
+            name="multi_polity_three",
+            new_name="multi_polity_three",
+            long_name="Multi Polity Three",
+            start_year=100,
+            end_year=200,
+        )
+        first_event = Instability_event.objects.create(
+            polity=first_polity,
+            name="First Multi Polity Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        second_event = Instability_event.objects.create(
+            polity=second_polity,
+            name="Second Multi Polity Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        Instability_event.objects.create(
+            polity=third_polity,
+            name="Third Multi Polity Event",
+            source=Instability_event.Source.LLM,
+            year_from=154,
+            year_to=155,
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"polity": [str(first_polity.id), str(second_polity.id)]},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [first_event, second_event])
+        self.assertEqual(
+            response.context["selected_polity_ids"],
+            [str(first_polity.id), str(second_polity.id)],
+        )
+
+    def test_good_row_filter_excludes_only_disqualifying_checks(self):
+        polity = Polity.objects.create(
+            name="good_row_polity",
+            new_name="good_row_polity",
+            long_name="Good Row Polity",
+            start_year=100,
+            end_year=200,
+        )
+        bad_row_check = Check_choice.objects.create(
+            name="Bad Row",
+            check_description="Entire row is invalid.",
+            color="Red",
+        )
+        external_event_check = Check_choice.objects.create(
+            name="External Event",
+            check_description="External event should be excluded.",
+            color="Blue",
+        )
+        corrected_check = Check_choice.objects.create(
+            name="Intensity",
+            check_description="Intensity was corrected.",
+            color="Red",
+        )
+
+        clean_event = Instability_event.objects.create(
+            polity=polity,
+            name="Clean Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        corrected_event = Instability_event.objects.create(
+            polity=polity,
+            name="Corrected Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        corrected_event.ra_check.add(corrected_check)
+
+        excluded_bad_row_event = Instability_event.objects.create(
+            polity=polity,
+            name="Bad Row Event",
+            source=Instability_event.Source.LLM,
+            year_from=154,
+            year_to=155,
+        )
+        excluded_bad_row_event.ra_check.add(bad_row_check)
+
+        excluded_external_event = Instability_event.objects.create(
+            polity=polity,
+            name="External Event Row",
+            source=Instability_event.Source.LLM,
+            year_from=156,
+            year_to=157,
+        )
+        excluded_external_event.ra_check.add(external_event_check)
+
+        mixed_event = Instability_event.objects.create(
+            polity=polity,
+            name="Mixed Check Event",
+            source=Instability_event.Source.LLM,
+            year_from=158,
+            year_to=159,
+        )
+        mixed_event.ra_check.add(corrected_check, bad_row_check)
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"row_quality": GOOD_ROW_FILTER},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            list(response.context["object_list"]),
+            [clean_event, corrected_event],
+        )
+        self.assertEqual(response.context["selected_row_quality"], GOOD_ROW_FILTER)
 
     def test_polity_instability_queryset_filters_by_batch(self):
         polity = Polity.objects.create(
