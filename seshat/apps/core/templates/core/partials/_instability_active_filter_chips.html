@@ -1,0 +1,120 @@
+{% load custom_filters %}
+
+{% if selected_polity_ids or selected_source_values or selected_batch_values or selected_inst_type_ids or selected_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or name_query or selected_macro_events or selected_is_macro_event or selected_row_quality or request.GET.year_from_min or request.GET.year_to_max %}
+<div class="w-100 pt-2 mb-0">
+  <div class="py-2 px-2 rounded" style="background: rgba(255, 255, 255, 0.58); border: 1px solid rgba(120, 40, 35, 0.1);">
+    <strong class="pb-2">Active filters:</strong>
+    <ul class="list-inline mb-1">
+      {% if request.GET.year_from_min %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
+          <span class="fw-light">Year >= </span><span class="fw-bold">{{ request.GET.year_from_min }}</span>
+          <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+
+      {% if request.GET.year_to_max %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
+          <span class="fw-light">Year <= </span><span class="fw-bold">{{ request.GET.year_to_max }}</span>
+          <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+
+      {% for p in polities %}
+        {% if p.id|stringformat:"s" in selected_polity_ids %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-success-light text-dark">
+            <small class="fw-light">Polity:</small> <span class="fw-bold">{{ p.long_name }}</span> ({{ p.new_name }})
+            <a href="{% query_without request 'polity' p.id|stringformat:'s' %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% for selected_macro_event in selected_macro_events %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
+          <small class="fw-light">Umbrella Event:</small> <span class="fw-bold">{{ selected_macro_event }}</span>
+          <a href="{% query_without request 'macro_event' selected_macro_event %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endfor %}
+
+      {% if selected_is_macro_event %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
+          <small class="fw-light">Macroevent:</small> <span class="fw-bold">{{ selected_is_macro_event|title }}</span>
+          <a href="?{% query_transform request is_macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+
+      {% if selected_row_quality == "good" %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-colorful text-dark">
+          <small class="fw-light">Invalid rows:</small> <span class="fw-bold">Excluded</span>
+          <a href="?{% query_transform request row_quality=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+
+      {% if name_query %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
+          <small class="fw-light">Event Name:</small> <span class="fw-bold">{{ name_query }}</span>
+          <a href="?{% query_transform request searched_name=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endif %}
+
+      {% for val, label in INST_INTENSITY_CHOICES %}
+        {% if val in selected_inst_intensity_values %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-danger-light text-dark">
+            <small class="fw-light">Intensity:</small> <span class="fw-bold">{{ label }}</span>
+            <a href="{% query_without request 'inst_intensity' val %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% for val, label in INST_EXTENT_CHOICES %}
+        {% if val in selected_inst_extent_values %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
+            <small class="fw-light">Extent:</small> <span class="fw-bold">{{ label }}</span>
+            <a href="{% query_without request 'inst_extent' val %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% for type in instability_types %}
+        {% if type.id|stringformat:"s" in selected_inst_type_ids %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
+            <small class="fw-light">Type:</small> <span class="fw-bold">{{ type.name }}</span>
+            <a href="{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% for check in check_choices %}
+        {% if check.id|stringformat:"s" in selected_ra_check_ids %}
+          <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
+            <small class="fw-light">RA Check:</small> <span class="fw-bold">{{ check.name }}</span>
+            <a href="{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if batch_filter_forces_llm %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
+          <small class="fw-light">Source:</small> <span class="fw-bold">LLM only</span> <small>(batch filter)</small>
+          <a href="?{% query_transform request selected_batch=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% else %}
+        {% for source_value, source_label, source_count in source_filter_choices %}
+          {% if source_value in selected_source_values %}
+            <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
+              <small class="fw-light">Source:</small> <span class="fw-bold">{{ source_label }}</span>
+              <a href="{% query_without request 'source' source_value %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% for selected_batch in selected_batch_values %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
+          <small class="fw-light">LLM Batch:</small> <span class="fw-bold">{{ selected_batch }}</span>
+          <a href="{% query_without request 'selected_batch' selected_batch %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}

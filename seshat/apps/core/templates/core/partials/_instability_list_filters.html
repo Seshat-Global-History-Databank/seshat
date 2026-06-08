@@ -1,0 +1,446 @@
+{% load custom_filters %}
+
+<style>
+  .instability-filter-panel {
+    background:
+      linear-gradient(135deg, rgba(246, 127, 127, 0.08), rgba(242, 199, 119, 0.12), rgba(151, 230, 151, 0.1)),
+      #fffdf2;
+  }
+
+  .instability-filter-summary {
+    position: sticky;
+    top: 55px;
+    z-index: 920;
+    background: rgba(255, 253, 242, 0.95);
+    border: 1px solid rgba(120, 40, 35, 0.14);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(120, 40, 35, 0.08);
+    padding: 0.65rem;
+  }
+
+  .instability-filter-tabs {
+    border-bottom-color: rgba(120, 40, 35, 0.18);
+  }
+
+  .instability-filter-tabs .nav-link {
+    color: #5f6b76;
+    border: 1px solid transparent;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: 700;
+    padding: 0.45rem 0.8rem;
+  }
+
+  .instability-filter-tabs .nav-link.active {
+    color: #212529;
+    background: rgba(255, 255, 255, 0.86);
+    border-color: rgba(120, 40, 35, 0.18) rgba(120, 40, 35, 0.18) rgba(255, 255, 255, 0.86);
+  }
+
+  .instability-filter-card {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(120, 40, 35, 0.14);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+    padding: 0.75rem;
+  }
+
+  .instability-filter-card-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(120, 40, 35, 0.12);
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .instability-filter-help {
+    color: #6c757d;
+    font-size: 0.76rem;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+  }
+
+  .instability-quick-row {
+    background: rgba(255, 255, 255, 0.42);
+    border-radius: 10px;
+    padding: 0.35rem;
+  }
+
+  .instability-summary-search {
+    flex: 1 1 18rem;
+    min-width: min(100%, 18rem);
+  }
+
+  .instability-summary-batch {
+    flex: 1 1 18rem;
+    min-width: min(100%, 18rem);
+  }
+
+  .instability-summary-actions {
+    flex: 0 0 auto;
+  }
+
+  .instability-filter-panel .select2-container {
+    width: 100% !important;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple {
+    min-height: 42px;
+    max-height: 118px;
+    overflow-y: auto;
+    padding: 4px 6px;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin: 0;
+    padding: 2px 1.75rem 2px 8px;
+    border-color: rgba(25, 135, 84, 0.75);
+    background: rgba(151, 230, 151, 0.45);
+    color: #123f18;
+    white-space: normal;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    left: auto;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    color: #0f5132;
+    float: none;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(-50%);
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    background: rgba(15, 81, 50, 0.14);
+    color: #842029;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__clear {
+    display: none !important;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-search--inline .select2-search__field {
+    min-width: 16rem;
+    margin-top: 3px;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #6c757d;
+    margin-top: 3px;
+  }
+</style>
+
+<div class="border border-secondary rounded px-3 pt-3 mb-2 instability-filter-panel">
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2 pb-1">
+            <div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <strong class="text-dark">Filter Instability Events</strong>
+                    <span class="badge rounded-pill bg-colorful border text-dark">
+                        {% if record_count is not None %}
+                            {{ record_count }} matching
+                        {% else %}
+                            {{ object_list|length }} matching
+                        {% endif %}
+                    </span>
+                    {% if active_filter_count %}
+                        <span class="badge rounded-pill bg-warning-light text-dark">{{ active_filter_count }} filter{{ active_filter_count|pluralize }} active</span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-absent-light text-secondary">No filters active</span>
+                    {% endif %}
+                </div>
+                <div class="small text-secondary">
+                    Build a research set by combining scope, source, quality, classification, and time filters.
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="instability-filter-summary">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-2">
+                    <div class="d-flex flex-wrap align-items-center gap-2 instability-quick-row">
+                        <span class="small fw-semibold text-secondary me-1">Common views</span>
+                        <a href="?{% query_transform request row_quality='good' %}" class="btn btn-sm {% if selected_row_quality == 'good' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                            Exclude invalid rows
+                        </a>
+                        {% if selected_row_quality == 'good' %}
+                            <a href="?{% query_transform request row_quality=None %}" class="btn btn-sm btn-outline-secondary">Include invalid rows</a>
+                        {% endif %}
+                        <a href="?{% query_transform request source='llm' %}" class="btn btn-sm {% if selected_source == 'llm' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                            Only LLM
+                        </a>
+                        <a href="?{% query_transform request source='manual' selected_batch=None %}" class="btn btn-sm {% if selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                            Only manual
+                        </a>
+                        {% if selected_source_values %}
+                            <a href="?{% query_transform request source=None selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All sources</a>
+                        {% endif %}
+                        {% if selected_batch_values %}
+                            <a href="?{% query_transform request selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All batches</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="instability-summary-search">
+                        <label for="searched_name" class="small fw-semibold text-secondary mb-1">Search events</label>
+                        <input type="text" name="searched_name" id="searched_name" class="form-control form-control-sm" value="{{ name_query }}" placeholder="Search event names">
+                    </div>
+
+                    <div class="instability-summary-batch">
+                        <label for="selected_batch" class="small fw-semibold text-secondary mb-1">LLM batches</label>
+                        <select name="selected_batch" id="selected_batch" class="form-select js-instability-multiple" multiple data-placeholder="All LLM batches">
+                          {% for batch, count in batch_filter_choices %}
+                            <option value="{{ batch }}" {% if batch in selected_batch_values %}selected{% endif %}>
+                              {{ batch }} - {{ count }}
+                            </option>
+                          {% endfor %}
+                        </select>
+                        <div class="instability-filter-help mb-0">Batch filters always limit results to LLM rows.</div>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2 instability-summary-actions">
+                        <button type="submit" class="btn btn-sm fw-bold bg-colorful-light">
+                            <i class="fa-solid fa-filter"></i> Apply
+                        </button>
+                        <a href="?" class="btn btn-outline-danger btn-sm fw-semibold text-nowrap">Clear All</a>
+                    </div>
+                </div>
+
+                {% include "core/partials/_instability_active_filter_chips.html" %}
+            </div>
+        </div>
+
+        <div class="col-12 pt-2">
+            <ul class="nav nav-tabs instability-filter-tabs" id="instabilityFilterTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="instability-scope-tab" data-bs-toggle="tab" data-bs-target="#instability-scope-pane" type="button" role="tab" aria-controls="instability-scope-pane" aria-selected="true">
+                        Scope
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="instability-source-tab" data-bs-toggle="tab" data-bs-target="#instability-source-pane" type="button" role="tab" aria-controls="instability-source-pane" aria-selected="false">
+                        Source & Review
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="instability-classification-tab" data-bs-toggle="tab" data-bs-target="#instability-classification-pane" type="button" role="tab" aria-controls="instability-classification-pane" aria-selected="false">
+                        Classification
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="instability-time-tab" data-bs-toggle="tab" data-bs-target="#instability-time-pane" type="button" role="tab" aria-controls="instability-time-pane" aria-selected="false">
+                        Time
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="instabilityFilterTabContent">
+                <div class="tab-pane fade show active" id="instability-scope-pane" role="tabpanel" aria-labelledby="instability-scope-tab" tabindex="0">
+                    <div class="instability-filter-card">
+                        <div class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Scope</span>
+                            <span class="small text-secondary">Choose where and which umbrella event to inspect.</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-6 pb-2">
+                                <label for="polity" class="text-secondary">Polities <small class="text-secondary">(matching: {{ polities|length }})</small></label>
+                                <select name="polity" id="polity" class="form-select js-instability-multiple" multiple data-placeholder="Search polities, then choose one or more">
+                                  {% for p in polities %}
+                                    <option value="{{ p.id }}" {% if p.id|stringformat:"s" in selected_polity_ids %}selected{% endif %}>
+                                        {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}] - {{ p.event_count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Type to search polities. Use the x inside a green chip to remove only that polity.</div>
+                            </div>
+
+                            <div class="col-md-6 pb-2">
+                                <label for="macro_event" class="text-secondary">Umbrella Events</label>
+                                <select name="macro_event" id="macro_event" class="form-select js-instability-multiple" multiple data-placeholder="Search umbrella events">
+                                  {% for event, count in macro_events_with_counts %}
+                                    <option value="{{ event }}" {% if event in selected_macro_events %}selected{% endif %}>
+                                       {{ event }} - {{ count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Use this for clusters of related instability events.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="instability-source-pane" role="tabpanel" aria-labelledby="instability-source-tab" tabindex="0">
+                    <div class="instability-filter-card">
+                        <div class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Source & Review State</span>
+                            <span class="small text-secondary">Control data origin and exclude invalid review outcomes.</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-4 pb-2">
+                                <label for="source" class="text-secondary">Sources</label>
+                                <select name="source" id="source" class="form-select js-instability-multiple" multiple data-placeholder="All sources">
+                                  {% for value, label, count in source_filter_choices %}
+                                    <option value="{{ value }}" {% if value in selected_source_values %}selected{% endif %}>{{ label }} - {{ count }}</option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Select LLM, manual, or both.</div>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="row_quality" class="text-secondary">Invalid rows</label>
+                                <select name="row_quality" id="row_quality" class="form-select js-example-basic-single">
+                                  <option value="">Include all rows</option>
+                                  <option value="good" {% if selected_row_quality == "good" %}selected{% endif %}>Exclude invalid rows</option>
+                                </select>
+                                <div class="instability-filter-help">Invalid means Bad Row, Duplicate, Not Instability Event, or External Event.</div>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="is_macro_event" class="text-secondary">Macroevent Record</label>
+                                <select name="is_macro_event" id="is_macro_event" class="form-select js-example-basic-single">
+                                  <option value="">All</option>
+                                  <option value="true" {% if selected_is_macro_event == "true" %}selected{% endif %}>True</option>
+                                  <option value="false" {% if selected_is_macro_event == "false" %}selected{% endif %}>False</option>
+                                </select>
+                                <div class="instability-filter-help">Limit to rows marked as macroevent records, or exclude them.</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="instability-classification-pane" role="tabpanel" aria-labelledby="instability-classification-tab" tabindex="0">
+                    <div class="instability-filter-card">
+                        <div class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Classification</span>
+                            <span class="small text-secondary">Narrow by event type, review labels, intensity, or extent.</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-4 pb-2">
+                                <label for="inst_type_select" class="text-secondary d-block">Event Types</label>
+                                <select id="inst_type_select" name="inst_type" class="form-select js-instability-multiple" multiple data-placeholder="Search event types">
+                                  {% for type in instability_types %}
+                                    <option value="{{ type.id }}" {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
+                                      {{ type.name }} - {{ type.event_count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Select one or more instability categories.</div>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="ra_check_select" class="text-secondary d-block">Researcher Checks</label>
+                                <select id="ra_check_select" name="ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Search researcher checks">
+                                  {% for check in check_choices %}
+                                    <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
+                                      {{ check.name }} - {{ check.event_count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Correction labels stay searchable; invalid labels can be excluded above.</div>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="inst_intensity_select" class="text-secondary">Intensity</label>
+                                <select id="inst_intensity_select" name="inst_intensity" class="form-select js-instability-multiple" multiple data-placeholder="All intensities">
+                                  {% for val, label, count in inst_intensity_filter_choices %}
+                                    <option value="{{ val }}" {% if val in selected_inst_intensity_values %}selected{% endif %}>
+                                      {{ label }} - {{ count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="inst_extent_select" class="text-secondary">Extent</label>
+                                <select id="inst_extent_select" name="inst_extent" class="form-select js-instability-multiple" multiple data-placeholder="All extents">
+                                  {% for val, label, count in inst_extent_filter_choices %}
+                                    <option value="{{ val }}" {% if val in selected_inst_extent_values %}selected{% endif %}>
+                                      {{ label }} - {{ count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="instability-time-pane" role="tabpanel" aria-labelledby="instability-time-tab" tabindex="0">
+                    <div class="instability-filter-card">
+                        <div class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Time</span>
+                            <span class="small text-secondary">Constrain the effective year range.</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-2 pb-2">
+                                <label class="text-secondary" for="year_from_min">Start Year</label>
+                                <input type="number" name="year_from_min" id="year_from_min" class="form-control" value="{{ request.GET.year_from_min }}" placeholder="Min">
+                            </div>
+
+                            <div class="col-md-2 pb-2">
+                                <label class="text-secondary" for="year_to_max">End Year</label>
+                                <input type="number" name="year_to_max" id="year_to_max" class="form-control" value="{{ request.GET.year_to_max }}" placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!window.jQuery || !jQuery.fn.select2) {
+      return;
+    }
+
+    const $instabilitySelects = jQuery(".js-instability-multiple");
+
+    $instabilitySelects.each(function () {
+      const $select = jQuery(this);
+      $select.select2({
+        allowClear: false,
+        closeOnSelect: false,
+        placeholder: $select.data("placeholder") || "Search and select",
+        width: "100%"
+      });
+    });
+
+    function cleanupInstabilityChoices() {
+      jQuery(".instability-filter-panel .select2-selection__choice").removeAttr("title");
+      jQuery(".instability-filter-panel .select2-selection__clear").remove();
+    }
+
+    $instabilitySelects.on("change select2:select select2:unselect select2:open", cleanupInstabilityChoices);
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (tabButton) {
+      tabButton.addEventListener("shown.bs.tab", cleanupInstabilityChoices);
+    });
+    cleanupInstabilityChoices();
+  });
+</script>

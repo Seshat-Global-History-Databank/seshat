@@ -334,157 +334,34 @@
     {% block secondary_description %}
     {% endblock secondary_description %}
 
+{% if var_name_display == 'Instability Event' %}
+    {% include "core/partials/_instability_list_filters.html" %}
+{% else %}
 <div class="border border-secondary rounded px-3 pt-3 mb-2" style="background: #fffdf2;">
     <form method="get" class="row g-2 mb-3">
         <div class="col-12 d-flex flex-wrap justify-content-between align-items-start gap-2 pb-1">
             <div>
-                <strong class="text-dark">
-                    {% if var_name_display == 'Instability Event' %}
-                        Filter Instability Events
-                    {% else %}
-                        Filter Records
-                    {% endif %}
-                </strong>
+                <strong class="text-dark">Filter Records</strong>
                 <div class="small text-secondary">
-                    {% if var_name_display == 'Instability Event' %}
-                        Combine multiple polities, categories, and review signals in one pass.
-                    {% else %}
-                        Refine the list with focused filters and year bounds.
-                    {% endif %}
+                    Refine the list with focused filters and year bounds.
                 </div>
             </div>
             <div class="small text-secondary">
-                {% if var_name_display == 'Instability Event' %}
-                    Select multiple values where needed, then click <span class="fw-semibold text-dark">Apply Filters</span>.
-                {% else %}
-                    Adjust the filters, then click <span class="fw-semibold text-dark">Apply Filters</span>.
-                {% endif %}
+                Adjust the filters, then click <span class="fw-semibold text-dark">Apply Filters</span>.
             </div>
         </div>
 
         <div class="col-md-6 pb-2">
-            {% if var_name_display == 'Instability Event' %}
-                <label for="polity" class="text-secondary">Polities <small class="text-secondary">(matching: {{ polities|length }})</small></label>
-                <select name="polity" id="polity" class="form-select js-example-basic-multiple" multiple>
-                  {% for p in polities %}
-                    <option value="{{ p.id }}" {% if p.id|stringformat:"s" in selected_polity_ids %}selected{% endif %}>
-                        {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}] · {{ p.event_count }}
-                    </option>
-                  {% endfor %}
-                </select>
-            {% else %}
-                <label for="polity" class="text-secondary">Polity <small class="text-secondary">(total: {{ polities|length }})</small></label>
-                <select name="polity" id="polity" class="form-select js-example-basic-single">
-                  <option value="">All</option>
-                  {% for p in polities %}
-                    <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %}>
-                        {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}]
-                    </option>
-                  {% endfor %}
-                </select>
-            {% endif %}
-        </div>
-
-        {% if var_name_display == 'Instability Event' %}
-        <div class="col-md-6 pb-2">
-            <label for="macro_event" class="text-secondary">Umbrella Events</label>
-            <select name="macro_event" id="macro_event" class="form-select js-example-basic-multiple" multiple>
-              {% for event, count in macro_events_with_counts %}
-                <option value="{{ event }}" {% if event in selected_macro_events %}selected{% endif %}>
-                   {{ event }} · {{ count }}
-                </option>
-              {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-2 pb-2">
-            <label for="source" class="text-secondary">Source</label>
-            <select name="source" id="source" class="form-select js-example-basic-single">
+            <label for="polity" class="text-secondary">Polity <small class="text-secondary">(total: {{ polities|length }})</small></label>
+            <select name="polity" id="polity" class="form-select js-example-basic-single">
               <option value="">All</option>
-              <option value="llm" {% if selected_source == "llm" %}selected{% endif %}>LLM</option>
-              <option value="manual" {% if selected_source == "manual" %}selected{% endif %}>Manual</option>
-            </select>
-        </div>
-
-        <div class="col-md-2 pb-2">
-            <label for="row_quality" class="text-secondary">Row Quality</label>
-            <select name="row_quality" id="row_quality" class="form-select js-example-basic-single">
-              <option value="">All rows</option>
-              <option value="good" {% if selected_row_quality == "good" %}selected{% endif %}>Good rows only</option>
-            </select>
-        </div>
-
-        <div class="col-md-2 pb-2">
-            <label for="is_macro_event" class="text-secondary">Macroevent Record</label>
-            <select name="is_macro_event" id="is_macro_event" class="form-select js-example-basic-single">
-              <option value="">All</option>
-              <option value="true" {% if selected_is_macro_event == "true" %}selected{% endif %}>True</option>
-              <option value="false" {% if selected_is_macro_event == "false" %}selected{% endif %}>False</option>
-            </select>
-        </div>
-
-        {% if show_llm_batch_filter %}
-        <div class="col-md-2 pb-2">
-            <label for="selected_batch" class="text-secondary">LLM Batch</label>
-            <select name="selected_batch" id="selected_batch" class="form-select js-example-basic-single">
-              <option value="">All</option>
-              <option value="Batch 1" {% if selected_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
-              <option value="Batch 2" {% if selected_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
-              <option value="Batch 3" {% if selected_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
-              <option value="Batch 4" {% if selected_batch == "Batch 4" %}selected{% endif %}>Batch 4</option>
-            </select>
-        </div>
-        {% endif %}
-
-        <div class="col-md-4 pb-2">
-            <label for="inst_type_select" class="text-secondary d-block">Event Types</label>
-            <select id="inst_type_select" name="inst_type" class="form-select js-example-basic-multiple" multiple>
-              {% for type in instability_types %}
-                <option value="{{ type.id }}" {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
-                  {{ type.name }} · {{ type.event_count }}
+              {% for p in polities %}
+                <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %}>
+                    {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}]
                 </option>
               {% endfor %}
             </select>
         </div>
-
-        <div class="col-md-4 pb-2">
-            <label for="ra_check_select" class="text-secondary d-block">Researcher Checks</label>
-            <select id="ra_check_select" name="ra_check" class="form-select js-example-basic-multiple" multiple>
-              {% for check in check_choices %}
-                <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
-                  {{ check.name }} · {{ check.event_count }}
-                </option>
-              {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4 pb-2">
-            <label for="inst_intensity_select" class="text-secondary">Intensity</label>
-            <select id="inst_intensity_select" name="inst_intensity" class="form-select js-example-basic-multiple" multiple>
-              {% for val, label, count in inst_intensity_filter_choices %}
-                <option value="{{ val }}" {% if val in selected_inst_intensity_values %}selected{% endif %}>
-                  {{ label }} · {{ count }}
-                </option>
-              {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4 pb-2">
-            <label for="inst_extent_select" class="text-secondary">Extent</label>
-            <select id="inst_extent_select" name="inst_extent" class="form-select js-example-basic-multiple" multiple>
-              {% for val, label, count in inst_extent_filter_choices %}
-                <option value="{{ val }}" {% if val in selected_inst_extent_values %}selected{% endif %}>
-                  {{ label }} · {{ count }}
-                </option>
-              {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4 pb-2">
-            <label for="searched_name" class="text-secondary">Event Name</label>
-            <input type="text" name="searched_name" id="searched_name" class="form-control" value="{{ name_query }}" placeholder="Search the coded event name">
-        </div>
-        {% endif %}
 
         <div class="col-md-2 pb-2">
             <label class="text-secondary" for="year_from_min">Start Year</label>
@@ -503,14 +380,8 @@
             <a href="?" class="btn btn-outline-danger fw-semibold text-nowrap">Clear All</a>
         </div>
 
-        {% if var_name_display == 'Instability Event' %}
-        <div class="col-12 small text-secondary pt-1">
-            <span class="fw-semibold text-dark">Good rows only</span> currently hides rows tagged as <span class="text-dark">Bad Row</span>, <span class="text-dark">Duplicate</span>, <span class="text-dark">Not Instability Event</span>, or <span class="text-dark">External Event</span>.
-        </div>
-        {% endif %}
-
         <div class="col-12 align-self-end pb-0 mb-0">
-          {% if selected_polity_ids or request.GET.polity or selected_source or selected_batch or selected_inst_type_ids or selected_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or name_query or selected_macro_events or selected_is_macro_event or selected_row_quality or request.GET.year_from_min or request.GET.year_to_max %}
+          {% if request.GET.polity or request.GET.year_from_min or request.GET.year_to_max %}
 
           <div class="py-1 px-0 d-inline-block">
             <strong class="pb-2">Filters applied:</strong>
@@ -529,16 +400,7 @@
                 </li>
               {% endif %}
 
-              {% if var_name_display == 'Instability Event' %}
-                {% for p in polities %}
-                  {% if p.id|stringformat:"s" in selected_polity_ids %}
-                    <li class="list-inline-item px-2 mb-1 rounded bg-success-light text-dark">
-                      <small class="fw-light">Polity:</small> <span class="fw-bold">{{ p.long_name }}</span> ({{ p.new_name }})
-                      <a href="{% query_without request 'polity' p.id|stringformat:'s' %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              {% elif request.GET.polity %}
+              {% if request.GET.polity %}
                 {% with request.GET.polity as selected_polity_id %}
                   {% for p in polities %}
                     {% if p.id|stringformat:"s" == selected_polity_id %}
@@ -551,83 +413,6 @@
                 {% endwith %}
               {% endif %}
 
-              {% for selected_macro_event in selected_macro_events %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
-                  <small class="fw-light">Umbrella Event:</small> <span class="fw-bold">{{ selected_macro_event }}</span>
-                  <a href="{% query_without request 'macro_event' selected_macro_event %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endfor %}
-
-              {% if selected_is_macro_event %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
-                  <small class="fw-light">Macroevent:</small> <span class="fw-bold">{{ selected_is_macro_event|title }}</span>
-                  <a href="?{% query_transform request is_macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-
-              {% if selected_row_quality == "good" %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-colorful text-dark">
-                  <small class="fw-light">Row Quality:</small> <span class="fw-bold">Good rows only</span>
-                  <a href="?{% query_transform request row_quality=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-
-              {% if name_query %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
-                  <small class="fw-light">Event Name:</small> <span class="fw-bold">{{ name_query }}</span>
-                  <a href="?{% query_transform request searched_name=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-
-              {% for val, label in INST_INTENSITY_CHOICES %}
-                {% if val in selected_inst_intensity_values %}
-                  <li class="list-inline-item px-2 mb-1 rounded bg-danger-light text-dark">
-                    <small class="fw-light">Intensity:</small> <span class="fw-bold">{{ label }}</span>
-                    <a href="{% query_without request 'inst_intensity' val %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                  </li>
-                {% endif %}
-              {% endfor %}
-
-              {% for val, label in INST_EXTENT_CHOICES %}
-                {% if val in selected_inst_extent_values %}
-                  <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
-                    <small class="fw-light">Extent:</small> <span class="fw-bold">{{ label }}</span>
-                    <a href="{% query_without request 'inst_extent' val %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                  </li>
-                {% endif %}
-              {% endfor %}
-
-              {% for type in instability_types %}
-                {% if type.id|stringformat:"s" in selected_inst_type_ids %}
-                  <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
-                    <small class="fw-light">Type:</small> <span class="fw-bold">{{ type.name }}</span>
-                    <a href="{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                  </li>
-                {% endif %}
-              {% endfor %}
-
-              {% for check in check_choices %}
-                {% if check.id|stringformat:"s" in selected_ra_check_ids %}
-                  <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
-                    <small class="fw-light">RA Check:</small> <span class="fw-bold">{{ check.name }}</span>
-                    <a href="{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                  </li>
-                {% endif %}
-              {% endfor %}
-
-              {% if selected_source %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
-                  <small class="fw-light">Source:</small> <span class="fw-bold">{{ selected_source|title }}</span>
-                  <a href="?{% query_transform request source=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-
-              {% if selected_batch and show_llm_batch_filter %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
-                  <small class="fw-light">LLM Batch:</small> <span class="fw-bold">{{ selected_batch }}</span>
-                  <a href="?{% query_transform request selected_batch=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
             </ul>
           </div>
           {% endif %}
@@ -636,6 +421,7 @@
 
       
 </div>
+{% endif %}
 
     <div class="table-container pb-3">
               

@@ -242,7 +242,44 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["object_list"]), [manual_event])
 
-    def test_batch_filter_is_ignored_for_manual_source(self):
+    def test_instability_list_can_filter_multiple_sources(self):
+        polity = Polity.objects.create(
+            name="multi_source_filter_polity",
+            new_name="multi_source_filter_polity",
+            long_name="Multi Source Filter Polity",
+            start_year=100,
+            end_year=200,
+        )
+        manual_event = Instability_event.objects.create(
+            polity=polity,
+            name="Manual Multi Source Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=150,
+            year_to=151,
+        )
+        llm_event = Instability_event.objects.create(
+            polity=polity,
+            name="LLM Multi Source Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"source": [Instability_event.Source.MANUAL, Instability_event.Source.LLM]},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [manual_event, llm_event])
+        self.assertEqual(
+            response.context["selected_source_values"],
+            [Instability_event.Source.MANUAL, Instability_event.Source.LLM],
+        )
+        self.assertIsNone(response.context["selected_source"])
+        self.assertEqual(response.context["active_filter_count"], 2)
+
+    def test_batch_filter_forces_llm_rows_even_with_manual_source(self):
         polity = Polity.objects.create(
             name="manual_batch_polity",
             new_name="manual_batch_polity",
@@ -257,6 +294,16 @@ class InstabilityCreateViewTests(TestCase):
             year_from=150,
             year_to=151,
         )
+        llm_event = Instability_event.objects.create(
+            polity=polity,
+            name="LLM Batch Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        Instability_event.objects.filter(pk=llm_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 3, 1))
+        )
 
         response = self.client.get(
             reverse("instability_events_all"),
@@ -264,7 +311,66 @@ class InstabilityCreateViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(list(response.context["object_list"]), [manual_event])
+        self.assertEqual(list(response.context["object_list"]), [llm_event])
+        self.assertEqual(response.context["selected_source_values"], [Instability_event.Source.LLM])
+        self.assertEqual(response.context["selected_batch_values"], ["Batch 1"])
+        self.assertTrue(response.context["batch_filter_forces_llm"])
+        self.assertContains(response, "LLM only")
+        self.assertNotContains(response, manual_event.name)
+
+    def test_instability_list_can_filter_multiple_batches(self):
+        polity = Polity.objects.create(
+            name="multi_batch_polity",
+            new_name="multi_batch_polity",
+            long_name="Multi Batch Polity",
+            start_year=100,
+            end_year=200,
+        )
+        batch_one_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch One List Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        batch_four_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch Four List Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        batch_two_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch Two List Event",
+            source=Instability_event.Source.LLM,
+            year_from=154,
+            year_to=155,
+        )
+        Instability_event.objects.filter(pk=batch_one_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 3, 1))
+        )
+        Instability_event.objects.filter(pk=batch_four_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2026, 3, 2))
+        )
+        Instability_event.objects.filter(pk=batch_two_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 4, 1))
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"selected_batch": ["Batch 1", "Batch 4"]},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [batch_one_event, batch_four_event])
+        self.assertEqual(response.context["selected_batch_values"], ["Batch 1", "Batch 4"])
+        self.assertEqual(response.context["active_filter_count"], 3)
+        self.assertContains(response, "3 filters active")
+        self.assertContains(response, "LLM batches")
+        self.assertContains(response, "Search events")
+        self.assertContains(response, "Search event names")
+        self.assertNotContains(response, batch_two_event.name)
 
     def test_instability_list_can_filter_multiple_polities(self):
         first_polity = Polity.objects.create(
@@ -321,6 +427,8 @@ class InstabilityCreateViewTests(TestCase):
             response.context["selected_polity_ids"],
             [str(first_polity.id), str(second_polity.id)],
         )
+        self.assertEqual(response.context["active_filter_count"], 2)
+        self.assertContains(response, "2 filters active")
 
     def test_good_row_filter_excludes_only_disqualifying_checks(self):
         polity = Polity.objects.create(
@@ -400,6 +508,11 @@ class InstabilityCreateViewTests(TestCase):
             [clean_event, corrected_event],
         )
         self.assertEqual(response.context["selected_row_quality"], GOOD_ROW_FILTER)
+        self.assertEqual(response.context["active_filter_count"], 1)
+        self.assertContains(response, "1 filter active")
+        self.assertContains(response, "Exclude invalid rows")
+        self.assertContains(response, "Invalid rows:")
+        self.assertNotContains(response, "Good rows only")
 
     def test_polity_instability_queryset_filters_by_batch(self):
         polity = Polity.objects.create(
