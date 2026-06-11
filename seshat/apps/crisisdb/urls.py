@@ -34,6 +34,11 @@ urlpatterns = [
     path('playgrounddownload/', views.playgrounddownload,
          name="playgrounddownload"),
      path("analytics-instability/", views.instability_analytics, name="instability-analytics"),
+     path(
+          "instability_event/filter_tokens/",
+          views.instability_filter_tokens,
+          name="instability_event-filter-tokens",
+     ),
 
      #path('fpl_all/', views.fpl_all,name="fpl_all"), 
 ]
@@ -293,7 +298,6 @@ urlpatterns += [
     path('external_conflictmetadownload/', views.external_conflict_meta_download,
          name="external_conflict-metadownload"),
 ]
-        
 
 urlpatterns += [
     path('internal_conflict/create/', views.Internal_conflictCreate.as_view(),
@@ -312,7 +316,6 @@ urlpatterns += [
     path('internal_conflictmetadownload/', views.internal_conflict_meta_download,
          name="internal_conflict-metadownload"),
 ]
-        
 
 urlpatterns += [
     path('external_conflict_side/create/', views.External_conflict_sideCreate.as_view(),
@@ -331,7 +334,6 @@ urlpatterns += [
     path('external_conflict_sidemetadownload/', views.external_conflict_side_meta_download,
          name="external_conflict_side-metadownload"),
 ]
-        
 
 urlpatterns += [
     path('agricultural_population/create/', views.Agricultural_populationCreate.as_view(),
@@ -654,4 +656,3 @@ urlpatterns += [
     path('disease_outbreakmetadownload/', views.disease_outbreak_meta_download,
          name="disease_outbreak-metadownload"),
 ]
-        

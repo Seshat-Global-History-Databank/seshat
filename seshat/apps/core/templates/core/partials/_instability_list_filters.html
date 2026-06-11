@@ -2,47 +2,184 @@
 
 <style>
   .instability-filter-panel {
+    --instability-ink: #2d2520;
+    --instability-muted: #70655f;
+    --instability-line: rgba(120, 40, 35, 0.14);
+    --instability-soft: rgba(120, 40, 35, 0.06);
+    --instability-teal: #0f766e;
+    --instability-teal-soft: rgba(15, 118, 110, 0.1);
+    --instability-rose: #782823;
     background:
-      linear-gradient(135deg, rgba(246, 127, 127, 0.08), rgba(242, 199, 119, 0.12), rgba(151, 230, 151, 0.1)),
+      radial-gradient(circle at 12% 0%, rgba(244, 183, 112, 0.22), transparent 26rem),
+      radial-gradient(circle at 88% 6%, rgba(116, 199, 179, 0.18), transparent 24rem),
+      linear-gradient(180deg, #fffdf7 0%, #fff8ed 100%),
       #fffdf2;
+    border-color: rgba(87, 82, 74, 0.55) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 40px rgba(89, 54, 32, 0.08);
+    overflow: visible;
+    position: relative;
+  }
+
+  .instability-filter-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .instability-filter-heading strong {
+    color: var(--instability-ink);
+    font-size: 1.04rem;
+  }
+
+  .instability-filter-subtitle {
+    color: var(--instability-muted);
+    font-size: 0.9rem;
+    margin-top: 0.15rem;
   }
 
   .instability-filter-summary {
     position: sticky;
     top: 55px;
     z-index: 920;
-    background: rgba(255, 253, 242, 0.95);
-    border: 1px solid rgba(120, 40, 35, 0.14);
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(120, 40, 35, 0.08);
+    background: rgba(255, 253, 248, 0.94);
+    border: 1px solid var(--instability-line);
+    border-radius: 18px;
+    box-shadow: 0 18px 34px rgba(89, 54, 32, 0.11);
+    padding: 0.9rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .instability-summary-main {
+    display: grid;
+    grid-template-columns: minmax(18rem, 1fr) auto;
+    gap: 0.85rem;
+    align-items: end;
+  }
+
+  .instability-global-filter {
+    min-width: 0;
+  }
+
+  .instability-global-filter label,
+  .instability-quick-row-label {
+    display: block;
+    color: var(--instability-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+  }
+
+  .instability-summary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    justify-content: flex-end;
+  }
+
+  .instability-summary-actions .btn,
+  .instability-quick-row .btn {
+    border-radius: 999px;
+  }
+
+  .instability-summary-actions .btn[type="submit"] {
+    border: 1px solid rgba(15, 118, 110, 0.3);
+    box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
+    color: #5a211d;
+  }
+
+  .instability-quick-row {
+    align-items: center;
+    border-top: 1px dashed var(--instability-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.8rem;
+    padding-top: 0.75rem;
+  }
+
+  .instability-active-filters {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid var(--instability-line);
+    border-radius: 14px;
+    margin-top: 0.75rem;
     padding: 0.65rem;
   }
 
+  .instability-active-filter-label {
+    color: var(--instability-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+  }
+
+  .instability-active-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .instability-active-filter-list .list-inline-item {
+    align-items: center;
+    background: rgba(255, 253, 250, 0.9) !important;
+    border: 1px solid rgba(120, 40, 35, 0.12);
+    border-radius: 999px !important;
+    box-shadow: 0 5px 14px rgba(89, 54, 32, 0.06);
+    display: inline-flex;
+    gap: 0.2rem;
+    margin: 0 !important;
+    padding: 0.34rem 0.5rem 0.34rem 0.62rem !important;
+  }
+
+  .instability-active-filter-list .list-inline-item a {
+    align-items: center;
+    border-radius: 999px;
+    color: var(--instability-rose) !important;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    margin-left: 0.2rem !important;
+    min-height: 1.1rem;
+    min-width: 1.1rem;
+    text-decoration: none;
+  }
+
+  .instability-active-filter-list .list-inline-item a:hover {
+    background: rgba(120, 40, 35, 0.09);
+  }
+
   .instability-filter-tabs {
-    border-bottom-color: rgba(120, 40, 35, 0.18);
+    border-bottom: 0;
+    gap: 0.35rem;
   }
 
   .instability-filter-tabs .nav-link {
-    color: #5f6b76;
+    color: var(--instability-muted);
+    background: rgba(255, 255, 255, 0.45);
     border: 1px solid transparent;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: 999px;
     font-weight: 700;
-    padding: 0.45rem 0.8rem;
+    padding: 0.5rem 0.9rem;
   }
 
   .instability-filter-tabs .nav-link.active {
-    color: #212529;
-    background: rgba(255, 255, 255, 0.86);
-    border-color: rgba(120, 40, 35, 0.18) rgba(120, 40, 35, 0.18) rgba(255, 255, 255, 0.86);
+    color: var(--instability-ink);
+    background: #fffdfa;
+    border-color: var(--instability-line);
+    box-shadow: 0 8px 20px rgba(89, 54, 32, 0.08);
   }
 
   .instability-filter-card {
-    background: rgba(255, 255, 255, 0.72);
-    border: 1px solid rgba(120, 40, 35, 0.14);
-    border-top: 0;
-    border-radius: 0 0 12px 12px;
-    padding: 0.75rem;
+    background: rgba(255, 253, 250, 0.82);
+    border: 1px solid var(--instability-line);
+    border-radius: 16px;
+    margin-top: 0.55rem;
+    padding: 0.85rem;
   }
 
   .instability-filter-card-title {
@@ -51,7 +188,7 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 0.5rem;
-    border-bottom: 1px solid rgba(120, 40, 35, 0.12);
+    border-bottom: 1px solid rgba(120, 40, 35, 0.1);
     padding-bottom: 0.35rem;
     margin-bottom: 0.6rem;
   }
@@ -63,26 +200,6 @@
     margin-top: 0.25rem;
   }
 
-  .instability-quick-row {
-    background: rgba(255, 255, 255, 0.42);
-    border-radius: 10px;
-    padding: 0.35rem;
-  }
-
-  .instability-summary-search {
-    flex: 1 1 18rem;
-    min-width: min(100%, 18rem);
-  }
-
-  .instability-summary-batch {
-    flex: 1 1 18rem;
-    min-width: min(100%, 18rem);
-  }
-
-  .instability-summary-actions {
-    flex: 0 0 auto;
-  }
-
   .instability-filter-panel .select2-container {
     width: 100% !important;
   }
@@ -92,6 +209,18 @@
     max-height: 118px;
     overflow-y: auto;
     padding: 4px 6px;
+    border-color: rgba(120, 40, 35, 0.16);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .instability-global-filter .select2-container--default .select2-selection--multiple {
+    min-height: 58px;
+    max-height: 140px;
+    padding: 8px 10px;
+    border: 1px solid rgba(120, 40, 35, 0.2);
+    border-radius: 16px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered {
@@ -106,10 +235,11 @@
     display: inline-block;
     max-width: 100%;
     margin: 0;
-    padding: 2px 1.75rem 2px 8px;
-    border-color: rgba(25, 135, 84, 0.75);
-    background: rgba(151, 230, 151, 0.45);
-    color: #123f18;
+    padding: 0.28rem 1.75rem 0.28rem 0.62rem;
+    border-color: rgba(15, 118, 110, 0.26);
+    border-radius: 999px;
+    background: var(--instability-teal-soft);
+    color: #10433e;
     white-space: normal;
   }
 
@@ -128,7 +258,7 @@
     padding: 0;
     border: 0;
     border-radius: 999px;
-    color: #0f5132;
+    color: #0f5e56;
     float: none;
     font-weight: 700;
     line-height: 1;
@@ -137,8 +267,8 @@
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
-    background: rgba(15, 81, 50, 0.14);
-    color: #842029;
+    background: rgba(15, 118, 110, 0.14);
+    color: var(--instability-rose);
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__clear {
@@ -148,11 +278,131 @@
   .instability-filter-panel .select2-container--default .select2-search--inline .select2-search__field {
     min-width: 16rem;
     margin-top: 3px;
+    color: var(--instability-ink);
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
     color: #6c757d;
     margin-top: 3px;
+  }
+
+  .instability-filter-panel .select2-dropdown,
+  .instability-filter-dropdown {
+    overflow: hidden;
+    border: 1px solid var(--instability-line, rgba(120, 40, 35, 0.14)) !important;
+    border-radius: 16px !important;
+    background: #fffdfa !important;
+    box-shadow: 0 18px 34px rgba(89, 54, 32, 0.18) !important;
+  }
+
+  .instability-filter-panel .select2-results,
+  .instability-filter-dropdown .select2-results {
+    background: #fffdfa !important;
+  }
+
+  .instability-filter-panel .select2-results__options,
+  .instability-filter-dropdown .select2-results__options {
+    max-height: 360px !important;
+    background: #fffdfa !important;
+  }
+
+  .instability-filter-panel .select2-results__options--nested,
+  .instability-filter-dropdown .select2-results__options--nested {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .instability-filter-panel .select2-results__group,
+  .instability-filter-dropdown .select2-results__group {
+    background: #fffdfa !important;
+    padding: 0.72rem 0.9rem 0.35rem;
+    color: var(--instability-muted, #70655f) !important;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .instability-filter-panel .select2-results__option,
+  .instability-filter-dropdown .select2-results__option {
+    background: #fffdfa !important;
+    color: var(--instability-ink, #2d2520) !important;
+    display: block !important;
+    float: none !important;
+    padding: 0.62rem 0.9rem;
+  }
+
+  .instability-filter-panel .select2-results__option[role="group"],
+  .instability-filter-dropdown .select2-results__option[role="group"] {
+    background: #fffdfa !important;
+    padding: 0 !important;
+  }
+
+  .instability-filter-panel .select2-results__option--highlighted[aria-selected],
+  .instability-filter-panel .select2-results__option--highlighted.select2-results__option--selectable,
+  .instability-filter-panel .select2-results__option--selectable:hover,
+  .instability-filter-dropdown .select2-results__option--highlighted[aria-selected],
+  .instability-filter-dropdown .select2-results__option--highlighted.select2-results__option--selectable,
+  .instability-filter-dropdown .select2-results__option--selectable:hover {
+    background: rgba(15, 118, 110, 0.12) !important;
+    color: var(--instability-ink, #2d2520) !important;
+  }
+
+  .instability-filter-panel .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted),
+  .instability-filter-dropdown .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted) {
+    background: rgba(120, 40, 35, 0.06) !important;
+    color: var(--instability-ink, #2d2520) !important;
+  }
+
+  .instability-token-result {
+    clear: both;
+    display: grid;
+    grid-template-columns: minmax(5.5rem, 7rem) minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    min-height: 2.4rem;
+    width: 100%;
+  }
+
+  .instability-token-kind {
+    color: var(--instability-teal);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    padding-top: 0.18rem;
+    text-transform: uppercase;
+  }
+
+  .instability-token-result-main {
+    display: block;
+    font-weight: 700;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .instability-token-result-meta {
+    display: block;
+    color: var(--instability-muted);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-top: 0.12rem;
+    min-width: 0;
+  }
+
+  .instability-token-result-content {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 991px) {
+    .instability-summary-main {
+      grid-template-columns: 1fr;
+    }
+
+    .instability-summary-actions {
+      justify-content: flex-start;
+    }
   }
 </style>
 
@@ -160,7 +410,7 @@
     <form method="get" class="row g-2 mb-3">
         <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2 pb-1">
             <div>
-                <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="instability-filter-heading">
                     <strong class="text-dark">Filter Instability Events</strong>
                     <span class="badge rounded-pill bg-colorful border text-dark">
                         {% if record_count is not None %}
@@ -175,7 +425,7 @@
                         <span class="badge rounded-pill bg-absent-light text-secondary">No filters active</span>
                     {% endif %}
                 </div>
-                <div class="small text-secondary">
+                <div class="instability-filter-subtitle">
                     Build a research set by combining scope, source, quality, classification, and time filters.
                 </div>
             </div>
@@ -183,44 +433,15 @@
 
         <div class="col-12">
             <div class="instability-filter-summary">
-                <div class="d-flex flex-wrap justify-content-between align-items-end gap-2">
-                    <div class="d-flex flex-wrap align-items-center gap-2 instability-quick-row">
-                        <span class="small fw-semibold text-secondary me-1">Common views</span>
-                        <a href="?{% query_transform request row_quality='good' %}" class="btn btn-sm {% if selected_row_quality == 'good' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                            Exclude invalid rows
-                        </a>
-                        {% if selected_row_quality == 'good' %}
-                            <a href="?{% query_transform request row_quality=None %}" class="btn btn-sm btn-outline-secondary">Include invalid rows</a>
-                        {% endif %}
-                        <a href="?{% query_transform request source='llm' %}" class="btn btn-sm {% if selected_source == 'llm' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                            Only LLM
-                        </a>
-                        <a href="?{% query_transform request source='manual' selected_batch=None %}" class="btn btn-sm {% if selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                            Only manual
-                        </a>
-                        {% if selected_source_values %}
-                            <a href="?{% query_transform request source=None selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All sources</a>
-                        {% endif %}
-                        {% if selected_batch_values %}
-                            <a href="?{% query_transform request selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All batches</a>
-                        {% endif %}
-                    </div>
-
-                    <div class="instability-summary-search">
-                        <label for="searched_name" class="small fw-semibold text-secondary mb-1">Search events</label>
-                        <input type="text" name="searched_name" id="searched_name" class="form-control form-control-sm" value="{{ name_query }}" placeholder="Search event names">
-                    </div>
-
-                    <div class="instability-summary-batch">
-                        <label for="selected_batch" class="small fw-semibold text-secondary mb-1">LLM batches</label>
-                        <select name="selected_batch" id="selected_batch" class="form-select js-instability-multiple" multiple data-placeholder="All LLM batches">
-                          {% for batch, count in batch_filter_choices %}
-                            <option value="{{ batch }}" {% if batch in selected_batch_values %}selected{% endif %}>
-                              {{ batch }} - {{ count }}
-                            </option>
+                <div class="instability-summary-main">
+                    <div class="instability-global-filter">
+                        <label for="global_filter_tokens" class="small fw-semibold text-secondary mb-1">Search & add filters</label>
+                        <select id="global_filter_tokens" class="form-select js-instability-token-filter" multiple data-ajax-url="{% url 'instability_event-filter-tokens' %}" data-placeholder="Search events, polities, batches, sources, types, checks, or macroevent state">
+                          {% for token in selected_global_filter_tokens %}
+                            <option value="{{ token.token_id }}" selected>{{ token.label }}</option>
                           {% endfor %}
                         </select>
-                        <div class="instability-filter-help mb-0">Batch filters always limit results to LLM rows.</div>
+                        <div class="instability-filter-help mb-0">Type to preview matching filter tokens. Selected tokens become normal filters when you apply.</div>
                     </div>
 
                     <div class="d-flex flex-wrap align-items-center gap-2 instability-summary-actions">
@@ -229,6 +450,28 @@
                         </button>
                         <a href="?" class="btn btn-outline-danger btn-sm fw-semibold text-nowrap">Clear All</a>
                     </div>
+                </div>
+
+                <div class="instability-quick-row">
+                    <span class="instability-quick-row-label mb-0 me-1">Common views</span>
+                    <a href="?{% query_transform request row_quality='good' excluded_ra_check=None excluded_ra_check_mode=None %}" class="btn btn-sm {% if selected_row_quality == 'good' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                        Exclude invalid rows
+                    </a>
+                    {% if selected_row_quality == 'good' %}
+                        <a href="?{% query_transform request row_quality=None excluded_ra_check=None excluded_ra_check_mode=None %}" class="btn btn-sm btn-outline-secondary">Include invalid rows</a>
+                    {% endif %}
+                    <a href="?{% query_transform request source='llm' %}" class="btn btn-sm {% if selected_source == 'llm' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                        Only LLM
+                    </a>
+                    <a href="?{% query_transform request source='manual' selected_batch=None %}" class="btn btn-sm {% if selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
+                        Only manual
+                    </a>
+                    {% if selected_source_values %}
+                        <a href="?{% query_transform request source=None selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All sources</a>
+                    {% endif %}
+                    {% if selected_batch_values %}
+                        <a href="?{% query_transform request selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All batches</a>
+                    {% endif %}
                 </div>
 
                 {% include "core/partials/_instability_active_filter_chips.html" %}
@@ -317,7 +560,7 @@
                                   <option value="">Include all rows</option>
                                   <option value="good" {% if selected_row_quality == "good" %}selected{% endif %}>Exclude invalid rows</option>
                                 </select>
-                                <div class="instability-filter-help">Invalid means Bad Row, Duplicate, Not Instability Event, or External Event.</div>
+                                <div class="instability-filter-help">Default invalid labels are configurable in the Classification tab.</div>
                             </div>
 
                             <div class="col-md-4 pb-2">
@@ -363,6 +606,18 @@
                                   {% endfor %}
                                 </select>
                                 <div class="instability-filter-help">Correction labels stay searchable; invalid labels can be excluded above.</div>
+                            </div>
+
+                            <div class="col-md-4 pb-2">
+                                <label for="excluded_ra_check_select" class="text-secondary d-block">Excluded Invalid Labels</label>
+                                <select id="excluded_ra_check_select" name="excluded_ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Default invalid labels" data-default-values="{{ default_excluded_ra_check_ids|join:',' }}">
+                                  {% for check in excluded_ra_check_choices %}
+                                    <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_excluded_ra_check_ids %}selected{% endif %}>
+                                      {{ check.name }} - {{ check.event_count }}
+                                    </option>
+                                  {% endfor %}
+                                </select>
+                                <div class="instability-filter-help">Used when Exclude invalid rows is active. Defaults can be removed or extended here.</div>
                             </div>
 
                             <div class="col-md-4 pb-2">
@@ -421,15 +676,192 @@
     }
 
     const $instabilitySelects = jQuery(".js-instability-multiple");
+    const $tokenFilter = jQuery(".js-instability-token-filter");
+    const $filterPanel = jQuery(".instability-filter-panel");
+    const $rowQuality = jQuery("#row_quality");
+    const $excludedRaCheckSelect = jQuery("#excluded_ra_check_select");
+
+    function escapeHtml(value) {
+      const htmlCharacters = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      };
+      return String(value || "").replace(/[&<>"']/g, function (character) {
+        return htmlCharacters[character];
+      });
+    }
+
+    function getTokenKindLabel(kind) {
+      const kindLabels = {
+        event: "Event",
+        inst_type: "Type",
+        is_macro_event: "Macro",
+        macro_event: "Umbrella",
+        polity: "Polity",
+        ra_check: "Check",
+        selected_batch: "Batch",
+        source: "Source",
+        text: "Text"
+      };
+      return kindLabels[kind] || "Filter";
+    }
+
+    function formatTokenResult(option) {
+      if (option.loading || !option.id) {
+        return escapeHtml(option.text);
+      }
+
+      const metadata = option.meta
+        ? '<span class="instability-token-result-meta">' + escapeHtml(option.meta) + "</span>"
+        : "";
+
+      return (
+        '<span class="instability-token-result">' +
+          '<span class="instability-token-kind">' + escapeHtml(getTokenKindLabel(option.kind)) + "</span>" +
+          '<span class="instability-token-result-content">' +
+            '<span class="instability-token-result-main">' + escapeHtml(option.text) + "</span>" +
+            metadata +
+          "</span>" +
+        "</span>"
+      );
+    }
+
+    function getDefaultExcludedRaCheckIds() {
+      const defaultValues = String($excludedRaCheckSelect.data("default-values") || "");
+      return defaultValues.split(",").filter(function (value) {
+        return value;
+      });
+    }
+
+    function populateDefaultExcludedRaChecks() {
+      if (!$excludedRaCheckSelect.length || ($excludedRaCheckSelect.val() || []).length) {
+        return;
+      }
+      const defaultValues = getDefaultExcludedRaCheckIds();
+      if (defaultValues.length) {
+        $excludedRaCheckSelect.val(defaultValues).trigger("change");
+      }
+    }
+
+    function clearSelect2SearchText($select) {
+      window.setTimeout(function () {
+        const select2 = $select.data("select2");
+        const $containerSearch = $select.next(".select2-container").find(".select2-search__field");
+        $containerSearch.val("").trigger("input");
+
+        if (select2 && select2.selection && select2.selection.$search) {
+          select2.selection.$search.val("").trigger("input");
+        }
+        if (select2 && select2.dropdown && select2.dropdown.$search) {
+          select2.dropdown.$search.val("").trigger("input");
+        }
+      }, 0);
+    }
 
     $instabilitySelects.each(function () {
       const $select = jQuery(this);
       $select.select2({
         allowClear: false,
         closeOnSelect: false,
+        dropdownCssClass: "instability-filter-dropdown",
+        dropdownParent: $filterPanel,
         placeholder: $select.data("placeholder") || "Search and select",
         width: "100%"
       });
+    });
+
+    $tokenFilter.select2({
+      ajax: {
+        data: function (params) {
+          return { q: params.term || "" };
+        },
+        dataType: "json",
+        delay: 250,
+        processResults: function (data) {
+          return data;
+        },
+        url: $tokenFilter.data("ajax-url")
+      },
+      allowClear: false,
+      closeOnSelect: false,
+      dropdownCssClass: "instability-filter-dropdown",
+      dropdownParent: $filterPanel,
+      escapeMarkup: function (markup) {
+        return markup;
+      },
+      minimumInputLength: 2,
+      placeholder: $tokenFilter.data("placeholder") || "Search and add filters",
+      templateResult: formatTokenResult,
+      width: "100%"
+    });
+
+    $rowQuality.on("change", function () {
+      if ($rowQuality.val() === "good") {
+        populateDefaultExcludedRaChecks();
+      }
+    });
+
+    function tokenToParam(tokenId) {
+      const separatorIndex = tokenId.indexOf(":");
+      if (separatorIndex === -1) {
+        return null;
+      }
+
+      const kind = tokenId.slice(0, separatorIndex);
+      const value = tokenId.slice(separatorIndex + 1);
+      const tokenParamMap = {
+        event: "event",
+        inst_type: "inst_type",
+        is_macro_event: "is_macro_event",
+        macro_event: "macro_event",
+        polity: "polity",
+        ra_check: "ra_check",
+        selected_batch: "selected_batch",
+        source: "source",
+        text: "q"
+      };
+
+      if (!tokenParamMap[kind] || !value) {
+        return null;
+      }
+      return { name: tokenParamMap[kind], value: value };
+    }
+
+    jQuery(".instability-filter-panel form").on("submit", function () {
+      const $form = jQuery(this);
+      const excludedRaCheckValues = $excludedRaCheckSelect.val() || [];
+      $form.find("[data-instability-token-param='true']").remove();
+      $form.find("[data-instability-excluded-mode='true']").remove();
+      ($tokenFilter.val() || []).forEach(function (tokenId) {
+        const param = tokenToParam(tokenId);
+        if (!param) {
+          return;
+        }
+        jQuery("<input>", {
+          type: "hidden",
+          name: param.name,
+          value: param.value,
+          "data-instability-token-param": "true"
+        }).appendTo($form);
+      });
+
+      if ($rowQuality.val() !== "good" && excludedRaCheckValues.length) {
+        $rowQuality.val("good");
+      }
+
+      if ($rowQuality.val() === "good") {
+        jQuery("<input>", {
+          type: "hidden",
+          name: "excluded_ra_check_mode",
+          value: "custom",
+          "data-instability-excluded-mode": "true"
+        }).appendTo($form);
+      } else {
+        $excludedRaCheckSelect.prop("disabled", true);
+      }
     });
 
     function cleanupInstabilityChoices() {
@@ -437,7 +869,10 @@
       jQuery(".instability-filter-panel .select2-selection__clear").remove();
     }
 
-    $instabilitySelects.on("change select2:select select2:unselect select2:open", cleanupInstabilityChoices);
+    $instabilitySelects.add($tokenFilter).on("select2:select", function () {
+      clearSelect2SearchText(jQuery(this));
+    });
+    $instabilitySelects.add($tokenFilter).on("change select2:select select2:unselect select2:open", cleanupInstabilityChoices);
     document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (tabButton) {
       tabButton.addEventListener("shown.bs.tab", cleanupInstabilityChoices);
     });

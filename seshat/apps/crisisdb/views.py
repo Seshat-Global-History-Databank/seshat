@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.safestring import mark_safe
 from django.views.generic.list import ListView
+from django.views.decorators.http import require_GET
 
 from django.contrib.contenttypes.models import ContentType
 
@@ -55,7 +56,11 @@ from .models import Power_transition, Crisis_consequence, Human_sacrifice, Exter
 
 
 from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm, CheckChoiceForm
-from .instability_filters import apply_instability_batch_filter, get_batch_tag
+from .instability_filters import (
+    apply_instability_batch_filter,
+    build_instability_filter_token_response,
+    get_batch_tag,
+)
 
 
 # Create View
@@ -106,6 +111,14 @@ def get_citations_dropdown(request):
 
     # return dropdown template as JSON response
     return JsonResponse({'data': citations_list})
+
+
+@login_required
+@require_GET
+def instability_filter_tokens(request):
+    search_query = request.GET.get("q") or request.GET.get("term") or ""
+    return JsonResponse(build_instability_filter_token_response(search_query))
+
 
 class Crisis_consequenceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """

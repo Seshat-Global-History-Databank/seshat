@@ -367,10 +367,196 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.context["selected_batch_values"], ["Batch 1", "Batch 4"])
         self.assertEqual(response.context["active_filter_count"], 3)
         self.assertContains(response, "3 filters active")
-        self.assertContains(response, "LLM batches")
-        self.assertContains(response, "Search events")
-        self.assertContains(response, "Search event names")
+        self.assertContains(response, "Search & add filters")
+        self.assertContains(response, "selected_batch:Batch 1")
+        self.assertContains(response, "selected_batch:Batch 4")
         self.assertNotContains(response, batch_two_event.name)
+
+    def test_instability_list_can_filter_by_exact_event_id(self):
+        polity = Polity.objects.create(
+            name="event_token_polity",
+            new_name="event_token_polity",
+            long_name="Event Token Polity",
+            start_year=100,
+            end_year=200,
+        )
+        selected_event = Instability_event.objects.create(
+            polity=polity,
+            name="Selected Exact Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=150,
+            year_to=151,
+        )
+        other_event = Instability_event.objects.create(
+            polity=polity,
+            name="Other Exact Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=152,
+            year_to=153,
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"event": str(selected_event.id)},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [selected_event])
+        self.assertEqual(response.context["selected_event_ids"], [str(selected_event.id)])
+        self.assertContains(response, f"event:{selected_event.id}")
+        self.assertContains(response, "Event:")
+        self.assertNotContains(response, other_event.name)
+
+    def test_instability_list_global_text_filter_searches_across_fields(self):
+        polity = Polity.objects.create(
+            name="global_text_polity",
+            new_name="global_text_polity",
+            long_name="Global Search Polity",
+            start_year=100,
+            end_year=200,
+        )
+        event_type = Instability_type.objects.create(name="Global Search Type")
+        matching_event = Instability_event.objects.create(
+            polity=polity,
+            name="Plain Event Name",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        matching_event.inst_type.add(event_type)
+        other_event = Instability_event.objects.create(
+            polity=polity,
+            name="Other Plain Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"q": "Global Search Type"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [matching_event])
+        self.assertEqual(response.context["selected_text_queries"], ["Global Search Type"])
+        self.assertContains(response, 'text:Global Search Type')
+        self.assertContains(response, "Search:")
+        self.assertNotContains(response, other_event.name)
+
+    def test_instability_filter_token_endpoint_returns_grouped_limited_results(self):
+        polity = Polity.objects.create(
+            name="token_polity",
+            new_name="token_polity",
+            long_name="Token Polity",
+            start_year=100,
+            end_year=200,
+        )
+        event_type = Instability_type.objects.create(name="Token Rebellion")
+        check = Check_choice.objects.create(
+            name="Token Check",
+            check_description="Tokenized review label.",
+            color="Blue",
+        )
+        macro_event = Instability_event.objects.create(
+            polity=polity,
+            name="A Token Macro Event",
+            llm_name="A Token Macro Event (Macro Event: Token Umbrella)",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        macro_event.inst_type.add(event_type)
+        macro_event.ra_check.add(check)
+
+        for index in range(10):
+            Instability_event.objects.create(
+                polity=polity,
+                name=f"Token Event {index}",
+                source=Instability_event.Source.LLM,
+                year_from=152 + index,
+                year_to=153 + index,
+            )
+
+        response = self.client.get(
+            reverse("instability_event-filter-tokens"),
+            {"q": "Token"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        groups = {
+            group["text"]: group["children"]
+            for group in response.json()["results"]
+        }
+        self.assertIn("Text Search", groups)
+        self.assertIn("Polities", groups)
+        self.assertIn("Events", groups)
+        self.assertIn("Umbrella Events", groups)
+        self.assertIn("Event Types", groups)
+        self.assertIn("Researcher Checks", groups)
+        self.assertLessEqual(len(groups["Events"]), 8)
+        self.assertTrue(
+            any(option["id"] == f"polity:{polity.id}" for option in groups["Polities"])
+        )
+        self.assertTrue(
+            any(option["id"] == f"event:{macro_event.id}" for option in groups["Events"])
+        )
+        self.assertTrue(
+            any(option["id"] == "macro_event:Token Umbrella" for option in groups["Umbrella Events"])
+        )
+        self.assertTrue(
+            any(option["id"] == f"inst_type:{event_type.id}" for option in groups["Event Types"])
+        )
+        self.assertTrue(
+            any(option["id"] == f"ra_check:{check.id}" for option in groups["Researcher Checks"])
+        )
+
+    def test_instability_filter_token_endpoint_returns_source_and_batch_tokens(self):
+        polity = Polity.objects.create(
+            name="batch_token_polity",
+            new_name="batch_token_polity",
+            long_name="Batch Token Polity",
+            start_year=100,
+            end_year=200,
+        )
+        batch_one_event = Instability_event.objects.create(
+            polity=polity,
+            name="Batch Token Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        Instability_event.objects.filter(pk=batch_one_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2025, 3, 1))
+        )
+
+        batch_response = self.client.get(
+            reverse("instability_event-filter-tokens"),
+            {"q": "batch"},
+        )
+        source_response = self.client.get(
+            reverse("instability_event-filter-tokens"),
+            {"q": "llm"},
+        )
+
+        batch_groups = {
+            group["text"]: group["children"]
+            for group in batch_response.json()["results"]
+        }
+        source_groups = {
+            group["text"]: group["children"]
+            for group in source_response.json()["results"]
+        }
+        self.assertEqual(batch_response.status_code, 200)
+        self.assertIn("LLM Batches", batch_groups)
+        self.assertTrue(
+            any(option["id"] == "selected_batch:Batch 1" for option in batch_groups["LLM Batches"])
+        )
+        self.assertEqual(source_response.status_code, 200)
+        self.assertIn("Sources", source_groups)
+        self.assertTrue(
+            any(option["id"] == "source:llm" for option in source_groups["Sources"])
+        )
 
     def test_instability_list_can_filter_multiple_polities(self):
         first_polity = Polity.objects.create(
@@ -508,11 +694,162 @@ class InstabilityCreateViewTests(TestCase):
             [clean_event, corrected_event],
         )
         self.assertEqual(response.context["selected_row_quality"], GOOD_ROW_FILTER)
+        self.assertEqual(
+            response.context["selected_excluded_ra_check_ids"],
+            [str(bad_row_check.id), str(external_event_check.id)],
+        )
+        self.assertEqual(
+            response.context["selected_excluded_ra_check_labels"],
+            ["Bad Row", "External Event"],
+        )
         self.assertEqual(response.context["active_filter_count"], 1)
         self.assertContains(response, "1 filter active")
         self.assertContains(response, "Exclude invalid rows")
         self.assertContains(response, "Invalid rows:")
+        self.assertContains(response, "Excluding Bad Row, External Event")
         self.assertNotContains(response, "Good rows only")
+
+    def test_good_row_filter_can_customize_excluded_researcher_checks(self):
+        polity = Polity.objects.create(
+            name="custom_good_row_polity",
+            new_name="custom_good_row_polity",
+            long_name="Custom Good Row Polity",
+            start_year=100,
+            end_year=200,
+        )
+        bad_row_check = Check_choice.objects.create(
+            name="Bad Row",
+            check_description="Entire row is invalid.",
+            color="Red",
+        )
+        external_event_check = Check_choice.objects.create(
+            name="External Event",
+            check_description="External event should be excluded by default.",
+            color="Blue",
+        )
+        intensity_check = Check_choice.objects.create(
+            name="Intensity",
+            check_description="Intensity was corrected.",
+            color="Red",
+        )
+
+        clean_event = Instability_event.objects.create(
+            polity=polity,
+            name="Custom Clean Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        bad_row_event = Instability_event.objects.create(
+            polity=polity,
+            name="Custom Bad Row Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        bad_row_event.ra_check.add(bad_row_check)
+        external_event = Instability_event.objects.create(
+            polity=polity,
+            name="Custom External Event",
+            source=Instability_event.Source.LLM,
+            year_from=154,
+            year_to=155,
+        )
+        external_event.ra_check.add(external_event_check)
+        intensity_event = Instability_event.objects.create(
+            polity=polity,
+            name="Custom Intensity Event",
+            source=Instability_event.Source.LLM,
+            year_from=156,
+            year_to=157,
+        )
+        intensity_event.ra_check.add(intensity_check)
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {
+                "row_quality": GOOD_ROW_FILTER,
+                "excluded_ra_check_mode": "custom",
+                "excluded_ra_check": [str(bad_row_check.id), str(intensity_check.id)],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            list(response.context["object_list"]),
+            [clean_event, external_event],
+        )
+        self.assertEqual(
+            response.context["selected_excluded_ra_check_ids"],
+            [str(bad_row_check.id), str(intensity_check.id)],
+        )
+        self.assertEqual(
+            response.context["selected_excluded_ra_check_labels"],
+            ["Bad Row", "Intensity"],
+        )
+        self.assertContains(response, "Excluding Bad Row, Intensity")
+        self.assertContains(response, external_event.name)
+        self.assertNotContains(response, bad_row_event.name)
+        self.assertNotContains(response, intensity_event.name)
+
+        implied_row_quality_response = self.client.get(
+            reverse("instability_events_all"),
+            {
+                "excluded_ra_check": [str(bad_row_check.id), str(intensity_check.id)],
+            },
+        )
+
+        self.assertEqual(implied_row_quality_response.status_code, 200)
+        self.assertEqual(
+            list(implied_row_quality_response.context["object_list"]),
+            [clean_event, external_event],
+        )
+        self.assertEqual(
+            implied_row_quality_response.context["selected_row_quality"],
+            GOOD_ROW_FILTER,
+        )
+
+    def test_good_row_filter_custom_empty_excludes_no_researcher_checks(self):
+        polity = Polity.objects.create(
+            name="empty_custom_good_row_polity",
+            new_name="empty_custom_good_row_polity",
+            long_name="Empty Custom Good Row Polity",
+            start_year=100,
+            end_year=200,
+        )
+        bad_row_check = Check_choice.objects.create(
+            name="Bad Row",
+            check_description="Entire row is invalid.",
+            color="Red",
+        )
+        clean_event = Instability_event.objects.create(
+            polity=polity,
+            name="Empty Custom Clean Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        bad_row_event = Instability_event.objects.create(
+            polity=polity,
+            name="Empty Custom Bad Row Event",
+            source=Instability_event.Source.LLM,
+            year_from=152,
+            year_to=153,
+        )
+        bad_row_event.ra_check.add(bad_row_check)
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {
+                "row_quality": GOOD_ROW_FILTER,
+                "excluded_ra_check_mode": "custom",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [clean_event, bad_row_event])
+        self.assertEqual(response.context["selected_excluded_ra_check_ids"], [])
+        self.assertContains(response, "No RA labels excluded")
 
     def test_polity_instability_queryset_filters_by_batch(self):
         polity = Polity.objects.create(
@@ -705,6 +1042,25 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["object_list"]), [macro_event])
         self.assertEqual(response.context["selected_is_macro_event"], "true")
+        self.assertContains(response, "is_macro_event:true")
+
+        token_response = self.client.get(
+            reverse("instability_event-filter-tokens"),
+            {"q": "macro"},
+        )
+        token_groups = {
+            group["text"]: group["children"]
+            for group in token_response.json()["results"]
+        }
+
+        self.assertEqual(token_response.status_code, 200)
+        self.assertIn("Macroevent Record", token_groups)
+        self.assertTrue(
+            any(
+                option["id"] == "is_macro_event:true"
+                for option in token_groups["Macroevent Record"]
+            )
+        )
 
     def test_instability_analytics_only_includes_llm_events(self):
         polity = Polity.objects.create(

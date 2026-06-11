@@ -6,6 +6,7 @@ from django.db.models.functions import Cast, Coalesce
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 
+from ..core.filter_tokens import FilterTokenOption, build_grouped_token_response
 from ..core.models import Polity
 from .models import (
     Check_choice,
@@ -13,6 +14,7 @@ from .models import (
     INST_INTENSITY_CHOICES,
     Instability_event,
     Instability_type,
+    extract_macro_event_from_llm_name,
 )
 
 
@@ -23,14 +25,15 @@ BATCH_1_END_DATETIME = timezone.make_aware(datetime.datetime.combine(BATCH_1_END
 BATCH_2_END_DATETIME = timezone.make_aware(datetime.datetime.combine(BATCH_2_END, datetime.time()))
 BATCH_3_END_DATETIME = timezone.make_aware(datetime.datetime.combine(BATCH_3_END, datetime.time()))
 GOOD_ROW_FILTER = "good"
-GOOD_ROW_EXCLUDED_CHECK_NAMES = frozenset(
-    {
-        "Bad Row",
-        "Duplicate",
-        "Not Instability Event",
-        "External Event",
-    }
+GOOD_ROW_EXCLUDED_CHECK_NAMES = (
+    "Bad Row",
+    "Duplicate",
+    "Not Instability Event",
+    "External Event",
 )
+EXCLUDED_RA_CHECK_PARAM = "excluded_ra_check"
+EXCLUDED_RA_CHECK_MODE_PARAM = "excluded_ra_check_mode"
+CUSTOM_EXCLUDED_RA_CHECK_MODE = "custom"
 VALID_INSTABILITY_SOURCES = (
     Instability_event.Source.LLM,
     Instability_event.Source.MANUAL,
@@ -41,6 +44,7 @@ VALID_INSTABILITY_BATCHES = (
     "Batch 3",
     "Batch 4",
 )
+INSTABILITY_FILTER_TOKEN_LIMIT = 8
 
 
 def get_batch_tag(created_date):
@@ -98,6 +102,11 @@ def apply_instability_batch_filter(queryset, selected_batches):
     if not selected_batches:
         return queryset
 
+    return queryset.filter(build_instability_batch_query(selected_batches))
+
+
+def build_instability_batch_query(selected_batches):
+    selected_batches = normalize_instability_batches(selected_batches)
     batch_query = Q()
     if "Batch 1" in selected_batches:
         batch_query |= Q(created_date__lt=BATCH_1_END_DATETIME)
@@ -113,18 +122,61 @@ def apply_instability_batch_filter(queryset, selected_batches):
         )
     if "Batch 4" in selected_batches:
         batch_query |= Q(created_date__gte=BATCH_3_END_DATETIME)
-    return queryset.filter(batch_query)
+    return batch_query
 
 
 def get_request_list(request, key):
-    return [value.strip() for value in request.GET.getlist(key) if value and value.strip()]
+    values = []
+    for value in request.GET.getlist(key):
+        cleaned_value = value.strip() if value else ""
+        if cleaned_value and cleaned_value not in values:
+            values.append(cleaned_value)
+    return values
 
 
 def get_selected_row_quality(request):
     selected_row_quality = request.GET.get("row_quality")
     if selected_row_quality == GOOD_ROW_FILTER:
         return selected_row_quality
+    if any(value.strip() for value in request.GET.getlist(EXCLUDED_RA_CHECK_PARAM)):
+        return GOOD_ROW_FILTER
     return None
+
+
+def get_default_excluded_ra_check_ids():
+    return [
+        str(check_id)
+        for check_id in Check_choice.objects.filter(
+            name__in=GOOD_ROW_EXCLUDED_CHECK_NAMES
+        )
+        .order_by("name")
+        .values_list("id", flat=True)
+    ]
+
+
+def uses_custom_excluded_ra_checks(request):
+    return (
+        request.GET.get(EXCLUDED_RA_CHECK_MODE_PARAM) == CUSTOM_EXCLUDED_RA_CHECK_MODE
+        or bool(get_custom_excluded_ra_check_ids(request))
+    )
+
+
+def get_custom_excluded_ra_check_ids(request):
+    return [
+        value
+        for value in get_request_list(request, EXCLUDED_RA_CHECK_PARAM)
+        if value.isdigit()
+    ]
+
+
+def get_selected_excluded_ra_check_ids(request):
+    if get_selected_row_quality(request) != GOOD_ROW_FILTER:
+        return []
+
+    if uses_custom_excluded_ra_checks(request):
+        return get_custom_excluded_ra_check_ids(request)
+
+    return get_default_excluded_ra_check_ids()
 
 
 def build_macro_event_filter_query(selected_macro_events):
@@ -137,11 +189,19 @@ def build_macro_event_filter_query(selected_macro_events):
     return macro_event_query
 
 
-def apply_instability_row_quality_filter(queryset, selected_row_quality):
+def apply_instability_row_quality_filter(
+    queryset,
+    selected_row_quality,
+    excluded_ra_check_ids=None,
+    use_custom_excluded_ra_checks=False,
+):
     if selected_row_quality == GOOD_ROW_FILTER:
-        return queryset.exclude(
-            ra_check__name__in=GOOD_ROW_EXCLUDED_CHECK_NAMES
-        ).distinct()
+        if use_custom_excluded_ra_checks:
+            if not excluded_ra_check_ids:
+                return queryset
+            return queryset.exclude(ra_check__id__in=excluded_ra_check_ids).distinct()
+
+        return queryset.exclude(ra_check__name__in=GOOD_ROW_EXCLUDED_CHECK_NAMES).distinct()
     return queryset
 
 
@@ -180,6 +240,18 @@ def get_selected_instability_batches(request):
     return normalize_instability_batches(get_request_list(request, "selected_batch"))
 
 
+def get_selected_instability_event_ids(request):
+    return [
+        value
+        for value in get_request_list(request, "event")
+        if value.isdigit()
+    ]
+
+
+def get_selected_instability_text_queries(request):
+    return get_request_list(request, "q")
+
+
 def get_active_instability_filter_count(request):
     multi_value_filters = (
         "polity",
@@ -188,6 +260,8 @@ def get_active_instability_filter_count(request):
         "ra_check",
         "inst_extent",
         "inst_intensity",
+        "event",
+        "q",
     )
     active_count = sum(
         len(get_request_list(request, filter_name))
@@ -222,6 +296,59 @@ def apply_instability_event_source_filter(queryset, request):
     return queryset
 
 
+def build_instability_global_text_query(text_values):
+    global_query = Q()
+    for text_value in text_values:
+        item_query = (
+            Q(name__icontains=text_value)
+            | Q(llm_name__icontains=text_value)
+            | Q(polity__name__icontains=text_value)
+            | Q(polity__long_name__icontains=text_value)
+            | Q(polity__new_name__icontains=text_value)
+            | Q(inst_type__name__icontains=text_value)
+            | Q(ra_check__name__icontains=text_value)
+        )
+
+        matching_sources = [
+            source
+            for source, label in (
+                (Instability_event.Source.LLM, "LLM"),
+                (Instability_event.Source.MANUAL, "Manual"),
+            )
+            if _token_query_matches(text_value, source, label)
+        ]
+        if matching_sources:
+            item_query |= Q(source__in=matching_sources)
+
+        matching_batches = [
+            batch
+            for batch in VALID_INSTABILITY_BATCHES
+            if _token_query_matches(text_value, batch, batch.replace(" ", ""))
+        ]
+        if matching_batches:
+            item_query |= (
+                Q(source=Instability_event.Source.LLM)
+                & build_instability_batch_query(matching_batches)
+            )
+
+        for value, label in INST_INTENSITY_CHOICES:
+            if _token_query_matches(text_value, value, label):
+                item_query |= Q(inst_intensity=value)
+
+        for value, label in INST_EXTENT_CHOICES:
+            if _token_query_matches(text_value, value, label):
+                item_query |= Q(inst_extent=value)
+
+        global_query |= item_query
+    return global_query
+
+
+def apply_instability_global_text_filter(queryset, text_values):
+    if not text_values:
+        return queryset
+    return queryset.filter(build_instability_global_text_query(text_values)).distinct()
+
+
 def apply_instability_event_filters(queryset, request, ignored_filters=None):
     ignored_filters = set(ignored_filters or [])
     year_from_min = (
@@ -240,6 +367,12 @@ def apply_instability_event_filters(queryset, request, ignored_filters=None):
     )
     selected_sources = (
         [] if "source" in ignored_filters else get_selected_instability_sources(request)
+    )
+    selected_event_ids = (
+        [] if "event" in ignored_filters else get_selected_instability_event_ids(request)
+    )
+    selected_text_queries = (
+        [] if "q" in ignored_filters else get_selected_instability_text_queries(request)
     )
     polity_ids = [] if "polity" in ignored_filters else get_request_list(request, "polity")
     inst_type_ids = (
@@ -274,6 +407,16 @@ def apply_instability_event_filters(queryset, request, ignored_filters=None):
     selected_row_quality = (
         None if "row_quality" in ignored_filters else get_selected_row_quality(request)
     )
+    excluded_ra_check_ids = (
+        []
+        if EXCLUDED_RA_CHECK_PARAM in ignored_filters or "row_quality" in ignored_filters
+        else get_selected_excluded_ra_check_ids(request)
+    )
+    use_custom_excluded_ra_checks = (
+        False
+        if EXCLUDED_RA_CHECK_MODE_PARAM in ignored_filters or "row_quality" in ignored_filters
+        else uses_custom_excluded_ra_checks(request)
+    )
 
     if inst_type_ids:
         queryset = queryset.filter(inst_type__in=inst_type_ids).distinct()
@@ -290,6 +433,9 @@ def apply_instability_event_filters(queryset, request, ignored_filters=None):
     if polity_ids:
         queryset = queryset.filter(polity__id__in=polity_ids)
 
+    if selected_event_ids:
+        queryset = queryset.filter(id__in=selected_event_ids)
+
     if selected_batches:
         queryset = queryset.filter(source=Instability_event.Source.LLM)
     elif selected_sources:
@@ -304,7 +450,14 @@ def apply_instability_event_filters(queryset, request, ignored_filters=None):
     if name_query:
         queryset = queryset.filter(name__icontains=name_query)
 
-    queryset = apply_instability_row_quality_filter(queryset, selected_row_quality)
+    queryset = apply_instability_global_text_filter(queryset, selected_text_queries)
+
+    queryset = apply_instability_row_quality_filter(
+        queryset,
+        selected_row_quality,
+        excluded_ra_check_ids=excluded_ra_check_ids,
+        use_custom_excluded_ra_checks=use_custom_excluded_ra_checks,
+    )
 
     queryset = queryset.annotate(
         start_year_effective=Coalesce("year_from", F("polity__start_year")),
@@ -363,6 +516,360 @@ def get_filtered_instability_queryset(model_class, request):
     queryset = get_instability_list_queryset(model_class)
     queryset = apply_instability_event_filters(queryset, request)
     return apply_instability_event_ordering(queryset, request.GET.get("orderby"))
+
+
+def _token_query_matches(search_query, *values):
+    normalized_query = search_query.lower()
+    return any(normalized_query in str(value or "").lower() for value in values)
+
+
+def _build_instability_text_token(search_query):
+    if len(search_query) < 2:
+        return []
+
+    return [
+        FilterTokenOption(
+            kind="text",
+            value=search_query,
+            label=f'Search all fields for "{search_query}"',
+            group="Text Search",
+            meta="Event names, polities, labels, source, and batch",
+        )
+    ]
+
+
+def _build_instability_polity_tokens(base_queryset, search_query, limit):
+    polity_rows = (
+        base_queryset.filter(
+            Q(polity__name__icontains=search_query)
+            | Q(polity__long_name__icontains=search_query)
+            | Q(polity__new_name__icontains=search_query)
+        )
+        .values(
+            "polity_id",
+            "polity__long_name",
+            "polity__new_name",
+            "polity__start_year",
+            "polity__end_year",
+        )
+        .annotate(event_count=Count("id", distinct=True))
+        .order_by("-event_count", "polity__long_name")[:limit]
+    )
+
+    return [
+        FilterTokenOption(
+            kind="polity",
+            value=str(row["polity_id"]),
+            label=f"{row['polity__long_name']} ({row['polity__new_name']})",
+            group="Polities",
+            meta=(
+                f"{row['event_count']} events"
+                f" | {row['polity__start_year']} to {row['polity__end_year']}"
+            ),
+        )
+        for row in polity_rows
+        if row["polity_id"]
+    ]
+
+
+def _build_instability_event_tokens(base_queryset, search_query, limit):
+    events = (
+        base_queryset.filter(
+            Q(name__icontains=search_query) | Q(llm_name__icontains=search_query)
+        )
+        .select_related("polity")
+        .only("id", "name", "llm_name", "year_from", "year_to", "polity__long_name")
+        .order_by("name", "id")[:limit]
+    )
+
+    return [
+        FilterTokenOption(
+            kind="event",
+            value=str(event.id),
+            label=event.name or event.llm_name or f"Event {event.id}",
+            group="Events",
+            meta=(
+                f"{event.polity.long_name if event.polity_id else 'No polity'}"
+                f" | {event.year_from or '?'} to {event.year_to or '?'}"
+            ),
+        )
+        for event in events
+    ]
+
+
+def _build_instability_type_tokens(base_queryset, search_query, limit):
+    event_types = (
+        Instability_type.objects.filter(
+            name__icontains=search_query,
+            crisisdb_instability_events__in=base_queryset,
+        )
+        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
+        .distinct()
+        .order_by("name")[:limit]
+    )
+
+    return [
+        FilterTokenOption(
+            kind="inst_type",
+            value=str(event_type.id),
+            label=event_type.name,
+            group="Event Types",
+            meta=f"{event_type.event_count} events",
+        )
+        for event_type in event_types
+    ]
+
+
+def _build_instability_check_tokens(base_queryset, search_query, limit):
+    check_choices = (
+        Check_choice.objects.filter(
+            name__icontains=search_query,
+            crisisdb_instability_events__in=base_queryset,
+        )
+        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
+        .distinct()
+        .order_by("name")[:limit]
+    )
+
+    return [
+        FilterTokenOption(
+            kind="ra_check",
+            value=str(check.id),
+            label=check.name,
+            group="Researcher Checks",
+            meta=f"{check.event_count} events",
+        )
+        for check in check_choices
+    ]
+
+
+def _build_instability_source_tokens(base_queryset, search_query):
+    source_labels = {
+        Instability_event.Source.LLM: "LLM",
+        Instability_event.Source.MANUAL: "Manual",
+    }
+
+    tokens = []
+    for source, label in source_labels.items():
+        if _token_query_matches(search_query, source, label, "source"):
+            tokens.append(
+                FilterTokenOption(
+                    kind="source",
+                    value=source,
+                    label=label,
+                    group="Sources",
+                    meta=f"{base_queryset.filter(source=source).count()} events",
+                )
+            )
+    return tokens
+
+
+def _build_instability_batch_tokens(base_queryset, search_query):
+    tokens = []
+    llm_queryset = base_queryset.filter(source=Instability_event.Source.LLM)
+    for batch in VALID_INSTABILITY_BATCHES:
+        if _token_query_matches(search_query, batch, batch.replace(" ", "")):
+            tokens.append(
+                FilterTokenOption(
+                    kind="selected_batch",
+                    value=batch,
+                    label=batch,
+                    group="LLM Batches",
+                    meta=f"{apply_instability_batch_filter(llm_queryset, batch).count()} events",
+                )
+            )
+    return tokens
+
+
+def _build_instability_macro_event_record_tokens(base_queryset, search_query):
+    choices = (
+        (
+            "true",
+            "Macroevent records only",
+            ("macro", "macroevent", "macro event", "macroevent true", "true"),
+        ),
+        (
+            "false",
+            "Non-macroevent records only",
+            ("macro", "macroevent", "macro event", "macroevent false", "false"),
+        ),
+    )
+
+    tokens = []
+    for value, label, aliases in choices:
+        if _token_query_matches(search_query, label, *aliases):
+            tokens.append(
+                FilterTokenOption(
+                    kind="is_macro_event",
+                    value=value,
+                    label=label,
+                    group="Macroevent Record",
+                    meta=f"{base_queryset.filter(is_macro_event=(value == 'true')).count()} events",
+                )
+            )
+    return tokens
+
+
+def _build_instability_macro_event_tokens(base_queryset, search_query, limit):
+    candidates = base_queryset.filter(
+        Q(name__icontains="Macro Event") | Q(llm_name__icontains="Macro Event"),
+        Q(name__icontains=search_query) | Q(llm_name__icontains=search_query),
+    ).values_list("name", "llm_name")[:200]
+
+    macro_counts = Counter()
+    for name, llm_name in candidates:
+        macro_event = extract_macro_event_from_llm_name(llm_name or name)
+        if macro_event and _token_query_matches(search_query, macro_event):
+            macro_counts[macro_event] += 1
+
+    return [
+        FilterTokenOption(
+            kind="macro_event",
+            value=macro_event,
+            label=macro_event,
+            group="Umbrella Events",
+            meta=f"{count} events",
+        )
+        for macro_event, count in macro_counts.most_common(limit)
+    ]
+
+
+def build_instability_filter_token_options(search_query, limit=INSTABILITY_FILTER_TOKEN_LIMIT):
+    search_query = (search_query or "").strip()
+    if not search_query:
+        return []
+
+    base_queryset = get_instability_list_queryset(Instability_event)
+    return (
+        _build_instability_text_token(search_query)
+        + _build_instability_polity_tokens(base_queryset, search_query, limit)
+        + _build_instability_event_tokens(base_queryset, search_query, limit)
+        + _build_instability_macro_event_tokens(base_queryset, search_query, limit)
+        + _build_instability_type_tokens(base_queryset, search_query, limit)
+        + _build_instability_check_tokens(base_queryset, search_query, limit)
+        + _build_instability_source_tokens(base_queryset, search_query)
+        + _build_instability_batch_tokens(base_queryset, search_query)
+        + _build_instability_macro_event_record_tokens(base_queryset, search_query)
+    )
+
+
+def build_instability_filter_token_response(search_query):
+    return build_grouped_token_response(
+        build_instability_filter_token_options(search_query)
+    )
+
+
+def build_selected_instability_filter_token_options(request):
+    options = []
+
+    for text_query in get_selected_instability_text_queries(request):
+        options.append(
+            FilterTokenOption(
+                kind="text",
+                value=text_query,
+                label=f'Search all fields for "{text_query}"',
+                group="Text Search",
+            )
+        )
+
+    for polity in Polity.objects.filter(
+        id__in=get_request_list(request, "polity")
+    ).order_by("long_name"):
+        options.append(
+            FilterTokenOption(
+                kind="polity",
+                value=str(polity.id),
+                label=f"{polity.long_name} ({polity.new_name})",
+                group="Polities",
+            )
+        )
+
+    for event in get_instability_list_queryset(Instability_event).filter(
+        id__in=get_selected_instability_event_ids(request)
+    ).select_related("polity"):
+        options.append(
+            FilterTokenOption(
+                kind="event",
+                value=str(event.id),
+                label=event.name or event.llm_name or f"Event {event.id}",
+                group="Events",
+            )
+        )
+
+    for macro_event in get_request_list(request, "macro_event"):
+        options.append(
+            FilterTokenOption(
+                kind="macro_event",
+                value=macro_event,
+                label=macro_event,
+                group="Umbrella Events",
+            )
+        )
+
+    selected_is_macro_event = request.GET.get("is_macro_event")
+    if selected_is_macro_event in {"true", "false"}:
+        options.append(
+            FilterTokenOption(
+                kind="is_macro_event",
+                value=selected_is_macro_event,
+                label=(
+                    "Macroevent records only"
+                    if selected_is_macro_event == "true"
+                    else "Non-macroevent records only"
+                ),
+                group="Macroevent Record",
+            )
+        )
+
+    for event_type in Instability_type.objects.filter(
+        id__in=get_request_list(request, "inst_type")
+    ).order_by("name"):
+        options.append(
+            FilterTokenOption(
+                kind="inst_type",
+                value=str(event_type.id),
+                label=event_type.name,
+                group="Event Types",
+            )
+        )
+
+    for check in Check_choice.objects.filter(
+        id__in=get_request_list(request, "ra_check")
+    ).order_by("name"):
+        options.append(
+            FilterTokenOption(
+                kind="ra_check",
+                value=str(check.id),
+                label=check.name,
+                group="Researcher Checks",
+            )
+        )
+
+    source_labels = {
+        Instability_event.Source.LLM: "LLM",
+        Instability_event.Source.MANUAL: "Manual",
+    }
+    for source in get_selected_instability_sources(request):
+        options.append(
+            FilterTokenOption(
+                kind="source",
+                value=source,
+                label=source_labels.get(source, source.title()),
+                group="Sources",
+            )
+        )
+
+    for batch in get_selected_instability_batches(request):
+        options.append(
+            FilterTokenOption(
+                kind="selected_batch",
+                value=batch,
+                label=batch,
+                group="LLM Batches",
+            )
+        )
+
+    return options
 
 
 def get_instability_filter_option_queryset(model_class, request, ignored_filters=None):
@@ -444,8 +951,11 @@ def build_instability_list_context(model_class, request):
     selected_row_quality = get_selected_row_quality(request)
     selected_polity_ids = get_request_list(request, "polity")
     selected_macro_events = get_request_list(request, "macro_event")
+    selected_event_ids = get_selected_instability_event_ids(request)
+    selected_text_queries = get_selected_instability_text_queries(request)
     selected_inst_type_ids = get_request_list(request, "inst_type")
     selected_ra_check_ids = get_request_list(request, "ra_check")
+    selected_excluded_ra_check_ids = get_selected_excluded_ra_check_ids(request)
     selected_inst_extent_values = get_request_list(request, "inst_extent")
     selected_inst_intensity_values = get_request_list(request, "inst_intensity")
 
@@ -468,6 +978,15 @@ def build_instability_list_context(model_class, request):
         model_class,
         request,
         ignored_filters={"ra_check"},
+    )
+    excluded_ra_check_option_queryset = get_instability_filter_option_queryset(
+        model_class,
+        request,
+        ignored_filters={
+            EXCLUDED_RA_CHECK_PARAM,
+            EXCLUDED_RA_CHECK_MODE_PARAM,
+            "row_quality",
+        },
     )
     inst_extent_option_queryset = get_instability_filter_option_queryset(
         model_class,
@@ -585,6 +1104,27 @@ def build_instability_list_context(model_class, request):
         for batch in VALID_INSTABILITY_BATCHES
         if batch_counts.get(batch, 0) or batch in selected_batch_values
     ]
+    selected_event_filters = list(
+        get_instability_list_queryset(model_class)
+        .filter(id__in=selected_event_ids)
+        .select_related("polity")
+        .order_by("name", "id")
+    )
+    excluded_ra_check_choices = list(
+        Check_choice.objects.filter(
+            Q(crisisdb_instability_events__in=excluded_ra_check_option_queryset)
+            | Q(id__in=selected_excluded_ra_check_ids)
+            | Q(name__in=GOOD_ROW_EXCLUDED_CHECK_NAMES)
+        )
+        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
+        .distinct()
+        .order_by("name")
+    )
+    selected_excluded_ra_check_labels = [
+        check.name
+        for check in excluded_ra_check_choices
+        if str(check.id) in selected_excluded_ra_check_ids
+    ]
 
     return {
         "polities": enriched_polities,
@@ -607,6 +1147,9 @@ def build_instability_list_context(model_class, request):
         "macro_events": [event for event, _count in macro_events_with_counts],
         "selected_macro": selected_macro_events[0] if len(selected_macro_events) == 1 else None,
         "selected_macro_events": selected_macro_events,
+        "selected_event_ids": selected_event_ids,
+        "selected_event_filters": selected_event_filters,
+        "selected_text_queries": selected_text_queries,
         "selected_is_macro_event": request.GET.get("is_macro_event"),
         "name_query": request.GET.get("searched_name", "").strip(),
         "selected_source": selected_source,
@@ -615,6 +1158,10 @@ def build_instability_list_context(model_class, request):
         "selected_batch_values": selected_batch_values,
         "batch_filter_forces_llm": batch_filter_forces_llm,
         "selected_row_quality": selected_row_quality,
+        "default_excluded_ra_check_ids": get_default_excluded_ra_check_ids(),
+        "excluded_ra_check_choices": excluded_ra_check_choices,
+        "selected_excluded_ra_check_ids": selected_excluded_ra_check_ids,
+        "selected_excluded_ra_check_labels": selected_excluded_ra_check_labels,
         "show_llm_batch_filter": True,
         "selected_polity_ids": selected_polity_ids,
         "selected_inst_type_ids": selected_inst_type_ids,
@@ -622,6 +1169,7 @@ def build_instability_list_context(model_class, request):
         "selected_inst_extent_values": selected_inst_extent_values,
         "selected_inst_intensity_values": selected_inst_intensity_values,
         "active_filter_count": get_active_instability_filter_count(request),
+        "selected_global_filter_tokens": build_selected_instability_filter_token_options(request),
         "source_filter_choices": source_filter_choices,
         "batch_filter_choices": batch_filter_choices,
         "inst_extent_filter_choices": inst_extent_filter_choices,
