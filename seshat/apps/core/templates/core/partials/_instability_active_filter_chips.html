@@ -1,31 +1,29 @@
 {% load custom_filters %}
 
-{% if selected_polity_ids or selected_source_values or selected_batch_values or selected_event_ids or selected_text_queries or selected_inst_type_ids or selected_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or name_query or selected_macro_events or selected_is_macro_event or selected_row_quality or request.GET.year_from_min or request.GET.year_to_max %}
+{% if selected_polity_ids or selected_source_values or selected_batch_values or selected_event_ids or selected_text_queries or selected_inst_type_ids or selected_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or name_query or selected_macro_events or selected_is_macro_event or selected_row_quality or selected_year_from_min is not None or selected_year_to_max is not None %}
 <div class="w-100 pt-2 mb-0">
   <div class="instability-active-filters">
     <div class="instability-active-filter-label">Active filters</div>
     <ul class="list-inline instability-active-filter-list mb-0">
-      {% if request.GET.year_from_min %}
+      {% if selected_year_from_min is not None %}
         <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
-          <span class="fw-light">Year >= </span><span class="fw-bold">{{ request.GET.year_from_min }}</span>
+          <span class="fw-light">Year >= </span><span class="fw-bold">{{ selected_year_from_min }}</span>
           <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
         </li>
       {% endif %}
 
-      {% if request.GET.year_to_max %}
+      {% if selected_year_to_max is not None %}
         <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
-          <span class="fw-light">Year <= </span><span class="fw-bold">{{ request.GET.year_to_max }}</span>
+          <span class="fw-light">Year <= </span><span class="fw-bold">{{ selected_year_to_max }}</span>
           <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
         </li>
       {% endif %}
 
-      {% for p in polities %}
-        {% if p.id|stringformat:"s" in selected_polity_ids %}
-          <li class="list-inline-item px-2 mb-1 rounded bg-success-light text-dark">
-            <small class="fw-light">Polity:</small> <span class="fw-bold">{{ p.long_name }}</span> ({{ p.new_name }})
-            <a href="{% query_without request 'polity' p.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
+      {% for p in selected_polity_filters %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-success-light text-dark">
+          <small class="fw-light">Polity:</small> <span class="fw-bold">{{ p.long_name }}</span> ({{ p.new_name }})
+          <a href="{% query_without request 'polity' p.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
+        </li>
       {% endfor %}
 
       {% for selected_macro_event in selected_macro_events %}
@@ -51,12 +49,12 @@
 
       {% if selected_row_quality == "good" %}
         <li class="list-inline-item px-2 mb-1 rounded bg-colorful text-dark">
-          <small class="fw-light">Invalid rows:</small>
+          <small class="fw-light">Researcher checks excluded:</small>
           <span class="fw-bold">
             {% if selected_excluded_ra_check_labels %}
-              Excluding {{ selected_excluded_ra_check_labels|join:", " }}
+              {{ selected_excluded_ra_check_labels|join:", " }}
             {% else %}
-              No RA labels excluded
+              None
             {% endif %}
           </span>
           <a href="?{% query_transform request row_quality=None excluded_ra_check=None excluded_ra_check_mode=None %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
@@ -102,22 +100,18 @@
         {% endif %}
       {% endfor %}
 
-      {% for type in instability_types %}
-        {% if type.id|stringformat:"s" in selected_inst_type_ids %}
-          <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
-            <small class="fw-light">Type:</small> <span class="fw-bold">{{ type.name }}</span>
-            <a href="{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
+      {% for type in selected_inst_type_filters %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
+          <small class="fw-light">Type:</small> <span class="fw-bold">{{ type.name }}</span>
+          <a href="{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
+        </li>
       {% endfor %}
 
-      {% for check in check_choices %}
-        {% if check.id|stringformat:"s" in selected_ra_check_ids %}
-          <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
-            <small class="fw-light">RA Check:</small> <span class="fw-bold">{{ check.name }}</span>
-            <a href="{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
+      {% for check in selected_ra_check_filters %}
+        <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
+          <small class="fw-light">RA Check:</small> <span class="fw-bold">{{ check.name }}</span>
+          <a href="{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1"><i class="fa-solid fa-square-xmark"></i></a>
+        </li>
       {% endfor %}
 
       {% if batch_filter_forces_llm %}

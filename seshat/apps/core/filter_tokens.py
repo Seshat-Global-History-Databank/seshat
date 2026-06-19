@@ -62,6 +62,14 @@ def get_search_terms(search_query):
     return normalize_search_text(search_query).split()
 
 
+def parse_integer_filter_value(value):
+    """Return a normalized integer filter value, or None for invalid input."""
+    try:
+        return int(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+
+
 def build_term_search_query(search_query, fields):
     """Build a Q object requiring every search term to match at least one field."""
     terms = get_search_terms(search_query)

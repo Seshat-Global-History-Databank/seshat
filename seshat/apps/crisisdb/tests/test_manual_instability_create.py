@@ -71,9 +71,58 @@ class InstabilityCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reverse("instability_event-create"))
+        self.assertContains(response, "Apply filters")
+        self.assertContains(response, 'id="year_from_min"')
+        self.assertContains(response, 'id="year_to_max"')
+        self.assertNotContains(response, 'id="instability-time-section"')
         self.assertContains(response, 'data-bs-target="#instability-scope-section"')
         self.assertContains(response, 'aria-expanded="false"')
         self.assertNotContains(response, 'id="instability-scope-section" class="collapse show"')
+
+    def test_invalid_year_filters_are_ignored_without_error(self):
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"year_from_min": "not-a-year", "year_to_max": "1.5"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.context["selected_year_from_min"])
+        self.assertIsNone(response.context["selected_year_to_max"])
+        self.assertEqual(response.context["active_filter_count"], 0)
+
+    def test_year_zero_is_a_valid_filter_value(self):
+        polity = Polity.objects.create(
+            name="year_zero_filter_polity",
+            new_name="year_zero_filter_polity",
+            long_name="Year Zero Filter Polity",
+            start_year=-100,
+            end_year=100,
+        )
+        included_event = Instability_event.objects.create(
+            polity=polity,
+            name="Year Zero Included Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=0,
+            year_to=0,
+        )
+        Instability_event.objects.create(
+            polity=polity,
+            name="Before Year Zero Event",
+            source=Instability_event.Source.MANUAL,
+            year_from=-10,
+            year_to=-10,
+        )
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {"year_from_min": "0", "year_to_max": "0"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [included_event])
+        self.assertEqual(response.context["selected_year_from_min"], 0)
+        self.assertEqual(response.context["selected_year_to_max"], 0)
+        self.assertEqual(response.context["active_filter_count"], 2)
 
     def test_instability_row_actions_include_inline_create_button(self):
         polity = Polity.objects.create(
@@ -296,6 +345,52 @@ class InstabilityCreateViewTests(TestCase):
         )
         self.assertIsNone(response.context["selected_source"])
         self.assertEqual(response.context["active_filter_count"], 2)
+
+    def test_zero_result_filters_keep_selected_active_filter_labels(self):
+        polity = Polity.objects.create(
+            name="zero_result_filter_polity",
+            new_name="zero_result_filter_polity",
+            long_name="Zero Result Filter Polity",
+            start_year=100,
+            end_year=200,
+        )
+        check = Check_choice.objects.create(
+            name="Zero Result Check",
+            check_description="Used to verify selected filter labels.",
+            color="Red",
+        )
+        event = Instability_event.objects.create(
+            polity=polity,
+            name="Zero Result LLM Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        event.ra_check.add(check)
+
+        response = self.client.get(
+            reverse("instability_events_all"),
+            {
+                "polity": str(polity.id),
+                "ra_check": str(check.id),
+                "source": Instability_event.Source.MANUAL,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(response.context["object_list"]), [])
+        self.assertEqual(response.context["selected_polity_filters"], [polity])
+        self.assertEqual(response.context["selected_ra_check_filters"], [check])
+        self.assertEqual(
+            [option.id for option in response.context["polities"] if option.event_count == 0],
+            [polity.id],
+        )
+        self.assertEqual(
+            [option.id for option in response.context["check_choices"] if option.event_count == 0],
+            [check.id],
+        )
+        self.assertContains(response, '<small class="fw-light">Polity:</small>')
+        self.assertContains(response, '<small class="fw-light">RA Check:</small>')
 
     def test_batch_filter_forces_llm_rows_even_with_manual_source(self):
         polity = Polity.objects.create(
@@ -940,10 +1035,14 @@ class InstabilityCreateViewTests(TestCase):
             ["Bad Row", "External Event"],
         )
         self.assertEqual(response.context["active_filter_count"], 1)
+        self.assertTrue(response.context["default_invalid_filter_active"])
         self.assertContains(response, "1 filter active")
         self.assertContains(response, "Exclude invalid rows")
-        self.assertContains(response, "Invalid rows:")
-        self.assertContains(response, "Excluding Bad Row, External Event")
+        self.assertContains(response, "Include by Researcher Check")
+        self.assertContains(response, "Exclude by Researcher Check")
+        self.assertNotContains(response, "Exclude all labels")
+        self.assertContains(response, "Researcher checks excluded:")
+        self.assertContains(response, "Bad Row, External Event")
         self.assertNotContains(response, "Good rows only")
 
     def test_good_row_filter_can_customize_excluded_researcher_checks(self):
@@ -1024,7 +1123,8 @@ class InstabilityCreateViewTests(TestCase):
             response.context["selected_excluded_ra_check_labels"],
             ["Bad Row", "Intensity"],
         )
-        self.assertContains(response, "Excluding Bad Row, Intensity")
+        self.assertFalse(response.context["default_invalid_filter_active"])
+        self.assertContains(response, "Bad Row, Intensity")
         self.assertContains(response, external_event.name)
         self.assertNotContains(response, bad_row_event.name)
         self.assertNotContains(response, intensity_event.name)
@@ -1086,7 +1186,8 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(response.context["object_list"]), [clean_event, bad_row_event])
         self.assertEqual(response.context["selected_excluded_ra_check_ids"], [])
-        self.assertContains(response, "No RA labels excluded")
+        self.assertContains(response, "Researcher checks excluded:")
+        self.assertContains(response, "None")
 
     def test_polity_instability_queryset_filters_by_batch(self):
         polity = Polity.objects.create(

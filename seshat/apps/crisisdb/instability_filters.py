@@ -12,6 +12,7 @@ from ..core.filter_tokens import (
     build_term_search_query,
     get_search_terms,
     normalize_search_text,
+    parse_integer_filter_value,
 )
 from ..core.models import Polity
 from .models import (
@@ -290,6 +291,10 @@ def get_selected_instability_text_queries(request):
     return get_request_list(request, "q")
 
 
+def get_selected_instability_year(request, parameter_name):
+    return parse_integer_filter_value(request.GET.get(parameter_name))
+
+
 def get_active_instability_filter_count(request):
     multi_value_filters = (
         "polity",
@@ -319,9 +324,9 @@ def get_active_instability_filter_count(request):
         active_count += 1
     if request.GET.get("searched_name", "").strip():
         active_count += 1
-    if request.GET.get("year_from_min"):
+    if get_selected_instability_year(request, "year_from_min") is not None:
         active_count += 1
-    if request.GET.get("year_to_max"):
+    if get_selected_instability_year(request, "year_to_max") is not None:
         active_count += 1
 
     return active_count
@@ -402,10 +407,14 @@ def apply_instability_global_text_filter(queryset, text_values):
 def apply_instability_event_filters(queryset, request, ignored_filters=None):
     ignored_filters = set(ignored_filters or [])
     year_from_min = (
-        None if "year_from_min" in ignored_filters else request.GET.get("year_from_min")
+        None
+        if "year_from_min" in ignored_filters
+        else get_selected_instability_year(request, "year_from_min")
     )
     year_to_max = (
-        None if "year_to_max" in ignored_filters else request.GET.get("year_to_max")
+        None
+        if "year_to_max" in ignored_filters
+        else get_selected_instability_year(request, "year_to_max")
     )
     created_before = (
         None if "created_before" in ignored_filters else request.GET.get("created_before")
@@ -508,11 +517,11 @@ def apply_instability_event_filters(queryset, request, ignored_filters=None):
         end_year_effective=Coalesce("year_to", F("polity__end_year")),
     )
 
-    if year_from_min:
-        queryset = queryset.filter(start_year_effective__gte=int(year_from_min))
+    if year_from_min is not None:
+        queryset = queryset.filter(start_year_effective__gte=year_from_min)
 
-    if year_to_max:
-        queryset = queryset.filter(end_year_effective__lte=int(year_to_max))
+    if year_to_max is not None:
+        queryset = queryset.filter(end_year_effective__lte=year_to_max)
 
     if created_before:
         parsed_date = parse_date(created_before)
@@ -1054,8 +1063,20 @@ def build_instability_list_context(model_class, request):
     selected_inst_type_ids = get_request_list(request, "inst_type")
     selected_ra_check_ids = get_selected_ra_check_ids(request)
     selected_excluded_ra_check_ids = get_selected_excluded_ra_check_ids(request)
+    default_excluded_ra_check_ids = get_default_excluded_ra_check_ids()
+    effective_default_excluded_ids = exclude_required_ra_check_ids(
+        request,
+        default_excluded_ra_check_ids,
+    )
+    default_invalid_filter_active = (
+        selected_row_quality == GOOD_ROW_FILTER
+        and bool(effective_default_excluded_ids)
+        and set(selected_excluded_ra_check_ids) == set(effective_default_excluded_ids)
+    )
     selected_inst_extent_values = get_request_list(request, "inst_extent")
     selected_inst_intensity_values = get_request_list(request, "inst_intensity")
+    selected_year_from_min = get_selected_instability_year(request, "year_from_min")
+    selected_year_to_max = get_selected_instability_year(request, "year_to_max")
 
     polity_option_queryset = get_instability_filter_option_queryset(
         model_class,
@@ -1114,7 +1135,13 @@ def build_instability_list_context(model_class, request):
         )
         if row["polity_id"] is not None
     }
-    polities = list(Polity.objects.filter(id__in=polity_counts).order_by("new_name"))
+    polity_option_ids = set(polity_counts)
+    polity_option_ids.update(
+        int(polity_id) for polity_id in selected_polity_ids if polity_id.isdigit()
+    )
+    polities = list(
+        Polity.objects.filter(id__in=polity_option_ids).order_by("new_name")
+    )
 
     macro_event_list = [
         obj.made_up_macro_event
@@ -1122,6 +1149,8 @@ def build_instability_list_context(model_class, request):
         if obj.made_up_macro_event
     ]
     macro_event_counts = Counter(macro_event_list)
+    for selected_macro_event in selected_macro_events:
+        macro_event_counts.setdefault(selected_macro_event, 0)
     macro_events_with_counts = sorted(
         macro_event_counts.items(),
         key=lambda item: (-item[1], item[0]),
@@ -1208,6 +1237,49 @@ def build_instability_list_context(model_class, request):
         .select_related("polity")
         .order_by("name", "id")
     )
+    selected_polity_filters = list(
+        Polity.objects.filter(id__in=selected_polity_ids).order_by("long_name", "id")
+    )
+    selected_inst_type_filters = list(
+        Instability_type.objects.filter(id__in=selected_inst_type_ids).order_by(
+            "name", "id"
+        )
+    )
+    selected_ra_check_filters = list(
+        Check_choice.objects.filter(id__in=selected_ra_check_ids).order_by(
+            "name", "id"
+        )
+    )
+    instability_types = (
+        Instability_type.objects.filter(
+            Q(crisisdb_instability_events__in=inst_type_option_queryset)
+            | Q(id__in=selected_inst_type_ids)
+        )
+        .annotate(
+            event_count=Count(
+                "crisisdb_instability_events",
+                filter=Q(crisisdb_instability_events__in=inst_type_option_queryset),
+                distinct=True,
+            )
+        )
+        .distinct()
+        .order_by("name")
+    )
+    check_choices = (
+        Check_choice.objects.filter(
+            Q(crisisdb_instability_events__in=ra_check_option_queryset)
+            | Q(id__in=selected_ra_check_ids)
+        )
+        .annotate(
+            event_count=Count(
+                "crisisdb_instability_events",
+                filter=Q(crisisdb_instability_events__in=ra_check_option_queryset),
+                distinct=True,
+            )
+        )
+        .distinct()
+        .order_by("name")
+    )
     excluded_ra_check_choices = list(
         Check_choice.objects.filter(
             Q(crisisdb_instability_events__in=excluded_ra_check_option_queryset)
@@ -1229,24 +1301,17 @@ def build_instability_list_context(model_class, request):
         "unreliable_polities": Polity.objects.filter(
             unreliable_instability_events=True
         ).order_by("new_name"),
-        "instability_types": Instability_type.objects.filter(
-            crisisdb_instability_events__in=inst_type_option_queryset
-        )
-        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
-        .distinct()
-        .order_by("name"),
-        "check_choices": Check_choice.objects.filter(
-            crisisdb_instability_events__in=ra_check_option_queryset
-        )
-        .annotate(event_count=Count("crisisdb_instability_events", distinct=True))
-        .distinct()
-        .order_by("name"),
+        "instability_types": instability_types,
+        "check_choices": check_choices,
         "macro_events_with_counts": macro_events_with_counts,
         "macro_events": [event for event, _count in macro_events_with_counts],
         "selected_macro": selected_macro_events[0] if len(selected_macro_events) == 1 else None,
         "selected_macro_events": selected_macro_events,
         "selected_event_ids": selected_event_ids,
         "selected_event_filters": selected_event_filters,
+        "selected_polity_filters": selected_polity_filters,
+        "selected_inst_type_filters": selected_inst_type_filters,
+        "selected_ra_check_filters": selected_ra_check_filters,
         "selected_text_queries": selected_text_queries,
         "selected_is_macro_event": request.GET.get("is_macro_event"),
         "name_query": request.GET.get("searched_name", "").strip(),
@@ -1258,7 +1323,8 @@ def build_instability_list_context(model_class, request):
         "selected_batch_values": selected_batch_values,
         "batch_filter_forces_llm": batch_filter_forces_llm,
         "selected_row_quality": selected_row_quality,
-        "default_excluded_ra_check_ids": get_default_excluded_ra_check_ids(),
+        "default_invalid_filter_active": default_invalid_filter_active,
+        "default_excluded_ra_check_ids": default_excluded_ra_check_ids,
         "excluded_ra_check_choices": excluded_ra_check_choices,
         "selected_excluded_ra_check_ids": selected_excluded_ra_check_ids,
         "selected_excluded_ra_check_labels": selected_excluded_ra_check_labels,
@@ -1268,6 +1334,8 @@ def build_instability_list_context(model_class, request):
         "selected_ra_check_ids": selected_ra_check_ids,
         "selected_inst_extent_values": selected_inst_extent_values,
         "selected_inst_intensity_values": selected_inst_intensity_values,
+        "selected_year_from_min": selected_year_from_min,
+        "selected_year_to_max": selected_year_to_max,
         "active_filter_count": get_active_instability_filter_count(request),
         "selected_global_filter_tokens": build_selected_instability_filter_token_options(request),
         "source_filter_choices": source_filter_choices,

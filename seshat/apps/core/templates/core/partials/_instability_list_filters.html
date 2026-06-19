@@ -52,10 +52,15 @@
   }
 
   .instability-summary-main {
-    display: grid;
-    grid-template-columns: minmax(18rem, 1fr) auto;
+    min-width: 0;
+  }
+
+  .instability-summary-header {
+    align-items: center;
+    display: flex;
     gap: 0.85rem;
-    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
   }
 
   .instability-global-filter {
@@ -63,7 +68,8 @@
   }
 
   .instability-global-filter label,
-  .instability-quick-row-label {
+  .instability-quick-row-label,
+  .instability-year-range-label {
     display: block;
     color: var(--instability-muted);
     font-size: 0.72rem;
@@ -85,6 +91,12 @@
     border-radius: 999px;
   }
 
+  .instability-summary-actions .btn {
+    font-size: 0.82rem;
+    min-height: 2.35rem;
+    padding: 0.4rem 0.8rem;
+  }
+
   .instability-summary-actions .btn[type="submit"] {
     border: 1px solid rgba(15, 118, 110, 0.3);
     box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
@@ -93,12 +105,54 @@
 
   .instability-quick-row {
     align-items: center;
-    border-top: 1px dashed var(--instability-line);
     display: flex;
     flex-wrap: wrap;
     gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .instability-summary-tools {
+    align-items: flex-end;
+    border-top: 1px dashed var(--instability-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    justify-content: space-between;
     margin-top: 0.8rem;
     padding-top: 0.75rem;
+  }
+
+  .instability-year-range {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .instability-year-range-label {
+    margin: 0 0.2rem 0.38rem 0;
+  }
+
+  .instability-year-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+  }
+
+  .instability-year-field label {
+    color: var(--instability-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .instability-year-field .form-control {
+    border-radius: 10px;
+    min-height: 2.35rem;
+    padding: 0.3rem 0.55rem;
+    width: 7rem;
   }
 
   .instability-active-filters {
@@ -313,21 +367,6 @@
     margin-top: 0.25rem;
   }
 
-  .instability-filter-actions {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.45rem;
-  }
-
-  .instability-filter-actions .btn {
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.22rem 0.55rem;
-  }
-
   .instability-filter-panel .form-control {
     min-height: 42px;
     border: 1px solid rgba(120, 40, 35, 0.16);
@@ -348,6 +387,9 @@
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
     min-height: 42px;
     max-height: 118px;
     overflow-y: auto;
@@ -358,15 +400,11 @@
   }
 
   .instability-filter-field .select2-container--default .select2-selection--multiple {
-    align-items: center;
-    display: flex;
     min-height: 42px;
-    max-height: 96px;
+    max-height: 148px;
   }
 
   .instability-global-filter .select2-container--default .select2-selection--multiple {
-    align-items: center;
-    display: flex;
     min-height: 58px;
     max-height: 140px;
     padding: 8px 10px;
@@ -381,23 +419,35 @@
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    align-content: flex-start;
     display: flex;
+    flex: 0 0 auto;
     flex-wrap: wrap;
     gap: 4px;
+    margin: 0;
     min-width: 0;
     padding: 0;
+    width: 100%;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered:empty {
+    display: none;
   }
 
   .instability-filter-field .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-    align-items: center;
+    align-items: flex-start;
     min-height: 2rem;
   }
 
   .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice {
     position: relative;
-    display: inline-block;
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    line-height: 1.2;
     max-width: 100%;
     margin: 0;
+    min-height: 2rem;
     padding: 0.28rem 1.75rem 0.28rem 0.62rem;
     border-color: rgba(15, 118, 110, 0.26);
     border-radius: 999px;
@@ -439,9 +489,21 @@
   }
 
   .instability-filter-panel .select2-container--default .select2-search--inline .select2-search__field {
-    min-width: 16rem;
+    box-sizing: border-box;
+    display: block;
     margin-top: 3px;
+    min-width: 0;
+    text-align: left;
+    width: 100% !important;
     color: var(--instability-ink);
+  }
+
+  .instability-filter-panel .select2-container--default .select2-search--inline {
+    display: block;
+    float: none;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
   }
 
   .instability-filter-field .select2-container--default .select2-search--inline .select2-search__field {
@@ -600,16 +662,44 @@
   }
 
   @media (max-width: 991px) {
-    .instability-summary-main {
-      grid-template-columns: 1fr;
-    }
-
     .instability-summary-actions {
       justify-content: flex-start;
     }
   }
 
   @media (max-width: 767px) {
+    .instability-filter-summary {
+      position: static;
+    }
+
+    .instability-summary-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .instability-summary-actions {
+      width: 100%;
+    }
+
+    .instability-summary-tools {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .instability-year-range {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .instability-year-field {
+      flex: 1 1 7rem;
+    }
+
+    .instability-year-field .form-control {
+      width: 100%;
+    }
+
     .instability-choice-toggle {
       grid-template-columns: 1fr;
     }
@@ -645,7 +735,15 @@
             <div class="instability-filter-summary">
                 <div class="instability-summary-main">
                     <div class="instability-global-filter">
-                        <label for="global_filter_tokens" class="small fw-semibold text-secondary mb-1">Search & add filters</label>
+                        <div class="instability-summary-header">
+                            <label for="global_filter_tokens" class="small fw-semibold text-secondary mb-0">Search & add filters</label>
+                            <div class="d-flex flex-wrap align-items-center gap-2 instability-summary-actions">
+                                <button type="submit" class="btn fw-bold bg-colorful-light">
+                                    <i class="fa-solid fa-filter"></i> Apply filters
+                                </button>
+                                <a href="?" class="btn btn-outline-danger fw-semibold text-nowrap">Clear all</a>
+                            </div>
+                        </div>
                         <select id="global_filter_tokens" class="form-select js-instability-token-filter" multiple data-ajax-url="{% url 'instability_event-filter-tokens' %}" data-placeholder="Search events, polities, batches, sources, types, checks, macro events, or normal events">
                           {% for token in selected_global_filter_tokens %}
                             <option value="{{ token.token_id }}" selected>{{ token.label }}</option>
@@ -653,41 +751,48 @@
                         </select>
                         <div class="instability-filter-help mb-0">Type to preview matching filter tokens. Selected tokens become normal filters when you apply.</div>
                     </div>
-
-                    <div class="d-flex flex-wrap align-items-center gap-2 instability-summary-actions">
-                        <button type="submit" class="btn btn-sm fw-bold bg-colorful-light">
-                            <i class="fa-solid fa-filter"></i> Apply
-                        </button>
-                        <a href="?" class="btn btn-outline-danger btn-sm fw-semibold text-nowrap">Clear All</a>
-                    </div>
                 </div>
 
-                <div class="instability-quick-row">
-                    <span class="instability-quick-row-label mb-0 me-1">Common views</span>
-                    <a href="?{% query_transform request row_quality='good' excluded_ra_check=None excluded_ra_check_mode=None %}" class="btn btn-sm {% if selected_row_quality == 'good' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                        Exclude invalid rows
-                    </a>
-                    {% if selected_row_quality == 'good' %}
-                        <a href="?{% query_transform request row_quality=None excluded_ra_check=None excluded_ra_check_mode=None %}" class="btn btn-sm btn-outline-secondary">Include invalid rows</a>
-                    {% endif %}
-                    <a href="?{% query_transform request source='llm' %}" class="btn btn-sm {% if explicit_selected_source == 'llm' and not batch_filter_forces_llm %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                        Only LLM
-                    </a>
-                    {% if batch_filter_forces_llm %}
-                        <span class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true" title="Batch filters are LLM-only. Clear batches before selecting manual rows." data-instability-source-conflict="batch">
-                            Only manual
-                        </span>
-                    {% else %}
-                        <a href="?{% query_transform request source='manual' selected_batch=None %}" class="btn btn-sm {% if explicit_selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}">
-                            Only manual
-                        </a>
-                    {% endif %}
-                    {% if explicit_selected_source_values and not batch_filter_forces_llm %}
-                        <a href="?{% query_transform request source=None %}" class="btn btn-sm btn-outline-secondary" data-instability-clear-sources="true">All sources</a>
-                    {% endif %}
-                    {% if selected_batch_values %}
-                        <a href="?{% query_transform request selected_batch=None %}" class="btn btn-sm btn-outline-secondary">All batches</a>
-                    {% endif %}
+                <div class="instability-summary-tools">
+                    <div class="instability-quick-row">
+                        <span class="instability-quick-row-label mb-0 me-1">Common views</span>
+                        <button type="button" class="btn btn-sm {% if default_invalid_filter_active %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="exclude-invalid">
+                            Exclude invalid rows
+                        </button>
+                        {% if selected_row_quality == 'good' %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="include-invalid">Include invalid rows</button>
+                        {% endif %}
+                        <button type="button" class="btn btn-sm {% if explicit_selected_source == 'llm' and not batch_filter_forces_llm %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="only-llm">
+                            Only LLM
+                        </button>
+                        {% if batch_filter_forces_llm %}
+                            <span class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true" title="Batch filters are LLM-only. Clear batches before selecting manual rows." data-instability-source-conflict="batch">
+                                Only manual
+                            </span>
+                        {% else %}
+                            <button type="button" class="btn btn-sm {% if explicit_selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="only-manual">
+                                Only manual
+                            </button>
+                        {% endif %}
+                        {% if explicit_selected_source_values and not batch_filter_forces_llm %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="all-sources" data-instability-clear-sources="true">All sources</button>
+                        {% endif %}
+                        {% if selected_batch_values %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="all-batches">All batches</button>
+                        {% endif %}
+                    </div>
+
+                    <div class="instability-year-range" role="group" aria-label="Year range">
+                        <span class="instability-year-range-label">Year range</span>
+                        <div class="instability-year-field">
+                            <label for="year_from_min">From</label>
+                            <input type="number" name="year_from_min" id="year_from_min" class="form-control" value="{{ selected_year_from_min|default_if_none:'' }}" placeholder="Min">
+                        </div>
+                        <div class="instability-year-field">
+                            <label for="year_to_max">To</label>
+                            <input type="number" name="year_to_max" id="year_to_max" class="form-control" value="{{ selected_year_to_max|default_if_none:'' }}" placeholder="Max">
+                        </div>
+                    </div>
                 </div>
 
                 {% include "core/partials/_instability_active_filter_chips.html" %}
@@ -780,7 +885,7 @@
                                     <label for="source" class="text-secondary">Sources</label>
                                     <select name="source" id="source" class="form-select js-instability-multiple" multiple data-placeholder="All sources">
                                       {% for value, label, count in source_filter_choices %}
-                                        <option value="{{ value }}" {% if value in selected_source_values %}selected{% endif %}>{{ label }} - {{ count }}</option>
+                                        <option value="{{ value }}" {% if value in explicit_selected_source_values %}selected{% endif %}>{{ label }} - {{ count }}</option>
                                       {% endfor %}
                                     </select>
                                     <div class="instability-filter-help">Select LLM, manual, or both.</div>
@@ -820,10 +925,10 @@
                                 <span>All types</span>
                             {% endif %}
                             {% if selected_ra_check_ids %}
-                                <span class="badge rounded-pill bg-violet-light text-dark">{{ selected_ra_check_ids|length }} required checks</span>
+                                <span class="badge rounded-pill bg-violet-light text-dark">{{ selected_ra_check_ids|length }} checks included</span>
                             {% endif %}
                             {% if selected_row_quality %}
-                                <span class="badge rounded-pill bg-colorful text-dark">Invalid rows excluded</span>
+                                <span class="badge rounded-pill bg-colorful text-dark">{{ selected_excluded_ra_check_ids|length }} checks excluded</span>
                             {% endif %}
                             {% if selected_inst_intensity_values or selected_inst_extent_values %}
                                 <span class="badge rounded-pill bg-secondary-light text-dark">Severity filters active</span>
@@ -847,7 +952,7 @@
                                 </div>
 
                                 <div class="col-md-4 pb-2 instability-filter-field">
-                                    <label for="ra_check_select" class="text-secondary d-block">Require Researcher Checks</label>
+                                    <label for="ra_check_select" class="text-secondary d-block">Include by Researcher Check</label>
                                     <select id="ra_check_select" name="ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Search researcher checks">
                                       {% for check in check_choices %}
                                         <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
@@ -855,24 +960,19 @@
                                         </option>
                                       {% endfor %}
                                     </select>
-                                    <div class="instability-filter-help">Keep only rows that carry at least one selected review label.</div>
+                                    <div class="instability-filter-help">Show rows carrying at least one selected researcher check.</div>
                                 </div>
 
                                 <div class="col-md-4 pb-2 instability-filter-field">
-                                    <label for="excluded_ra_check_select" class="text-secondary d-block">Exclude Researcher Checks</label>
-                                    <select id="excluded_ra_check_select" name="excluded_ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Default invalid labels" data-default-values="{{ default_excluded_ra_check_ids|join:',' }}">
+                                    <label for="excluded_ra_check_select" class="text-secondary d-block">Exclude by Researcher Check</label>
+                                    <select id="excluded_ra_check_select" name="excluded_ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Search researcher checks" data-default-values="{{ default_excluded_ra_check_ids|join:',' }}">
                                       {% for check in excluded_ra_check_choices %}
                                         <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_excluded_ra_check_ids %}selected{% endif %}>
                                           {{ check.name }} - {{ check.event_count }}
                                         </option>
                                       {% endfor %}
                                     </select>
-                                    <div class="instability-filter-actions">
-                                        <button type="button" class="btn btn-outline-secondary" data-instability-excluded-action="default">Default invalid</button>
-                                        <button type="button" class="btn btn-outline-secondary" data-instability-excluded-action="all">Exclude all labels</button>
-                                        <button type="button" class="btn btn-outline-secondary" data-instability-excluded-action="clear">Exclude none</button>
-                                    </div>
-                                    <div class="instability-filter-help">This removes rows with selected labels. Exclude none clears this rule and includes labels again.</div>
+                                    <div class="instability-filter-help">Hide rows carrying at least one selected researcher check. Use Exclude invalid rows for the default invalid set.</div>
                                 </div>
 
                                 <div class="col-md-4 pb-2 instability-filter-field">
@@ -901,41 +1001,6 @@
                     </div>
                 </section>
 
-                <section class="instability-filter-card">
-                    <button class="instability-filter-card-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#instability-time-section" aria-controls="instability-time-section" aria-expanded="{% if request.GET.year_from_min or request.GET.year_to_max %}true{% else %}false{% endif %}">
-                        <span class="instability-filter-card-title">
-                            <span class="small fw-bold text-dark">Time</span>
-                            <span class="small text-secondary">Constrain the effective year range.</span>
-                        </span>
-                        <span class="instability-filter-card-summary">
-                            {% if request.GET.year_from_min %}
-                                <span class="badge rounded-pill bg-orange-light text-dark">From {{ request.GET.year_from_min }}</span>
-                            {% endif %}
-                            {% if request.GET.year_to_max %}
-                                <span class="badge rounded-pill bg-orange-light text-dark">To {{ request.GET.year_to_max }}</span>
-                            {% endif %}
-                            {% if not request.GET.year_from_min and not request.GET.year_to_max %}
-                                <span>All years</span>
-                            {% endif %}
-                        </span>
-                        <i class="fa-solid fa-chevron-down instability-filter-card-chevron"></i>
-                    </button>
-                    <div id="instability-time-section" class="collapse {% if request.GET.year_from_min or request.GET.year_to_max %}show{% endif %}">
-                        <div class="instability-filter-card-body">
-                            <div class="row g-2">
-                                <div class="col-md-2 pb-2 instability-filter-field">
-                                    <label class="text-secondary" for="year_from_min">Start Year</label>
-                                    <input type="number" name="year_from_min" id="year_from_min" class="form-control" value="{{ request.GET.year_from_min }}" placeholder="Min">
-                                </div>
-
-                                <div class="col-md-2 pb-2 instability-filter-field">
-                                    <label class="text-secondary" for="year_to_max">End Year</label>
-                                    <input type="number" name="year_to_max" id="year_to_max" class="form-control" value="{{ request.GET.year_to_max }}" placeholder="Max">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </div>
         </div>
       </form>
@@ -950,6 +1015,7 @@
     const $instabilitySelects = jQuery(".js-instability-multiple");
     const $tokenFilter = jQuery(".js-instability-token-filter");
     const $filterPanel = jQuery(".instability-filter-panel");
+    const $filterForm = $filterPanel.find("form");
     const $rowQuality = jQuery("#row_quality");
     const $raCheckSelect = jQuery("#ra_check_select");
     const $excludedRaCheckSelect = jQuery("#excluded_ra_check_select");
@@ -1005,14 +1071,6 @@
     function getDefaultExcludedRaCheckIds() {
       const defaultValues = String($excludedRaCheckSelect.data("default-values") || "");
       return defaultValues.split(",").filter(function (value) {
-        return value;
-      });
-    }
-
-    function getAllExcludedRaCheckIds() {
-      return $excludedRaCheckSelect.find("option").map(function () {
-        return this.value;
-      }).get().filter(function (value) {
         return value;
       });
     }
@@ -1085,6 +1143,41 @@
 
       $tokenFilter.val(nextTokens).trigger("change");
       return true;
+    }
+
+    function removeAllTokenValuesByKind(kind) {
+      return removeTokenValuesByKind(kind, getTokenValuesByKind(kind));
+    }
+
+    function setSourceFilter(values) {
+      jQuery("#source").val(values).trigger("change");
+      removeAllTokenValuesByKind("source");
+    }
+
+    function removeTokenFromBackedField(token) {
+      if (!token) {
+        return;
+      }
+
+      const fieldSelectors = {
+        inst_type: "#inst_type_select",
+        macro_event: "#macro_event",
+        polity: "#polity",
+        ra_check: "#ra_check_select",
+        source: "#source"
+      };
+      if (fieldSelectors[token.kind]) {
+        removeSelectValues(jQuery(fieldSelectors[token.kind]), [token.value]);
+      }
+
+      if (token.kind === "is_macro_event") {
+        const $selectedMacroevent = jQuery(
+          'input[name="is_macro_event"]:checked'
+        );
+        if ($selectedMacroevent.val() === token.value) {
+          jQuery("#is_macro_event_all").prop("checked", true).trigger("change");
+        }
+      }
     }
 
     function getRequiredRaCheckValues() {
@@ -1174,16 +1267,25 @@
       }
     });
 
-    jQuery("[data-instability-excluded-action]").on("click", function () {
-      const action = jQuery(this).data("instability-excluded-action");
-      if (action === "default") {
+    jQuery("[data-instability-quick-action]").on("click", function () {
+      const action = jQuery(this).data("instability-quick-action");
+      if (action === "exclude-invalid") {
         setExcludedRaChecks(getDefaultExcludedRaCheckIds(), "good");
-      } else if (action === "all") {
-        setExcludedRaChecks(getAllExcludedRaCheckIds(), "good");
-      } else if (action === "clear") {
+      } else if (action === "include-invalid") {
         setExcludedRaChecks([], "");
+      } else if (action === "only-llm") {
+        setSourceFilter(["llm"]);
+      } else if (action === "only-manual") {
+        setSourceFilter(["manual"]);
+        removeAllTokenValuesByKind("selected_batch");
+      } else if (action === "all-sources") {
+        setSourceFilter([]);
+      } else if (action === "all-batches") {
+        removeAllTokenValuesByKind("selected_batch");
+      } else {
+        return;
       }
-      cleanupInstabilityChoices();
+      $filterForm.get(0).requestSubmit();
     });
 
     $raCheckSelect.on("select2:select", function (event) {
@@ -1207,6 +1309,26 @@
       if (selectedToken && selectedToken.kind === "ra_check") {
         removeExcludedRaCheckValues([selectedToken.value]);
       }
+    });
+
+    $tokenFilter.on("select2:unselect", function (event) {
+      const tokenId = event.params && event.params.data && event.params.data.id;
+      removeTokenFromBackedField(getTokenParts(tokenId));
+    });
+
+    $instabilitySelects.on("select2:unselect", function (event) {
+      const value = event.params && event.params.data && event.params.data.id;
+      const kind = this.name;
+      if (kind && value !== undefined) {
+        removeTokenValuesByKind(kind, [value]);
+      }
+    });
+
+    jQuery('input[name="is_macro_event"]').on("change", function () {
+      removeTokenValuesByKind(
+        "is_macro_event",
+        getTokenValuesByKind("is_macro_event")
+      );
     });
 
     function tokenToParam(tokenId) {
@@ -1235,6 +1357,22 @@
       return { name: tokenParamMap[kind], value: value };
     }
 
+    function formHasParamValue($form, name, value) {
+      return $form.find("[name]").filter(function () {
+        if (this.disabled || this.name !== name) {
+          return false;
+        }
+        if ((this.type === "radio" || this.type === "checkbox") && !this.checked) {
+          return false;
+        }
+        const fieldValues = jQuery(this).val();
+        if (Array.isArray(fieldValues)) {
+          return fieldValues.map(String).includes(String(value));
+        }
+        return String(fieldValues || "") === String(value);
+      }).length > 0;
+    }
+
     jQuery(".instability-filter-panel form").on("submit", function () {
       const $form = jQuery(this);
       $form.find("[data-instability-token-param='true']").remove();
@@ -1242,6 +1380,9 @@
       ($tokenFilter.val() || []).forEach(function (tokenId) {
         const param = tokenToParam(tokenId);
         if (!param) {
+          return;
+        }
+        if (formHasParamValue($form, param.name, param.value)) {
           return;
         }
         jQuery("<input>", {
@@ -1259,6 +1400,16 @@
         $rowQuality.val("good");
       }
 
+      $form.find("#year_from_min, #year_to_max").each(function () {
+        jQuery(this).prop("disabled", !jQuery(this).val());
+      });
+      const $selectedMacroevent = $form.find(
+        'input[name="is_macro_event"]:checked'
+      );
+      if (!$selectedMacroevent.val()) {
+        $selectedMacroevent.prop("disabled", true);
+      }
+
       if ($rowQuality.val() === "good") {
         jQuery("<input>", {
           type: "hidden",
@@ -1267,6 +1418,7 @@
           "data-instability-excluded-mode": "true"
         }).appendTo($form);
       } else {
+        $rowQuality.prop("disabled", true);
         $excludedRaCheckSelect.prop("disabled", true);
       }
     });
