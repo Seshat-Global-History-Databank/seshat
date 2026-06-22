@@ -1,0 +1,1443 @@
+{% load custom_filters %}
+
+<style>
+  .instability-filter-panel {
+    --instability-ink: #2d2520;
+    --instability-muted: #70655f;
+    --instability-line: rgba(120, 40, 35, 0.14);
+    --instability-soft: rgba(120, 40, 35, 0.06);
+    --instability-teal: #0f766e;
+    --instability-teal-soft: rgba(15, 118, 110, 0.1);
+    --instability-rose: #782823;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(244, 183, 112, 0.22), transparent 26rem),
+      radial-gradient(circle at 88% 6%, rgba(116, 199, 179, 0.18), transparent 24rem),
+      linear-gradient(180deg, #fffdf7 0%, #fff8ed 100%),
+      #fffdf2;
+    border-color: rgba(87, 82, 74, 0.55) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 40px rgba(89, 54, 32, 0.08);
+    overflow: visible;
+    position: relative;
+  }
+
+  .instability-filter-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .instability-filter-heading strong {
+    color: var(--instability-ink);
+    font-size: 1.04rem;
+  }
+
+  .instability-filter-subtitle {
+    color: var(--instability-muted);
+    font-size: 0.9rem;
+    margin-top: 0.15rem;
+  }
+
+  .instability-filter-summary {
+    position: sticky;
+    top: 55px;
+    z-index: 920;
+    background: rgba(255, 253, 248, 0.94);
+    border: 1px solid var(--instability-line);
+    border-radius: 18px;
+    box-shadow: 0 18px 34px rgba(89, 54, 32, 0.11);
+    padding: 0.9rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .instability-summary-main {
+    min-width: 0;
+  }
+
+  .instability-summary-header {
+    align-items: center;
+    display: flex;
+    gap: 0.85rem;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+  }
+
+  .instability-global-filter {
+    min-width: 0;
+  }
+
+  .instability-global-filter label,
+  .instability-quick-row-label,
+  .instability-year-range-label {
+    display: block;
+    color: var(--instability-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+  }
+
+  .instability-summary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    justify-content: flex-end;
+  }
+
+  .instability-summary-actions .btn,
+  .instability-quick-row .btn {
+    border-radius: 999px;
+  }
+
+  .instability-summary-actions .btn {
+    font-size: 0.82rem;
+    min-height: 2.35rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .instability-summary-actions .btn[type="submit"] {
+    border: 1px solid rgba(15, 118, 110, 0.3);
+    box-shadow: 0 8px 18px rgba(15, 118, 110, 0.12);
+    color: #5a211d;
+  }
+
+  .instability-quick-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .instability-summary-tools {
+    align-items: flex-end;
+    border-top: 1px dashed var(--instability-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+    padding-top: 0.75rem;
+  }
+
+  .instability-year-range {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .instability-year-range-label {
+    margin: 0 0.2rem 0.38rem 0;
+  }
+
+  .instability-year-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+  }
+
+  .instability-year-field label {
+    color: var(--instability-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .instability-year-field .form-control {
+    border-radius: 10px;
+    min-height: 2.35rem;
+    padding: 0.3rem 0.55rem;
+    width: 7rem;
+  }
+
+  .instability-active-filters {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid var(--instability-line);
+    border-radius: 14px;
+    margin-top: 0.75rem;
+    padding: 0.65rem;
+  }
+
+  .instability-active-filter-label {
+    color: var(--instability-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+  }
+
+  .instability-active-filter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .instability-active-filter-list .list-inline-item {
+    align-items: center;
+    background: rgba(255, 253, 250, 0.9) !important;
+    border: 1px solid rgba(120, 40, 35, 0.12);
+    border-radius: 999px !important;
+    box-shadow: 0 5px 14px rgba(89, 54, 32, 0.06);
+    display: inline-flex;
+    gap: 0.2rem;
+    margin: 0 !important;
+    padding: 0.34rem 0.5rem 0.34rem 0.62rem !important;
+  }
+
+  .instability-active-filter-list .list-inline-item a {
+    align-items: center;
+    border-radius: 999px;
+    color: var(--instability-rose) !important;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    margin-left: 0.2rem !important;
+    min-height: 1.1rem;
+    min-width: 1.1rem;
+    text-decoration: none;
+  }
+
+  .instability-active-filter-list .list-inline-item a:hover {
+    background: rgba(120, 40, 35, 0.09);
+  }
+
+  .instability-filter-sections {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .instability-filter-card {
+    background: rgba(255, 253, 250, 0.82);
+    border: 1px solid var(--instability-line);
+    border-radius: 16px;
+    box-shadow: 0 10px 24px rgba(89, 54, 32, 0.05);
+    overflow: hidden;
+  }
+
+  .instability-filter-card-toggle {
+    align-items: center;
+    background: rgba(255, 253, 250, 0.72);
+    border: 0;
+    color: inherit;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  .instability-filter-card-toggle:focus {
+    outline: 2px solid rgba(15, 118, 110, 0.3);
+    outline-offset: -2px;
+  }
+
+  .instability-filter-card-title {
+    align-items: baseline;
+    display: flex;
+    flex: 1 1 16rem;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.8rem;
+    min-width: 0;
+  }
+
+  .instability-filter-card-summary {
+    align-items: center;
+    color: var(--instability-muted);
+    display: flex;
+    flex: 1 1 18rem;
+    flex-wrap: wrap;
+    font-size: 0.76rem;
+    gap: 0.35rem;
+    justify-content: flex-end;
+  }
+
+  .instability-filter-card-summary .badge {
+    border: 1px solid rgba(120, 40, 35, 0.1);
+    font-weight: 700;
+  }
+
+  .instability-filter-card-chevron {
+    color: var(--instability-muted);
+    transition: transform 0.18s ease;
+  }
+
+  .instability-filter-card-toggle[aria-expanded="true"] .instability-filter-card-chevron {
+    transform: rotate(180deg);
+  }
+
+  .instability-filter-card-body {
+    border-top: 1px solid rgba(120, 40, 35, 0.1);
+    padding: 0.85rem;
+  }
+
+  .instability-filter-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .instability-filter-field > label,
+  .instability-toggle-field legend {
+    color: var(--instability-muted);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.32rem;
+  }
+
+  .instability-toggle-field {
+    border: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .instability-toggle-field legend {
+    float: none;
+    font-size: inherit;
+    width: auto;
+  }
+
+  .instability-choice-toggle {
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(120, 40, 35, 0.16);
+    border-radius: 14px;
+    display: grid;
+    gap: 0.28rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: 42px;
+    padding: 0.26rem;
+  }
+
+  .instability-choice-toggle input {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .instability-choice-toggle label {
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    color: var(--instability-muted);
+    cursor: pointer;
+    display: flex;
+    font-size: 0.82rem;
+    font-weight: 700;
+    justify-content: center;
+    line-height: 1.15;
+    margin: 0;
+    min-height: 2rem;
+    padding: 0.36rem 0.55rem;
+    text-align: center;
+    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .instability-choice-toggle label:hover {
+    background: rgba(15, 118, 110, 0.08);
+    color: var(--instability-ink);
+  }
+
+  .instability-choice-toggle input:focus-visible + label {
+    outline: 2px solid rgba(15, 118, 110, 0.34);
+    outline-offset: 2px;
+  }
+
+  .instability-choice-toggle input:checked + label {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.15), rgba(244, 183, 112, 0.16));
+    border-color: rgba(15, 118, 110, 0.36);
+    box-shadow: 0 6px 14px rgba(15, 118, 110, 0.12);
+    color: #10433e;
+  }
+
+  .instability-filter-help {
+    color: #6c757d;
+    font-size: 0.76rem;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+  }
+
+  .instability-filter-panel .form-control {
+    min-height: 42px;
+    border: 1px solid rgba(120, 40, 35, 0.16);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--instability-ink);
+    box-shadow: none;
+    padding: 0.42rem 0.65rem;
+  }
+
+  .instability-filter-panel .form-control:focus {
+    border-color: rgba(15, 118, 110, 0.42);
+    box-shadow: 0 0 0 0.18rem rgba(15, 118, 110, 0.12);
+  }
+
+  .instability-filter-panel .select2-container {
+    width: 100% !important;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    min-height: 42px;
+    max-height: 118px;
+    overflow-y: auto;
+    padding: 4px 6px;
+    border-color: rgba(120, 40, 35, 0.16);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .instability-filter-field .select2-container--default .select2-selection--multiple {
+    min-height: 42px;
+    max-height: 148px;
+  }
+
+  .instability-global-filter .select2-container--default .select2-selection--multiple {
+    min-height: 58px;
+    max-height: 140px;
+    padding: 8px 10px;
+    border: 1px solid rgba(120, 40, 35, 0.2);
+    border-radius: 16px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .instability-global-filter .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    align-items: center;
+    min-height: 2.4rem;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    align-content: flex-start;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+    min-width: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__rendered:empty {
+    display: none;
+  }
+
+  .instability-filter-field .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    align-items: flex-start;
+    min-height: 2rem;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    position: relative;
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    line-height: 1.2;
+    max-width: 100%;
+    margin: 0;
+    min-height: 2rem;
+    padding: 0.28rem 1.75rem 0.28rem 0.62rem;
+    border-color: rgba(15, 118, 110, 0.26);
+    border-radius: 999px;
+    background: var(--instability-teal-soft);
+    color: #10433e;
+    white-space: normal;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    left: auto;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 1.15rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    color: #0f5e56;
+    float: none;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(-50%);
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    background: rgba(15, 118, 110, 0.14);
+    color: var(--instability-rose);
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__clear {
+    display: none !important;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-search--inline .select2-search__field {
+    box-sizing: border-box;
+    display: block;
+    margin-top: 3px;
+    min-width: 0;
+    text-align: left;
+    width: 100% !important;
+    color: var(--instability-ink);
+  }
+
+  .instability-filter-panel .select2-container--default .select2-search--inline {
+    display: block;
+    float: none;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .instability-filter-field .select2-container--default .select2-search--inline .select2-search__field {
+    height: 2rem;
+    line-height: 2rem;
+    margin-top: 0;
+  }
+
+  .instability-global-filter .select2-container--default .select2-search--inline .select2-search__field {
+    height: 2.4rem;
+    line-height: 2.4rem;
+    margin-top: 0;
+  }
+
+  .instability-filter-panel .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #6c757d;
+    margin-top: 3px;
+  }
+
+  .instability-filter-field .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    line-height: 2rem;
+    margin-top: 0;
+  }
+
+  .instability-global-filter .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    line-height: 2.4rem;
+    margin-top: 0;
+  }
+
+  .instability-filter-panel .select2-dropdown,
+  .instability-filter-dropdown {
+    overflow: hidden;
+    border: 1px solid var(--instability-line, rgba(120, 40, 35, 0.14)) !important;
+    border-radius: 16px !important;
+    background: #fffdfa !important;
+    box-shadow: 0 18px 34px rgba(89, 54, 32, 0.18) !important;
+  }
+
+  .instability-filter-panel .select2-results,
+  .instability-filter-dropdown .select2-results {
+    background: #fffdfa !important;
+  }
+
+  .instability-filter-panel .select2-results__options,
+  .instability-filter-dropdown .select2-results__options {
+    max-height: 360px !important;
+    background: #fffdfa !important;
+  }
+
+  .instability-filter-panel .select2-results__options--nested,
+  .instability-filter-dropdown .select2-results__options--nested {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .instability-filter-panel .select2-results__group,
+  .instability-filter-dropdown .select2-results__group {
+    background: #fffdfa !important;
+    clear: both !important;
+    display: block !important;
+    line-height: 1.2;
+    padding: 0.72rem 0.9rem 0.35rem;
+    color: var(--instability-muted, #70655f) !important;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .instability-filter-panel .select2-results__option,
+  .instability-filter-dropdown .select2-results__option {
+    background: #fffdfa !important;
+    color: var(--instability-ink, #2d2520) !important;
+    box-sizing: border-box;
+    display: block !important;
+    float: none !important;
+    line-height: normal;
+    padding: 0.62rem 0.9rem;
+  }
+
+  .instability-filter-panel .select2-results__option[role="group"],
+  .instability-filter-dropdown .select2-results__option[role="group"] {
+    background: #fffdfa !important;
+    clear: both !important;
+    display: block !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .instability-filter-dropdown .select2-results__options--nested > .select2-results__option {
+    border-top: 1px solid rgba(120, 40, 35, 0.08);
+    clear: both !important;
+    min-height: 4.2rem;
+    padding: 0.76rem 0.9rem !important;
+  }
+
+  .instability-filter-dropdown .select2-results__options--nested > .select2-results__option:first-child {
+    border-top: 0;
+  }
+
+  .instability-filter-panel .select2-results__option--highlighted[aria-selected],
+  .instability-filter-panel .select2-results__option--highlighted.select2-results__option--selectable,
+  .instability-filter-panel .select2-results__option--selectable:hover,
+  .instability-filter-dropdown .select2-results__option--highlighted[aria-selected],
+  .instability-filter-dropdown .select2-results__option--highlighted.select2-results__option--selectable,
+  .instability-filter-dropdown .select2-results__option--selectable:hover {
+    background: rgba(15, 118, 110, 0.12) !important;
+    color: var(--instability-ink, #2d2520) !important;
+  }
+
+  .instability-filter-panel .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted),
+  .instability-filter-dropdown .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted) {
+    background: rgba(120, 40, 35, 0.06) !important;
+    color: var(--instability-ink, #2d2520) !important;
+  }
+
+  .instability-token-result {
+    clear: both;
+    display: grid;
+    grid-template-columns: minmax(5.5rem, 7rem) minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    min-height: 2.75rem;
+    width: 100%;
+  }
+
+  .instability-token-kind {
+    color: var(--instability-teal);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    padding-top: 0.18rem;
+    text-transform: uppercase;
+  }
+
+  .instability-token-result-main {
+    display: block;
+    font-weight: 700;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .instability-token-result-meta {
+    display: block;
+    color: var(--instability-muted);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-top: 0.12rem;
+    min-width: 0;
+  }
+
+  .instability-token-result-content {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 991px) {
+    .instability-summary-actions {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .instability-filter-summary {
+      position: static;
+    }
+
+    .instability-summary-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .instability-summary-actions {
+      width: 100%;
+    }
+
+    .instability-summary-tools {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .instability-year-range {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .instability-year-field {
+      flex: 1 1 7rem;
+    }
+
+    .instability-year-field .form-control {
+      width: 100%;
+    }
+
+    .instability-choice-toggle {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="border border-secondary rounded px-3 pt-3 mb-2 instability-filter-panel">
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2 pb-1">
+            <div>
+                <div class="instability-filter-heading">
+                    <strong class="text-dark">Filter Instability Events</strong>
+                    <span class="badge rounded-pill bg-colorful border text-dark">
+                        {% if record_count is not None %}
+                            {{ record_count }} matching
+                        {% else %}
+                            {{ object_list|length }} matching
+                        {% endif %}
+                    </span>
+                    {% if active_filter_count %}
+                        <span class="badge rounded-pill bg-warning-light text-dark">{{ active_filter_count }} filter{{ active_filter_count|pluralize }} active</span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-absent-light text-secondary">No filters active</span>
+                    {% endif %}
+                </div>
+                <div class="instability-filter-subtitle">
+                    Build a research set by combining scope, source, quality, classification, and time filters.
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="instability-filter-summary">
+                <div class="instability-summary-main">
+                    <div class="instability-global-filter">
+                        <div class="instability-summary-header">
+                            <label for="global_filter_tokens" class="small fw-semibold text-secondary mb-0">Search & add filters</label>
+                            <div class="d-flex flex-wrap align-items-center gap-2 instability-summary-actions">
+                                <button type="submit" class="btn fw-bold bg-colorful-light">
+                                    <i class="fa-solid fa-filter"></i> Apply filters
+                                </button>
+                                <a href="?" class="btn btn-outline-danger fw-semibold text-nowrap">Clear all</a>
+                            </div>
+                        </div>
+                        <select id="global_filter_tokens" class="form-select js-instability-token-filter" multiple data-ajax-url="{% url 'instability_event-filter-tokens' %}" data-placeholder="Search events, polities, batches, sources, types, checks, macro events, or normal events">
+                          {% for token in selected_global_filter_tokens %}
+                            <option value="{{ token.token_id }}" selected>{{ token.label }}</option>
+                          {% endfor %}
+                        </select>
+                        <div class="instability-filter-help mb-0">Type to preview matching filter tokens. Selected tokens become normal filters when you apply.</div>
+                    </div>
+                </div>
+
+                <div class="instability-summary-tools">
+                    <div class="instability-quick-row">
+                        <span class="instability-quick-row-label mb-0 me-1">Common views</span>
+                        <button type="button" class="btn btn-sm {% if default_invalid_filter_active %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="exclude-invalid">
+                            Exclude invalid rows
+                        </button>
+                        {% if selected_row_quality == 'good' %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="include-invalid">Include invalid rows</button>
+                        {% endif %}
+                        <button type="button" class="btn btn-sm {% if explicit_selected_source == 'llm' and not batch_filter_forces_llm %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="only-llm">
+                            Only LLM
+                        </button>
+                        {% if batch_filter_forces_llm %}
+                            <span class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true" title="Batch filters are LLM-only. Clear batches before selecting manual rows." data-instability-source-conflict="batch">
+                                Only manual
+                            </span>
+                        {% else %}
+                            <button type="button" class="btn btn-sm {% if explicit_selected_source == 'manual' %}btn-dark{% else %}btn-outline-secondary{% endif %}" data-instability-quick-action="only-manual">
+                                Only manual
+                            </button>
+                        {% endif %}
+                        {% if explicit_selected_source_values and not batch_filter_forces_llm %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="all-sources" data-instability-clear-sources="true">All sources</button>
+                        {% endif %}
+                        {% if selected_batch_values %}
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-instability-quick-action="all-batches">All batches</button>
+                        {% endif %}
+                    </div>
+
+                    <div class="instability-year-range" role="group" aria-label="Year range">
+                        <span class="instability-year-range-label">Year range</span>
+                        <div class="instability-year-field">
+                            <label for="year_from_min">From</label>
+                            <input type="number" name="year_from_min" id="year_from_min" class="form-control" value="{{ selected_year_from_min|default_if_none:'' }}" placeholder="Min">
+                        </div>
+                        <div class="instability-year-field">
+                            <label for="year_to_max">To</label>
+                            <input type="number" name="year_to_max" id="year_to_max" class="form-control" value="{{ selected_year_to_max|default_if_none:'' }}" placeholder="Max">
+                        </div>
+                    </div>
+                </div>
+
+                {% include "core/partials/_instability_active_filter_chips.html" %}
+            </div>
+        </div>
+
+        <div class="col-12 pt-2">
+            <div class="instability-filter-sections" id="instabilityFilterSections">
+                <section class="instability-filter-card">
+                    <button class="instability-filter-card-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#instability-scope-section" aria-controls="instability-scope-section" aria-expanded="{% if selected_polity_ids or selected_macro_events %}true{% else %}false{% endif %}">
+                        <span class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Scope</span>
+                            <span class="small text-secondary">Choose where and which umbrella event to inspect.</span>
+                        </span>
+                        <span class="instability-filter-card-summary">
+                            {% if selected_polity_ids %}
+                                <span class="badge rounded-pill bg-success-light text-dark">{{ selected_polity_ids|length }} polities</span>
+                            {% else %}
+                                <span>{{ polities|length }} matching polities</span>
+                            {% endif %}
+                            {% if selected_macro_events %}
+                                <span class="badge rounded-pill bg-secondary-light text-dark">{{ selected_macro_events|length }} umbrella events</span>
+                            {% else %}
+                                <span>{{ macro_events|length }} umbrella events</span>
+                            {% endif %}
+                        </span>
+                        <i class="fa-solid fa-chevron-down instability-filter-card-chevron"></i>
+                    </button>
+                    <div id="instability-scope-section" class="collapse {% if selected_polity_ids or selected_macro_events %}show{% endif %}">
+                        <div class="instability-filter-card-body">
+                            <div class="row g-2">
+                                <div class="col-md-6 pb-2 instability-filter-field">
+                                    <label for="polity" class="text-secondary">Polities <small class="text-secondary">(matching: {{ polities|length }})</small></label>
+                                    <select name="polity" id="polity" class="form-select js-instability-multiple" multiple data-placeholder="Search polities">
+                                      {% for p in polities %}
+                                        <option value="{{ p.id }}" {% if p.id|stringformat:"s" in selected_polity_ids %}selected{% endif %}>
+                                            {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}] - {{ p.event_count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Type to search polities. Use the x inside a green chip to remove only that polity.</div>
+                                </div>
+
+                                <div class="col-md-6 pb-2 instability-filter-field">
+                                    <label for="macro_event" class="text-secondary">Umbrella Events</label>
+                                    <select name="macro_event" id="macro_event" class="form-select js-instability-multiple" multiple data-placeholder="Search umbrella events">
+                                      {% for event, count in macro_events_with_counts %}
+                                        <option value="{{ event }}" {% if event in selected_macro_events %}selected{% endif %}>
+                                           {{ event }} - {{ count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Use this for clusters of related instability events.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="instability-filter-card">
+                    <button class="instability-filter-card-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#instability-source-section" aria-controls="instability-source-section" aria-expanded="{% if selected_source_values or selected_batch_values or selected_is_macro_event %}true{% else %}false{% endif %}">
+                        <span class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Source & Macroevent</span>
+                            <span class="small text-secondary">Control data origin and macroevent status.</span>
+                        </span>
+                        <span class="instability-filter-card-summary">
+                            {% if selected_batch_values %}
+                                <span class="badge rounded-pill bg-warning-light text-dark">LLM batches: {{ selected_batch_values|length }}</span>
+                            {% elif selected_source_values %}
+                                <span class="badge rounded-pill bg-warning-light text-dark">Sources: {{ selected_source_values|length }}</span>
+                            {% else %}
+                                <span>All sources</span>
+                            {% endif %}
+                            {% if selected_is_macro_event %}
+                                {% if selected_is_macro_event == "true" %}
+                                    <span class="badge rounded-pill bg-info-light text-dark">Macro events only</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-info-light text-dark">Normal events only</span>
+                                {% endif %}
+                            {% else %}
+                                <span>All events</span>
+                            {% endif %}
+                        </span>
+                        <i class="fa-solid fa-chevron-down instability-filter-card-chevron"></i>
+                    </button>
+                    <div id="instability-source-section" class="collapse {% if selected_source_values or selected_batch_values or selected_is_macro_event %}show{% endif %}">
+                        <div class="instability-filter-card-body">
+                            <div class="row g-2">
+                                <div class="col-md-6 pb-2 instability-filter-field">
+                                    <label for="source" class="text-secondary">Sources</label>
+                                    <select name="source" id="source" class="form-select js-instability-multiple" multiple data-placeholder="All sources">
+                                      {% for value, label, count in source_filter_choices %}
+                                        <option value="{{ value }}" {% if value in explicit_selected_source_values %}selected{% endif %}>{{ label }} - {{ count }}</option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Select LLM, manual, or both.</div>
+                                </div>
+
+                                <input type="hidden" name="row_quality" id="row_quality" value="{{ selected_row_quality }}">
+
+                                <div class="col-md-6 pb-2 instability-filter-field">
+                                    <fieldset class="instability-toggle-field">
+                                        <legend>Macroevent</legend>
+                                        <div class="instability-choice-toggle" role="radiogroup" aria-label="Macroevent filter">
+                                            <input type="radio" name="is_macro_event" id="is_macro_event_all" value="" {% if not selected_is_macro_event %}checked{% endif %}>
+                                            <label for="is_macro_event_all">All events</label>
+                                            <input type="radio" name="is_macro_event" id="is_macro_event_true" value="true" {% if selected_is_macro_event == "true" %}checked{% endif %}>
+                                            <label for="is_macro_event_true">Macro events</label>
+                                            <input type="radio" name="is_macro_event" id="is_macro_event_false" value="false" {% if selected_is_macro_event == "false" %}checked{% endif %}>
+                                            <label for="is_macro_event_false">Normal events</label>
+                                        </div>
+                                    </fieldset>
+                                    <div class="instability-filter-help">Choose whether to inspect macro events, normal events, or both.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="instability-filter-card">
+                    <button class="instability-filter-card-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#instability-classification-section" aria-controls="instability-classification-section" aria-expanded="{% if selected_inst_type_ids or selected_ra_check_ids or selected_excluded_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or selected_row_quality %}true{% else %}false{% endif %}">
+                        <span class="instability-filter-card-title">
+                            <span class="small fw-bold text-dark">Classification</span>
+                            <span class="small text-secondary">Event category, review labels, intensity, and extent.</span>
+                        </span>
+                        <span class="instability-filter-card-summary">
+                            {% if selected_inst_type_ids %}
+                                <span class="badge rounded-pill bg-info-light text-dark">{{ selected_inst_type_ids|length }} types</span>
+                            {% else %}
+                                <span>All types</span>
+                            {% endif %}
+                            {% if selected_ra_check_ids %}
+                                <span class="badge rounded-pill bg-violet-light text-dark">{{ selected_ra_check_ids|length }} checks included</span>
+                            {% endif %}
+                            {% if selected_row_quality %}
+                                <span class="badge rounded-pill bg-colorful text-dark">{{ selected_excluded_ra_check_ids|length }} checks excluded</span>
+                            {% endif %}
+                            {% if selected_inst_intensity_values or selected_inst_extent_values %}
+                                <span class="badge rounded-pill bg-secondary-light text-dark">Severity filters active</span>
+                            {% endif %}
+                        </span>
+                        <i class="fa-solid fa-chevron-down instability-filter-card-chevron"></i>
+                    </button>
+                    <div id="instability-classification-section" class="collapse {% if selected_inst_type_ids or selected_ra_check_ids or selected_excluded_ra_check_ids or selected_inst_extent_values or selected_inst_intensity_values or selected_row_quality %}show{% endif %}">
+                        <div class="instability-filter-card-body">
+                            <div class="row g-2">
+                                <div class="col-md-4 pb-2 instability-filter-field">
+                                    <label for="inst_type_select" class="text-secondary d-block">Event Types</label>
+                                    <select id="inst_type_select" name="inst_type" class="form-select js-instability-multiple" multiple data-placeholder="Search event types">
+                                      {% for type in instability_types %}
+                                        <option value="{{ type.id }}" {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
+                                          {{ type.name }} - {{ type.event_count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Select one or more instability categories.</div>
+                                </div>
+
+                                <div class="col-md-4 pb-2 instability-filter-field">
+                                    <label for="ra_check_select" class="text-secondary d-block">Include by Researcher Check</label>
+                                    <select id="ra_check_select" name="ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Search researcher checks">
+                                      {% for check in check_choices %}
+                                        <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
+                                          {{ check.name }} - {{ check.event_count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Show rows carrying at least one selected researcher check.</div>
+                                </div>
+
+                                <div class="col-md-4 pb-2 instability-filter-field">
+                                    <label for="excluded_ra_check_select" class="text-secondary d-block">Exclude by Researcher Check</label>
+                                    <select id="excluded_ra_check_select" name="excluded_ra_check" class="form-select js-instability-multiple" multiple data-placeholder="Search researcher checks" data-default-values="{{ default_excluded_ra_check_ids|join:',' }}">
+                                      {% for check in excluded_ra_check_choices %}
+                                        <option value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_excluded_ra_check_ids %}selected{% endif %}>
+                                          {{ check.name }} - {{ check.event_count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Hide rows carrying at least one selected researcher check. Use Exclude invalid rows for the default invalid set.</div>
+                                </div>
+
+                                <div class="col-md-4 pb-2 instability-filter-field">
+                                    <label for="inst_intensity_select" class="text-secondary">Intensity</label>
+                                    <select id="inst_intensity_select" name="inst_intensity" class="form-select js-instability-multiple" multiple data-placeholder="All intensities">
+                                      {% for val, label, count in inst_intensity_filter_choices %}
+                                        <option value="{{ val }}" {% if val in selected_inst_intensity_values %}selected{% endif %}>
+                                          {{ label }} - {{ count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 pb-2 instability-filter-field">
+                                    <label for="inst_extent_select" class="text-secondary">Extent</label>
+                                    <select id="inst_extent_select" name="inst_extent" class="form-select js-instability-multiple" multiple data-placeholder="All extents">
+                                      {% for val, label, count in inst_extent_filter_choices %}
+                                        <option value="{{ val }}" {% if val in selected_inst_extent_values %}selected{% endif %}>
+                                          {{ label }} - {{ count }}
+                                        </option>
+                                      {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+      </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!window.jQuery || !jQuery.fn.select2) {
+      return;
+    }
+
+    const $instabilitySelects = jQuery(".js-instability-multiple");
+    const $tokenFilter = jQuery(".js-instability-token-filter");
+    const $filterPanel = jQuery(".instability-filter-panel");
+    const $filterForm = $filterPanel.find("form");
+    const $rowQuality = jQuery("#row_quality");
+    const $raCheckSelect = jQuery("#ra_check_select");
+    const $excludedRaCheckSelect = jQuery("#excluded_ra_check_select");
+
+    function escapeHtml(value) {
+      const htmlCharacters = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      };
+      return String(value || "").replace(/[&<>"']/g, function (character) {
+        return htmlCharacters[character];
+      });
+    }
+
+    function getTokenKindLabel(kind) {
+      const kindLabels = {
+        event: "Event",
+        inst_type: "Type",
+        is_macro_event: "Macroevent",
+        macro_event: "Umbrella",
+        polity: "Polity",
+        ra_check: "Check",
+        selected_batch: "Batch",
+        source: "Source",
+        text: "Text"
+      };
+      return kindLabels[kind] || "Filter";
+    }
+
+    function formatTokenResult(option) {
+      if (option.loading || !option.id) {
+        return escapeHtml(option.text);
+      }
+
+      const metadata = option.meta
+        ? '<span class="instability-token-result-meta">' + escapeHtml(option.meta) + "</span>"
+        : "";
+
+      return (
+        '<span class="instability-token-result">' +
+          '<span class="instability-token-kind">' + escapeHtml(getTokenKindLabel(option.kind)) + "</span>" +
+          '<span class="instability-token-result-content">' +
+            '<span class="instability-token-result-main">' + escapeHtml(option.text) + "</span>" +
+            metadata +
+          "</span>" +
+        "</span>"
+      );
+    }
+
+    function getDefaultExcludedRaCheckIds() {
+      const defaultValues = String($excludedRaCheckSelect.data("default-values") || "");
+      return defaultValues.split(",").filter(function (value) {
+        return value;
+      });
+    }
+
+    function setExcludedRaChecks(values, rowQualityValue) {
+      $excludedRaCheckSelect.val(values).trigger("change");
+      $rowQuality.val(rowQualityValue).trigger("change");
+      removeRequiredRaCheckValues(values);
+      removeTokenValuesByKind("ra_check", values);
+    }
+
+    function getSelectedValues($select) {
+      return $select.val() || [];
+    }
+
+    function removeSelectValues($select, valuesToRemove) {
+      const removeValues = new Set((valuesToRemove || []).map(String));
+      if (!removeValues.size) {
+        return false;
+      }
+
+      const currentValues = getSelectedValues($select);
+      const nextValues = currentValues.filter(function (value) {
+        return !removeValues.has(String(value));
+      });
+
+      if (nextValues.length === currentValues.length) {
+        return false;
+      }
+
+      $select.val(nextValues).trigger("change");
+      return true;
+    }
+
+    function getTokenParts(tokenId) {
+      const tokenValue = String(tokenId || "");
+      const separatorIndex = tokenValue.indexOf(":");
+      if (separatorIndex === -1) {
+        return null;
+      }
+      return {
+        kind: tokenValue.slice(0, separatorIndex),
+        value: tokenValue.slice(separatorIndex + 1)
+      };
+    }
+
+    function getTokenValuesByKind(kind) {
+      return getSelectedValues($tokenFilter).map(getTokenParts).filter(function (token) {
+        return token && token.kind === kind;
+      }).map(function (token) {
+        return token.value;
+      });
+    }
+
+    function removeTokenValuesByKind(kind, valuesToRemove) {
+      const removeValues = new Set((valuesToRemove || []).map(String));
+      if (!removeValues.size) {
+        return false;
+      }
+
+      const currentTokens = getSelectedValues($tokenFilter);
+      const nextTokens = currentTokens.filter(function (tokenId) {
+        const token = getTokenParts(tokenId);
+        return !token || token.kind !== kind || !removeValues.has(String(token.value));
+      });
+
+      if (nextTokens.length === currentTokens.length) {
+        return false;
+      }
+
+      $tokenFilter.val(nextTokens).trigger("change");
+      return true;
+    }
+
+    function removeAllTokenValuesByKind(kind) {
+      return removeTokenValuesByKind(kind, getTokenValuesByKind(kind));
+    }
+
+    function setSourceFilter(values) {
+      jQuery("#source").val(values).trigger("change");
+      removeAllTokenValuesByKind("source");
+    }
+
+    function removeTokenFromBackedField(token) {
+      if (!token) {
+        return;
+      }
+
+      const fieldSelectors = {
+        inst_type: "#inst_type_select",
+        macro_event: "#macro_event",
+        polity: "#polity",
+        ra_check: "#ra_check_select",
+        source: "#source"
+      };
+      if (fieldSelectors[token.kind]) {
+        removeSelectValues(jQuery(fieldSelectors[token.kind]), [token.value]);
+      }
+
+      if (token.kind === "is_macro_event") {
+        const $selectedMacroevent = jQuery(
+          'input[name="is_macro_event"]:checked'
+        );
+        if ($selectedMacroevent.val() === token.value) {
+          jQuery("#is_macro_event_all").prop("checked", true).trigger("change");
+        }
+      }
+    }
+
+    function getRequiredRaCheckValues() {
+      const values = getSelectedValues($raCheckSelect).concat(getTokenValuesByKind("ra_check"));
+      return values.filter(function (value, index) {
+        return values.indexOf(value) === index;
+      });
+    }
+
+    function removeExcludedRaCheckValues(valuesToRemove) {
+      const removed = removeSelectValues($excludedRaCheckSelect, valuesToRemove);
+      if (removed && !getSelectedValues($excludedRaCheckSelect).length) {
+        $rowQuality.val("").trigger("change");
+      }
+      return removed;
+    }
+
+    function removeRequiredRaCheckValues(valuesToRemove) {
+      return removeSelectValues($raCheckSelect, valuesToRemove);
+    }
+
+    function populateDefaultExcludedRaChecks() {
+      if (!$excludedRaCheckSelect.length || ($excludedRaCheckSelect.val() || []).length) {
+        return;
+      }
+      const defaultValues = getDefaultExcludedRaCheckIds();
+      if (defaultValues.length) {
+        $excludedRaCheckSelect.val(defaultValues).trigger("change");
+      }
+    }
+
+    function clearSelect2SearchText($select) {
+      window.setTimeout(function () {
+        const select2 = $select.data("select2");
+        const $containerSearch = $select.next(".select2-container").find(".select2-search__field");
+        $containerSearch.val("").trigger("input");
+
+        if (select2 && select2.selection && select2.selection.$search) {
+          select2.selection.$search.val("").trigger("input");
+        }
+        if (select2 && select2.dropdown && select2.dropdown.$search) {
+          select2.dropdown.$search.val("").trigger("input");
+        }
+      }, 0);
+    }
+
+    $instabilitySelects.each(function () {
+      const $select = jQuery(this);
+      $select.select2({
+        allowClear: false,
+        closeOnSelect: false,
+        dropdownCssClass: "instability-filter-dropdown",
+        dropdownParent: $filterPanel,
+        placeholder: $select.data("placeholder") || "Search and select",
+        width: "100%"
+      });
+    });
+
+    $tokenFilter.select2({
+      ajax: {
+        data: function (params) {
+          return { q: params.term || "" };
+        },
+        dataType: "json",
+        delay: 250,
+        processResults: function (data) {
+          return data;
+        },
+        url: $tokenFilter.data("ajax-url")
+      },
+      allowClear: false,
+      closeOnSelect: false,
+      dropdownCssClass: "instability-filter-dropdown",
+      dropdownParent: $filterPanel,
+      escapeMarkup: function (markup) {
+        return markup;
+      },
+      minimumInputLength: 2,
+      placeholder: $tokenFilter.data("placeholder") || "Search and add filters",
+      templateResult: formatTokenResult,
+      width: "100%"
+    });
+
+    $rowQuality.on("change", function () {
+      if ($rowQuality.val() === "good") {
+        populateDefaultExcludedRaChecks();
+      }
+    });
+
+    jQuery("[data-instability-quick-action]").on("click", function () {
+      const action = jQuery(this).data("instability-quick-action");
+      if (action === "exclude-invalid") {
+        setExcludedRaChecks(getDefaultExcludedRaCheckIds(), "good");
+      } else if (action === "include-invalid") {
+        setExcludedRaChecks([], "");
+      } else if (action === "only-llm") {
+        setSourceFilter(["llm"]);
+      } else if (action === "only-manual") {
+        setSourceFilter(["manual"]);
+        removeAllTokenValuesByKind("selected_batch");
+      } else if (action === "all-sources") {
+        setSourceFilter([]);
+      } else if (action === "all-batches") {
+        removeAllTokenValuesByKind("selected_batch");
+      } else {
+        return;
+      }
+      $filterForm.get(0).requestSubmit();
+    });
+
+    $raCheckSelect.on("select2:select", function (event) {
+      const selectedValue = event.params && event.params.data && event.params.data.id;
+      removeExcludedRaCheckValues([selectedValue]);
+      cleanupInstabilityChoices();
+    });
+
+    $excludedRaCheckSelect.on("select2:select", function (event) {
+      const selectedValue = event.params && event.params.data && event.params.data.id;
+      removeRequiredRaCheckValues([selectedValue]);
+      removeTokenValuesByKind("ra_check", [selectedValue]);
+      if (getSelectedValues($excludedRaCheckSelect).length) {
+        $rowQuality.val("good").trigger("change");
+      }
+      cleanupInstabilityChoices();
+    });
+
+    $tokenFilter.on("select2:select", function (event) {
+      const selectedToken = event.params && event.params.data;
+      if (selectedToken && selectedToken.kind === "ra_check") {
+        removeExcludedRaCheckValues([selectedToken.value]);
+      }
+    });
+
+    $tokenFilter.on("select2:unselect", function (event) {
+      const tokenId = event.params && event.params.data && event.params.data.id;
+      removeTokenFromBackedField(getTokenParts(tokenId));
+    });
+
+    $instabilitySelects.on("select2:unselect", function (event) {
+      const value = event.params && event.params.data && event.params.data.id;
+      const kind = this.name;
+      if (kind && value !== undefined) {
+        removeTokenValuesByKind(kind, [value]);
+      }
+    });
+
+    jQuery('input[name="is_macro_event"]').on("change", function () {
+      removeTokenValuesByKind(
+        "is_macro_event",
+        getTokenValuesByKind("is_macro_event")
+      );
+    });
+
+    function tokenToParam(tokenId) {
+      const separatorIndex = tokenId.indexOf(":");
+      if (separatorIndex === -1) {
+        return null;
+      }
+
+      const kind = tokenId.slice(0, separatorIndex);
+      const value = tokenId.slice(separatorIndex + 1);
+      const tokenParamMap = {
+        event: "event",
+        inst_type: "inst_type",
+        is_macro_event: "is_macro_event",
+        macro_event: "macro_event",
+        polity: "polity",
+        ra_check: "ra_check",
+        selected_batch: "selected_batch",
+        source: "source",
+        text: "q"
+      };
+
+      if (!tokenParamMap[kind] || !value) {
+        return null;
+      }
+      return { name: tokenParamMap[kind], value: value };
+    }
+
+    function formHasParamValue($form, name, value) {
+      return $form.find("[name]").filter(function () {
+        if (this.disabled || this.name !== name) {
+          return false;
+        }
+        if ((this.type === "radio" || this.type === "checkbox") && !this.checked) {
+          return false;
+        }
+        const fieldValues = jQuery(this).val();
+        if (Array.isArray(fieldValues)) {
+          return fieldValues.map(String).includes(String(value));
+        }
+        return String(fieldValues || "") === String(value);
+      }).length > 0;
+    }
+
+    jQuery(".instability-filter-panel form").on("submit", function () {
+      const $form = jQuery(this);
+      $form.find("[data-instability-token-param='true']").remove();
+      $form.find("[data-instability-excluded-mode='true']").remove();
+      ($tokenFilter.val() || []).forEach(function (tokenId) {
+        const param = tokenToParam(tokenId);
+        if (!param) {
+          return;
+        }
+        if (formHasParamValue($form, param.name, param.value)) {
+          return;
+        }
+        jQuery("<input>", {
+          type: "hidden",
+          name: param.name,
+          value: param.value,
+          "data-instability-token-param": "true"
+        }).appendTo($form);
+      });
+
+      removeExcludedRaCheckValues(getRequiredRaCheckValues());
+      const excludedRaCheckValues = getSelectedValues($excludedRaCheckSelect);
+
+      if ($rowQuality.val() !== "good" && excludedRaCheckValues.length) {
+        $rowQuality.val("good");
+      }
+
+      $form.find("#year_from_min, #year_to_max").each(function () {
+        jQuery(this).prop("disabled", !jQuery(this).val());
+      });
+      const $selectedMacroevent = $form.find(
+        'input[name="is_macro_event"]:checked'
+      );
+      if (!$selectedMacroevent.val()) {
+        $selectedMacroevent.prop("disabled", true);
+      }
+
+      if ($rowQuality.val() === "good") {
+        jQuery("<input>", {
+          type: "hidden",
+          name: "excluded_ra_check_mode",
+          value: "custom",
+          "data-instability-excluded-mode": "true"
+        }).appendTo($form);
+      } else {
+        $rowQuality.prop("disabled", true);
+        $excludedRaCheckSelect.prop("disabled", true);
+      }
+    });
+
+    function cleanupInstabilityChoices() {
+      jQuery(".instability-filter-panel .select2-selection__choice").removeAttr("title");
+      jQuery(".instability-filter-panel .select2-selection__clear").remove();
+    }
+
+    $instabilitySelects.add($tokenFilter).on("select2:select", function () {
+      clearSelect2SearchText(jQuery(this));
+    });
+    $instabilitySelects.add($tokenFilter).on("change select2:select select2:unselect select2:open", cleanupInstabilityChoices);
+    document.querySelectorAll(".instability-filter-panel .collapse").forEach(function (section) {
+      section.addEventListener("shown.bs.collapse", function () {
+        jQuery(section).find(".select2-container").css("width", "100%");
+        cleanupInstabilityChoices();
+      });
+    });
+    cleanupInstabilityChoices();
+  });
+</script>

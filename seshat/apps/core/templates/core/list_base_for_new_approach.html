@@ -334,291 +334,94 @@
     {% block secondary_description %}
     {% endblock secondary_description %}
 
-<div class="border border-secondary rounded px-3 pt-2 mb-2" style="background: #fffdf2;">
-    <form method="get" class="row mb-3">
-        <div class="col-md-12 row">
-            <div class="col-md-6 pb-2">
-                <label for="polity" class="text-secondary">Polity <small class="text-secondary"> (total: {{polities|length}})</small></label>
-                <br>
-                <select name="polity" id="polity" class="form-select js-example-basic-single "
-                        onchange="this.form.submit()">
-                  <option value="">All</option>
-                  {% for p in polities %}
-                    <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %} >
-                        {{ p.long_name }} ({{ p.new_name }}) &nbsp; &nbsp; [{{ p.formatted_years_text }}]
-                    </option>
-                  {% endfor %}
-                </select>
-              
-                {% comment %} preserve other filters with hidden fields {% endcomment %}
-                {% for key, value in request.GET.items %}
-                  {% if key != 'polity' %}
-                    <input type="hidden" name="{{ key }}" value="{{ value }}">
-                  {% endif %}
-                {% endfor %}
-            </div>
-            {% if var_name_display == 'Instability Event' %}
-            <div class="col-md-4 pb-2">
-                <label for="macro_event" class="text-secondary">Umbrella Event:</label>
-                <br>
-                <select name="macro_event" id="macro_event"  class="form-select js-example-basic-single " onchange="this.form.submit()">
-                  <option value="">All</option>
-                  {% for event, count in macro_events_with_counts %}
-                    <option value="{{ event }}" {% if event == selected_macro %}selected{% endif %}>
-                       {{ event }} (#{{ count }} Events)
-
-                    </option>
-                  {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-2 pb-2">
-                <label for="is_macro_event" class="text-secondary">Macroevent:</label>
-                <br>
-                <select name="is_macro_event" id="is_macro_event" class="form-select js-example-basic-single" onchange="this.form.submit()">
-                  <option value="">All</option>
-                  <option value="true" {% if selected_is_macro_event == "true" %}selected{% endif %}>True</option>
-                  <option value="false" {% if selected_is_macro_event == "false" %}selected{% endif %}>False</option>
-                </select>
-            </div>
-            <div class="col-md-2 pb-2">
-                <label for="searched_name" class="text-secondary">Event Name:</label>
-                <input type="text" name="searched_name" id="searched_name" class="form-control" value="{{ name_query }}">
-            </div>
-
-
-            <div class="col-md-4 pb-2">
-                <label class="text-secondary">Intensity</label>
-                <select name="inst_intensity" class="form-select" onchange="this.form.submit()">
-                  <option value="">All</option>
-                  {% for val, label in INST_INTENSITY_CHOICES %}
-                    <option value="{{ val }}" {% if request.GET.inst_intensity == val %}selected{% endif %}>{{ label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-            <div class="col-md-5 pb-2">
-                <label class="text-secondary">Extent</label>
-                <select name="inst_extent" class="form-select" onchange="this.form.submit()">
-                  <option value="">All</option>
-                  {% for val, label in INST_EXTENT_CHOICES %}
-                    <option value="{{ val }}" {% if request.GET.inst_extent == val %}selected{% endif %}>{{ label }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              {% endif %}
-
-            <div class="col-md-1 pb-2">
-              <label  class="text-secondary">Start Year</label>
-              <input type="number" name="year_from_min" class="form-control" value="{{ request.GET.year_from_min }}"> 
-            </div>
-            <div class="col-md-1 pb-2">
-              <label  class="text-secondary">End Year</label>
-              <input type="number" name="year_to_max" class="form-control" value="{{ request.GET.year_to_max }}">
-            </div>
-            {% if var_name_display == 'Instability Event' %}
-
-            <div class="col-md-2 pb-2">
-                <label for="source" class="text-secondary">Source</label>
-                <select name="source" id="source" class="form-select" onchange="this.form.submit()">
-                  <option value="">All</option>
-                  <option value="llm" {% if selected_source == "llm" %}selected{% endif %}>LLM</option>
-                  <option value="manual" {% if selected_source == "manual" %}selected{% endif %}>Manual</option>
-                </select>
-              </div>
-
-            {% if show_llm_batch_filter %}
-              <div class="col-md-1 pb-2">
-                  <label for="selected_batch" class="text-secondary">LLM Batch</label>
-                  <select name="selected_batch" id="selected_batch" class="form-select" onchange="this.form.submit()">
-                    <option value="">All</option>
-                    <option value="Batch 1" {% if selected_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
-                    <option value="Batch 2" {% if selected_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
-                    <option value="Batch 3" {% if selected_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
-                    <option value="Batch 4" {% if selected_batch == "Batch 4" %}selected{% endif %}>Batch 4</option>
-                  </select>
+{% if var_name_display == 'Instability Event' %}
+    {% include "core/partials/_instability_list_filters.html" %}
+{% else %}
+<div class="border border-secondary rounded px-3 pt-3 mb-2" style="background: #fffdf2;">
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-start gap-2 pb-1">
+            <div>
+                <strong class="text-dark">Filter Records</strong>
+                <div class="small text-secondary">
+                    Refine the list with focused filters and year bounds.
                 </div>
-            {% endif %}
-                  
-    
-              <div class="col-md-4 pb-2">
-                <label for="inst_type_select" class="text-secondary d-block">Event Types</label>
-                <select id="inst_type_select" name="inst_type" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
-                  {% for type in instability_types %}
-                    <option value="{{ type.id }}"
-                      {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
-                      {{ type.name }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <div class="col-md-4 pb-2">
-                <label for="ra_check_select" class="text-secondary d-block">Researcher Checks</label>
-                <select id="ra_check_select" name="ra_check" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
-                    {% for check in check_choices %}
-                    <option value="{{ check.id }}"
-                      {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
-                      {{ check.name }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
-              
-
-              
-    
-
-              
-              {% endif %}
-              <div class="col-md-1 d-flex align-items-center pt-2">
             </div>
-
-              <div class="col-md-3 d-flex align-items-center pt-2">
-                <button type="submit" class="btn w-100 fw-bold bg-colorful-light"> <i class="fa-solid fa-filter"></i> Apply Filters</button>
+            <div class="small text-secondary">
+                Adjust the filters, then click <span class="fw-semibold text-dark">Apply Filters</span>.
             </div>
         </div>
 
- 
-       
+        <div class="col-md-6 pb-2">
+            <label for="polity" class="text-secondary">Polity <small class="text-secondary">(total: {{ polities|length }})</small></label>
+            <select name="polity" id="polity" class="form-select js-example-basic-single">
+              <option value="">All</option>
+              {% for p in polities %}
+                <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %}>
+                    {{ p.long_name }} ({{ p.new_name }}) [{{ p.formatted_years_text }}]
+                </option>
+              {% endfor %}
+            </select>
+        </div>
 
-        <!-- <div class="col-auto">
-          <label>Before Created Date</label>
-          <input type="date" name="created_before" class="form-control" value="{{ request.GET.created_before }}">
-        </div> -->
-        <div class="col-auto align-self-end pb-0 mb-0">
-          {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.source or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event or request.GET.is_macro_event %}
+        <div class="col-md-2 pb-2">
+            <label class="text-secondary" for="year_from_min">Start Year</label>
+            <input type="number" name="year_from_min" id="year_from_min" class="form-control" value="{{ request.GET.year_from_min }}">
+        </div>
 
-          <div class="py-1 px-0  d-inline-block" >
+        <div class="col-md-2 pb-2">
+            <label class="text-secondary" for="year_to_max">End Year</label>
+            <input type="number" name="year_to_max" id="year_to_max" class="form-control" value="{{ request.GET.year_to_max }}">
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end gap-2 pb-2 ms-auto">
+            <button type="submit" class="btn w-100 fw-bold bg-colorful-light">
+                <i class="fa-solid fa-filter"></i> Apply Filters
+            </button>
+            <a href="?" class="btn btn-outline-danger fw-semibold text-nowrap">Clear All</a>
+        </div>
+
+        <div class="col-12 align-self-end pb-0 mb-0">
+          {% if request.GET.polity or request.GET.year_from_min or request.GET.year_to_max %}
+
+          <div class="py-1 px-0 d-inline-block">
             <strong class="pb-2">Filters applied:</strong>
             <ul class="list-inline mb-1">
               {% if request.GET.year_from_min %}
-                <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
-                    <span class="fw-light">Year ≥  </span>  <span class="fw-bold"> {{ request.GET.year_from_min }}</span>
-
+                <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
+                  <span class="fw-light">Year ≥ </span><span class="fw-bold">{{ request.GET.year_from_min }}</span>
                   <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
-              {% if request.GET.year_to_max %}
-                <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
-                    <span class="fw-light">Year ≤ </span>  <span class="fw-bold"> {{ request.GET.year_to_max }}</span>
 
+              {% if request.GET.year_to_max %}
+                <li class="list-inline-item px-2 mb-1 rounded bg-orange-light text-dark">
+                  <span class="fw-light">Year ≤ </span><span class="fw-bold">{{ request.GET.year_to_max }}</span>
                   <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
-              {% for type in instability_types %}
-              {% if type.id|stringformat:"s" in selected_inst_type_ids %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
-                <small class="fw-light">Type:</small>  <span class="fw-bold"> {{ type.name }}</span>
-                  <a href="?{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-            {% endfor %}
-            
-            {% if request.GET.inst_intensity %}
-            {% for val, label in INST_INTENSITY_CHOICES %}
-              {% if val == request.GET.inst_intensity %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-danger-light text-dark">
-                    <small class="fw-light">Intensity:</small>  <span class="fw-bold"> {{ label }}</span>
-                  <a href="?{% query_transform request inst_intensity=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-          
-          {% if request.GET.inst_extent %}
-          {% for val, label in INST_EXTENT_CHOICES %}
-            {% if val == request.GET.inst_extent %}
-              <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
-                <small class="fw-light">Extent:</small>  <span class="fw-bold"> {{ label }}</span>
-                <a href="?{% query_transform request inst_extent=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-              </li>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
 
-        {% if request.GET.searched_name %}
- 
-            <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
-              <small class="fw-light">Searched Name:</small>  <span class="fw-bold"> {{ request.GET.searched_name }}</span>
-              <a href="?{% query_transform request searched_name=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-            </li>
-
-      {% endif %}
-
-      {% if request.GET.macro_event %}
- 
-        <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
-            <small class="fw-light">Umbrella Event:</small>  <span class="fw-bold"> {{ request.GET.macro_event }}</span>
-            <a href="?{% query_transform request macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-        </li>
-
-    {% endif %}
-    {% if request.GET.is_macro_event %}
-        <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
-            <small class="fw-light">Macroevent:</small>  <span class="fw-bold">{{ request.GET.is_macro_event|title }}</span>
-            <a href="?{% query_transform request is_macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-        </li>
-    {% endif %}
-        
-        {% for check in check_choices %}
-        {% if check.id|stringformat:"s" in selected_ra_check_ids %}
-          <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
-            <small class="fw-light">RA Check:</small>  <span class="fw-bold"> {{ check.name }}</span>
-            <a href="?{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-          </li>
-        {% endif %}
-	      {% endfor %}
-
-	              <!-- {% if request.GET.created_before %}
-	                <li class="list-inline-item px-2 mb-1 rounded  bg-warning text-dark">
-	                  Created Before {{ request.GET.created_before }}
-	                  <a href="?{% query_transform request created_before=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
-	                </li>
-	              {% endif %} -->
-	              {% if selected_source %}
-	                <li class="list-inline-item px-2 mb-1 rounded bg-warning-light text-dark">
-	                  <small class="fw-light">Source:</small>
-	                  <span class="fw-bold">{{ selected_source|title }}</span>
-	                  <a href="?{% query_transform request source=None %}" class="text-dark ms-1" style="text-decoration: none;">
-	                    &nbsp;<i class="fa-solid fa-square-xmark"></i>
-	                  </a>
-	                </li>
-	              {% endif %}
-	              {% if selected_batch and show_llm_batch_filter %}
-	                <li class="list-inline-item px-2 mb-1 rounded  bg-warning-light text-dark">
-	                    <small class="fw-light">LLM Batch:</small> <span class="fw-bold">{{ selected_batch }}</span>
-	                    <a href="?{% query_transform request selected_batch=None %}" class="text-dark ms-1" style="text-decoration: none;">
-	                    &nbsp;<i class="fa-solid fa-square-xmark"></i>
-                    </a>
-                </li>
-            {% endif %}
-    
               {% if request.GET.polity %}
-              {% with request.GET.polity as selected_polity_id %}
-                {% for p in polities %}
-                  {% if p.id|stringformat:"s" == selected_polity_id %}
-                  <li class="list-inline-item px-2 mb-1 rounded  bg-success-light text-dark">
-                    Polity: <b> {{ p.long_name }} </b>({{ p.new_name }})
-                      <a href="?{% query_transform request polity=None %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a></a>
-                  </li>
-                  {% endif %}
-                {% endfor %}
-              {% endwith %}
-            {% endif %}
+                {% with request.GET.polity as selected_polity_id %}
+                  {% for p in polities %}
+                    {% if p.id|stringformat:"s" == selected_polity_id %}
+                      <li class="list-inline-item px-2 mb-1 rounded bg-success-light text-dark">
+                        <small class="fw-light">Polity:</small> <span class="fw-bold">{{ p.long_name }}</span> ({{ p.new_name }})
+                        <a href="?{% query_transform request polity=None %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
+              {% endif %}
 
-            
             </ul>
-    
           </div>
-          <span>  <a href="?" class="btn btn-sm btn-outline-danger ms-2 px-2" style="padding-top:0px; padding-bottom:0px !important;">Clear All Filters</a></span>
-
           {% endif %}
         </div>
       </form>
 
       
 </div>
+{% endif %}
 
     <div class="table-container pb-3">
               
@@ -923,12 +726,16 @@
 
 <script>
     $(document).ready(function() {
-        // Initialize Select2 with an empty dataset
-        $('.js-example-basic-single').select2();
+        $('.js-example-basic-single').select2({
+            width: '100%'
+        });
     });  
 
     $(document).ready(function() {
-        $('.js-example-basic-multiple').select2();
+        $('.js-example-basic-multiple').select2({
+            width: '100%',
+            closeOnSelect: false
+        });
     });
 
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
