@@ -881,7 +881,7 @@
                     <div id="instability-source-section" class="collapse {% if selected_source_values or selected_batch_values or selected_is_macro_event %}show{% endif %}">
                         <div class="instability-filter-card-body">
                             <div class="row g-2">
-                                <div class="col-md-6 pb-2 instability-filter-field">
+                                <div class="col-lg-4 col-md-6 pb-2 instability-filter-field">
                                     <label for="source" class="text-secondary">Sources</label>
                                     <select name="source" id="source" class="form-select js-instability-multiple" multiple data-placeholder="All sources">
                                       {% for value, label, count in source_filter_choices %}
@@ -893,7 +893,17 @@
 
                                 <input type="hidden" name="row_quality" id="row_quality" value="{{ selected_row_quality }}">
 
-                                <div class="col-md-6 pb-2 instability-filter-field">
+                                <div class="col-lg-4 col-md-6 pb-2 instability-filter-field">
+                                    <label for="selected_batch" class="text-secondary">LLM Batches</label>
+                                    <select name="selected_batch" id="selected_batch" class="form-select js-instability-multiple" multiple data-placeholder="All LLM batches">
+                                      {% for batch, count in batch_filter_choices %}
+                                        <option value="{{ batch }}" {% if batch in selected_batch_values %}selected{% endif %}>{{ batch }} - {{ count }}</option>
+                                      {% endfor %}
+                                    </select>
+                                    <div class="instability-filter-help">Select one or more import batches. Batch filters include LLM rows only.</div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-12 pb-2 instability-filter-field">
                                     <fieldset class="instability-toggle-field">
                                         <legend>Macroevent</legend>
                                         <div class="instability-choice-toggle" role="radiogroup" aria-label="Macroevent filter">
@@ -1019,6 +1029,7 @@
     const $rowQuality = jQuery("#row_quality");
     const $raCheckSelect = jQuery("#ra_check_select");
     const $excludedRaCheckSelect = jQuery("#excluded_ra_check_select");
+    const $batchSelect = jQuery("#selected_batch");
 
     function escapeHtml(value) {
       const htmlCharacters = {
@@ -1154,6 +1165,11 @@
       removeAllTokenValuesByKind("source");
     }
 
+    function clearBatchFilter() {
+      $batchSelect.val([]).trigger("change");
+      removeAllTokenValuesByKind("selected_batch");
+    }
+
     function removeTokenFromBackedField(token) {
       if (!token) {
         return;
@@ -1164,6 +1180,7 @@
         macro_event: "#macro_event",
         polity: "#polity",
         ra_check: "#ra_check_select",
+        selected_batch: "#selected_batch",
         source: "#source"
       };
       if (fieldSelectors[token.kind]) {
@@ -1277,11 +1294,11 @@
         setSourceFilter(["llm"]);
       } else if (action === "only-manual") {
         setSourceFilter(["manual"]);
-        removeAllTokenValuesByKind("selected_batch");
+        clearBatchFilter();
       } else if (action === "all-sources") {
         setSourceFilter([]);
       } else if (action === "all-batches") {
-        removeAllTokenValuesByKind("selected_batch");
+        clearBatchFilter();
       } else {
         return;
       }
@@ -1308,6 +1325,19 @@
       const selectedToken = event.params && event.params.data;
       if (selectedToken && selectedToken.kind === "ra_check") {
         removeExcludedRaCheckValues([selectedToken.value]);
+      } else if (selectedToken && selectedToken.kind === "selected_batch") {
+        setSourceFilter([]);
+      }
+    });
+
+    $batchSelect.on("select2:select", function () {
+      setSourceFilter([]);
+    });
+
+    jQuery("#source").on("select2:select", function (event) {
+      const selectedSource = event.params && event.params.data && event.params.data.id;
+      if (selectedSource === "manual") {
+        clearBatchFilter();
       }
     });
 
