@@ -2499,10 +2499,9 @@
                                 <label for="selected_batch" class="text-secondary small mb-0">LLM Batch</label>
                                 <select name="selected_batch" id="selected_batch" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
                                     <option value="">All</option>
-                                    <option value="Batch 1" {% if selected_instability_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
-                                    <option value="Batch 2" {% if selected_instability_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
-                                    <option value="Batch 3" {% if selected_instability_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
-                                    <option value="Batch 4" {% if selected_instability_batch == "Batch 4" %}selected{% endif %}>Batch 4</option>
+                                    {% for batch in instability_batch_choices %}
+                                        <option value="{{ batch }}" {% if selected_instability_batch == batch %}selected{% endif %}>{{ batch }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         {% endif %}

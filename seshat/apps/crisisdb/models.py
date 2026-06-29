@@ -417,6 +417,7 @@ class Instability_event(SeshatCommon):
         choices=Source.choices,
         default=Source.MANUAL,
     )
+    llm_import_batch = models.CharField(max_length=50, null=True, blank=True, db_index=True)
     inst_type = models.ManyToManyField(Instability_type, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     ra_check = models.ManyToManyField(Check_choice, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
     inst_llm_ref = models.ManyToManyField(Instability_ref, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
@@ -497,7 +498,7 @@ class Instability_event(SeshatCommon):
             return None
         from .instability_filters import get_batch_tag
 
-        return get_batch_tag(self.created_date)
+        return get_batch_tag(self.created_date, self.llm_import_batch)
         
     @property
     def batch_tooltip(self):
@@ -505,7 +506,7 @@ class Instability_event(SeshatCommon):
             return None
         from .instability_filters import get_batch_tooltip
 
-        return get_batch_tooltip(self.created_date)
+        return get_batch_tooltip(self.created_date, self.llm_import_batch)
 
 
     def __str__(self) -> str:

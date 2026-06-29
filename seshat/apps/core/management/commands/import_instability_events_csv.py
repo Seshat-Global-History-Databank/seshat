@@ -102,6 +102,11 @@ class Command(BaseCommand):
         parser.add_argument("--csv", required=True, help="Absolute or relative path to the CSV file.")
         parser.add_argument("--polity", required=True, help="Polity.new_name to attach to every imported event.")
         parser.add_argument(
+            "--batch",
+            default=None,
+            help='Optional explicit LLM import batch label, for example "Batch 5".',
+        )
+        parser.add_argument(
             "--limit",
             type=int,
             default=None,
@@ -119,8 +124,12 @@ class Command(BaseCommand):
             raise CommandError(f"CSV file not found: {csv_path}")
 
         polity_name = options["polity"]
+        import_batch = (options["batch"] or "").strip() or None
         limit = options["limit"]
         dry_run = options["dry_run"]
+
+        if import_batch and len(import_batch) > 50:
+            raise CommandError("--batch must be 50 characters or fewer.")
 
         try:
             polity = Polity.objects.get(new_name=polity_name)
@@ -204,6 +213,7 @@ class Command(BaseCommand):
                     event = Instability_event.objects.create(
                         name=name,
                         source=Instability_event.Source.LLM,
+                        llm_import_batch=import_batch,
                         llm_name=llm_name,
                         polity=polity,
                         year_from=year_from,
@@ -248,4 +258,6 @@ class Command(BaseCommand):
             f"Finished CSV import for polity '{polity_name}'. "
             f"Created: {created_count}."
         )
+        if import_batch:
+            summary += f" Batch: {import_batch}."
         self.stdout.write(self.style.SUCCESS(summary))

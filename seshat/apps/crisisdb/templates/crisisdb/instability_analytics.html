@@ -359,10 +359,9 @@
     <label for="selected_batch" class="text-secondary">Batch</label>
     <select name="selected_batch" id="selected_batch" class="form-select" onchange="this.form.submit()">
       <option value="">All</option>
-      <option value="Batch 1" {% if request.GET.selected_batch == "Batch 1" %}selected{% endif %}>Batch 1</option>
-      <option value="Batch 2" {% if request.GET.selected_batch == "Batch 2" %}selected{% endif %}>Batch 2</option>
-      <option value="Batch 3" {% if request.GET.selected_batch == "Batch 3" %}selected{% endif %}>Batch 3</option>
-      <option value="Batch 4" {% if request.GET.selected_batch == "Batch 4" %}selected{% endif %}>Batch 4</option>
+      {% for batch in batch_filter_choices %}
+        <option value="{{ batch.label }}" {% if request.GET.selected_batch == batch.label %}selected{% endif %}>{{ batch.label }}</option>
+      {% endfor %}
     </select>
   </div>
 
