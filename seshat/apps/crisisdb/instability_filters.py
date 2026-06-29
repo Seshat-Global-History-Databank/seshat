@@ -50,6 +50,28 @@ VALID_INSTABILITY_BATCHES = (
     "Batch 2",
     "Batch 3",
     "Batch 4",
+    "Batch 5",
+)
+LEGACY_INSTABILITY_BATCHES = (
+    "Batch 1",
+    "Batch 2",
+    "Batch 3",
+    "Batch 4",
+)
+BATCH_TOOLTIPS = {
+    "Batch 1": "Generated in March 2025.",
+    "Batch 2": "Generated from March 28th, to April 28th, 2025.",
+    "Batch 3": "Generated after April 28th, 2025.",
+    "Batch 4": "Generated on or after March 1st, 2026.",
+    "Batch 5": "Curated agentic LLM review import.",
+}
+BATCH_ORDER = (
+    "Batch 1",
+    "Batch 2",
+    "Batch 3",
+    "Batch 4",
+    "Batch 5",
+    "Unknown",
 )
 INSTABILITY_FILTER_TOKEN_LIMIT = 8
 INSTABILITY_FILTER_TOKEN_GROUP_ORDER = (
@@ -65,7 +87,10 @@ INSTABILITY_FILTER_TOKEN_GROUP_ORDER = (
 )
 
 
-def get_batch_tag(created_date):
+def get_batch_tag(created_date, explicit_batch=None):
+    if explicit_batch:
+        return explicit_batch
+
     if created_date is None:
         return "Unknown"
 
@@ -83,7 +108,10 @@ def get_batch_tag(created_date):
     return "Batch 4"
 
 
-def get_batch_tooltip(created_date):
+def get_batch_tooltip(created_date, explicit_batch=None):
+    if explicit_batch:
+        return BATCH_TOOLTIPS.get(explicit_batch, f"LLM import batch: {explicit_batch}.")
+
     if created_date is None:
         return "Unknown creation date"
 
@@ -92,13 +120,7 @@ def get_batch_tooltip(created_date):
             created_date = timezone.make_aware(created_date)
         created_date = created_date.date()
 
-    if created_date < BATCH_1_END:
-        return "Generated in March 2025."
-    if created_date < BATCH_2_END:
-        return "Generated from March 28th, to April 28th, 2025."
-    if created_date < BATCH_3_END:
-        return "Generated after April 28th, 2025."
-    return "Generated on or after March 1st, 2026."
+    return BATCH_TOOLTIPS[get_batch_tag(created_date)]
 
 
 def normalize_instability_batches(selected_batches):
@@ -123,23 +145,36 @@ def apply_instability_batch_filter(queryset, selected_batches):
     return queryset.filter(build_instability_batch_query(selected_batches))
 
 
-def build_instability_batch_query(selected_batches):
-    selected_batches = normalize_instability_batches(selected_batches)
-    batch_query = Q()
-    if "Batch 1" in selected_batches:
-        batch_query |= Q(created_date__lt=BATCH_1_END_DATETIME)
-    if "Batch 2" in selected_batches:
-        batch_query |= Q(
+def build_missing_explicit_batch_query():
+    return Q(llm_import_batch__isnull=True) | Q(llm_import_batch="")
+
+
+def build_legacy_instability_batch_query(batch):
+    if batch == "Batch 1":
+        return Q(created_date__lt=BATCH_1_END_DATETIME)
+    if batch == "Batch 2":
+        return Q(
             created_date__gte=BATCH_1_END_DATETIME,
             created_date__lt=BATCH_2_END_DATETIME,
         )
-    if "Batch 3" in selected_batches:
-        batch_query |= Q(
+    if batch == "Batch 3":
+        return Q(
             created_date__gte=BATCH_2_END_DATETIME,
             created_date__lt=BATCH_3_END_DATETIME,
         )
-    if "Batch 4" in selected_batches:
-        batch_query |= Q(created_date__gte=BATCH_3_END_DATETIME)
+    if batch == "Batch 4":
+        return Q(created_date__gte=BATCH_3_END_DATETIME)
+    return Q(pk__in=[])
+
+
+def build_instability_batch_query(selected_batches):
+    selected_batches = normalize_instability_batches(selected_batches)
+    batch_query = Q()
+    missing_explicit_batch_query = build_missing_explicit_batch_query()
+    for batch in selected_batches:
+        batch_query |= Q(llm_import_batch=batch)
+        if batch in LEGACY_INSTABILITY_BATCHES:
+            batch_query |= missing_explicit_batch_query & build_legacy_instability_batch_query(batch)
     return batch_query
 
 
@@ -745,6 +780,9 @@ def _build_instability_batch_tokens(base_queryset, search_query):
     tokens = []
     llm_queryset = base_queryset.filter(source=Instability_event.Source.LLM)
     for batch in VALID_INSTABILITY_BATCHES:
+        event_count = apply_instability_batch_filter(llm_queryset, batch).count()
+        if not event_count:
+            continue
         if _token_query_matches(search_query, batch, batch.replace(" ", "")):
             tokens.append(
                 FilterTokenOption(
@@ -752,7 +790,7 @@ def _build_instability_batch_tokens(base_queryset, search_query):
                     value=batch,
                     label=batch,
                     group="LLM Batches",
-                    meta=f"{apply_instability_batch_filter(llm_queryset, batch).count()} events",
+                    meta=f"{event_count} events",
                 )
             )
     return tokens
@@ -1156,26 +1194,22 @@ def build_instability_list_context(model_class, request):
         key=lambda item: (-item[1], item[0]),
     )
 
-    batch_order = ["Batch 1", "Batch 2", "Batch 3", "Batch 4", "Unknown"]
     polity_batch_tags = defaultdict(set)
-    for polity_id, source, created_date in polity_option_queryset.values_list(
+    for polity_id, source, created_date, explicit_batch in polity_option_queryset.values_list(
         "polity_id",
         "source",
         "created_date",
+        "llm_import_batch",
     ):
-        if (
-            polity_id is not None
-            and source == Instability_event.Source.LLM
-            and created_date is not None
-        ):
-            polity_batch_tags[polity_id].add(get_batch_tag(created_date))
+        if polity_id is not None and source == Instability_event.Source.LLM:
+            polity_batch_tags[polity_id].add(get_batch_tag(created_date, explicit_batch))
 
     enriched_polities = []
     for polity in polities:
         batch_list = sorted(
             polity_batch_tags.get(polity.id, set()),
             key=lambda value: (
-                batch_order.index(value) if value in batch_order else len(batch_order)
+                BATCH_ORDER.index(value) if value in BATCH_ORDER else len(BATCH_ORDER)
             ),
         )
         setattr(polity, "event_count", polity_counts.get(polity.id, 0))
@@ -1219,12 +1253,13 @@ def build_instability_list_context(model_class, request):
         ),
     ]
     batch_counts = Counter(
-        get_batch_tag(created_date)
-        for source, created_date in batch_option_queryset.values_list(
+        get_batch_tag(created_date, explicit_batch)
+        for source, created_date, explicit_batch in batch_option_queryset.values_list(
             "source",
             "created_date",
+            "llm_import_batch",
         )
-        if source == Instability_event.Source.LLM and created_date is not None
+        if source == Instability_event.Source.LLM
     )
     batch_filter_choices = [
         (batch, batch_counts.get(batch, 0))

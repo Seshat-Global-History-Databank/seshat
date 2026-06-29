@@ -57,6 +57,7 @@ from .models import Power_transition, Crisis_consequence, Human_sacrifice, Exter
 
 from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm, CheckChoiceForm
 from .instability_filters import (
+    VALID_INSTABILITY_BATCHES,
     apply_instability_batch_filter,
     build_instability_filter_token_response,
     get_batch_tag,
@@ -6356,8 +6357,21 @@ def instability_analytics(request):
         polity__unreliable_instability_events=False,
         source=Instability_event.Source.LLM,
     ).only(
-        'id', 'created_date', 'source', 'inst_extent', 'inst_intensity', 'real_event_check', 'inst_type', 'ra_check', 'curator', 'comment', 'private_comment'
+        'id', 'created_date', 'source', 'llm_import_batch', 'inst_extent', 'inst_intensity', 'real_event_check', 'inst_type', 'ra_check', 'curator', 'comment', 'private_comment'
     )
+    selected_batch = request.GET.get('selected_batch')
+    batch_filter_counts = Counter(
+        get_batch_tag(created_date, explicit_batch)
+        for created_date, explicit_batch in queryset.values_list(
+            "created_date",
+            "llm_import_batch",
+        )
+    )
+    batch_filter_choices = [
+        {"label": batch, "count": batch_filter_counts.get(batch, 0)}
+        for batch in VALID_INSTABILITY_BATCHES
+        if batch_filter_counts.get(batch, 0) or selected_batch == batch
+    ]
 
     all_events_count= len(queryset)
 
@@ -6387,8 +6401,6 @@ def instability_analytics(request):
             selected_researcher = None
     else:
         selected_researcher = None
-
-    selected_batch = request.GET.get('selected_batch')
 
     if selected_batch:
         queryset = apply_instability_batch_filter(queryset, selected_batch)
@@ -6517,7 +6529,11 @@ def instability_analytics(request):
 
     # Step 1: Assign batch label per event
     batch_labels = [
-            get_batch_tag(dt) for dt in queryset.values_list("created_date", flat=True)
+        get_batch_tag(created_date, explicit_batch)
+        for created_date, explicit_batch in queryset.values_list(
+            "created_date",
+            "llm_import_batch",
+        )
     ]
 
     # Step 2: Count occurrences
@@ -6715,6 +6731,7 @@ def instability_analytics(request):
         "check_choices": Check_choice.objects.all(),
         "selected_ra_check_ids": selected_ra_check_ids,
         'batch_data': batch_data,
+        "batch_filter_choices": batch_filter_choices,
         "intensity_comp_chart_data": intensity_comp_chart_data,
         "extent_comp_chart_data": extent_comp_chart_data,
         "year_range_comp_chart_data": year_range_comp_chart_data,

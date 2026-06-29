@@ -5,15 +5,11 @@
 <tr  id="hidden-row-llm" style="border-width:0; display:none; background-image: linear-gradient(to left, rgb(246, 127, 127, 0.056),rgb(242, 199, 119, 0.056),rgb(151, 230, 151, 0.056));">
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">  
         <small style="vertical-align: top;">
-            {% if form.instance.created_date|date:"Y-m-d" < "2025-03-29" %}
-            <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
-          {% elif form.instance.created_date|date:"Y-m-d" < "2025-04-11" %}
-            <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
-          {% elif form.instance.created_date|date:"Y-m-d" < "2026-03-01" %}
-            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
-          {% else %}
-            <span class="badge" style="background:#d9b26f;" data-bs-toggle="tooltip" data-bs-html="true" title="Generated on or after March 1st, 2026.">Batch 4</span>
-          {% endif %}
+            {% with batch=form.instance.batch_number %}
+              {% if batch %}
+                <span class="badge" style="{% if batch == 'Batch 1' %}background:#D3D3D3;{% elif batch == 'Batch 2' %}background:#ADD8E6;{% elif batch == 'Batch 3' %}background:#a8dcab;{% elif batch == 'Batch 4' %}background:#d9b26f;{% elif batch == 'Batch 5' %}background:#8f7ab8;{% else %}background:#6c757d;{% endif %}" data-bs-toggle="tooltip" data-bs-html="true" title="{{ form.instance.batch_tooltip }}">{{ batch }}</span>
+              {% endif %}
+            {% endwith %}
         </small>                         
         <span> {{ form.instance.llm_name|remove_macro_event}}</span>
     </td>

@@ -3,7 +3,7 @@ import importlib
 import random
 import numpy as np
 
-from collections import defaultdict, OrderedDict
+from collections import Counter, defaultdict, OrderedDict
 from seshat.utils.utils import dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from seshat.apps.crisisdb.models import Human_sacrifice
@@ -80,7 +80,10 @@ from ..general.models import Polity_research_assistant, Polity_duration, Polity_
 from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level, Polity_territory, Polity_population
 
 from ..crisisdb.models import Instability_event, Power_transition
-from ..crisisdb.instability_filters import get_polity_instability_queryset
+from ..crisisdb.instability_filters import (
+    VALID_INSTABILITY_BATCHES,
+    get_polity_instability_queryset,
+)
 
 from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion, HabitationSite, CityPolityRelation
 
@@ -3125,6 +3128,21 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
                 selected_source=selected_instability_source,
                 selected_batch=selected_instability_batch,
             )
+            polity_llm_events = get_polity_instability_queryset(
+                self.object.pk,
+                selected_source=Instability_event.Source.LLM,
+            ).only("created_date", "llm_import_batch")
+            polity_batch_counts = Counter(
+                event.batch_number
+                for event in polity_llm_events
+                if event.batch_number
+            )
+            context["instability_batch_choices"] = [
+                batch
+                for batch in VALID_INSTABILITY_BATCHES
+                if polity_batch_counts.get(batch, 0)
+                or selected_instability_batch == batch
+            ]
             context["show_instability_source_filter"] = bool(
                 selected_instability_source
                 or get_polity_instability_queryset(

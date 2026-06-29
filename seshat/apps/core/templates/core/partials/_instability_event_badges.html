@@ -1,7 +1,7 @@
 <small style="vertical-align: middle;">
     {% if event.is_llm_source and event.batch_number %}
         <span
-            style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; border-radius:5px; color:white;{% if event.batch_number == 'Batch 1' %} background:#D3D3D3;{% elif event.batch_number == 'Batch 2' %} background:#ADD8E6;{% elif event.batch_number == 'Batch 3' %} background:#a8dcab;{% else %} background:#d9b26f;{% endif %}"
+            style="padding-bottom:0px; padding-left:5px; padding-right:5px; padding-top:1px; border-radius:5px; color:white;{% if event.batch_number == 'Batch 1' %} background:#D3D3D3;{% elif event.batch_number == 'Batch 2' %} background:#ADD8E6;{% elif event.batch_number == 'Batch 3' %} background:#a8dcab;{% elif event.batch_number == 'Batch 4' %} background:#d9b26f;{% elif event.batch_number == 'Batch 5' %} background:#8f7ab8;{% else %} background:#6c757d;{% endif %}"
             data-bs-toggle="tooltip"
             data-bs-html="true"
             title="{{ event.batch_tooltip }}"

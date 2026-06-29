@@ -1252,6 +1252,48 @@ class InstabilityCreateViewTests(TestCase):
         self.assertEqual(manual_events, [manual_event])
         self.assertEqual(llm_batch_one_events, [batch_one_event])
 
+    def test_polity_instability_queryset_filters_by_explicit_batch(self):
+        polity = Polity.objects.create(
+            name="polity_explicit_batch_filter",
+            new_name="polity_explicit_batch_filter",
+            long_name="Polity Explicit Batch Filter",
+            start_year=100,
+            end_year=200,
+        )
+        batch_four_event = Instability_event.objects.create(
+            polity=polity,
+            name="Legacy Batch Four Event",
+            source=Instability_event.Source.LLM,
+            year_from=150,
+            year_to=151,
+        )
+        batch_five_event = Instability_event.objects.create(
+            polity=polity,
+            name="Explicit Batch Five Event",
+            source=Instability_event.Source.LLM,
+            llm_import_batch="Batch 5",
+            year_from=152,
+            year_to=153,
+        )
+        Instability_event.objects.filter(pk=batch_four_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2026, 3, 2))
+        )
+        Instability_event.objects.filter(pk=batch_five_event.pk).update(
+            created_date=timezone.make_aware(datetime.datetime(2026, 3, 2))
+        )
+
+        batch_four_events = list(
+            get_polity_instability_queryset(polity.id, selected_batch="Batch 4")
+        )
+        batch_five_events = list(
+            get_polity_instability_queryset(polity.id, selected_batch="Batch 5")
+        )
+
+        self.assertEqual(batch_four_event.batch_number, "Batch 4")
+        self.assertEqual(batch_five_event.batch_number, "Batch 5")
+        self.assertEqual(batch_four_events, [batch_four_event])
+        self.assertEqual(batch_five_events, [batch_five_event])
+
     def test_polity_detail_instability_batch_filter_renders(self):
         polity = Polity.objects.create(
             name="polity_detail_batch_filter",
@@ -1302,6 +1344,10 @@ class InstabilityCreateViewTests(TestCase):
         self.assertContains(response, "Polity Detail Batch One Event")
         self.assertNotContains(response, "Polity Detail Batch Four Event")
         self.assertNotContains(response, "Polity Detail Manual Event")
+        self.assertEqual(
+            response.context["instability_batch_choices"],
+            ["Batch 1", "Batch 4"],
+        )
 
         manual_response = self.client.get(
             reverse("polity-detail-main", args=[polity.id]),
