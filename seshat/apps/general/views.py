@@ -1956,6 +1956,13 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     paginator = Paginator(object_list, current_per_page)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    if var_name == "instability_event":
+        page_obj.object_list = page_obj.object_list.select_related(
+            "polity"
+        ).prefetch_related(
+            "inst_type",
+            "ra_check",
+        )
     context['page_obj'] = page_obj
     context['paginated'] = True
     context["current_per_page_value"] = requested_per_page

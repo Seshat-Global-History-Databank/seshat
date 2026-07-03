@@ -270,7 +270,7 @@
 
       
       
-    {% if object_list or request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event or request.GET.is_macro_event %}
+    {% if record_count or request.GET or object_list %}
     <div class="row d-flex">
         <div class="col-md-9">
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
