@@ -164,7 +164,7 @@
 </style>
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-start mb-1">
-        <h2 class="mb-0">{{ hoard.external_dataset_id }}</h2>
+        <h2 class="mb-0">{{ hoard.external_dataset_id_label }}</h2>
         <a class="btn btn-secondary btn-sm" href="{% url 'coinhoards' %}">Back to list</a>
     </div>
     <p class="text-secondary">{{ hoard.hoard_name|default:"Unnamed hoard" }}</p>
@@ -172,11 +172,11 @@
         <small class="text-secondary">Data read date: <b>9 March 2026</b></small>
     </div>
     <div class="mb-3 d-flex gap-2">
-        {% if hoard.chre_url %}
-            <a class="btn btn-sm btn-outline-dark" href="{{ hoard.chre_url }}" target="_blank" rel="noopener noreferrer">Open Original CHRE Record</a>
+        {% if hoard.source_record_url %}
+            <a class="btn btn-sm btn-outline-dark" href="{{ hoard.source_record_url }}" target="_blank" rel="noopener noreferrer">Open Source Record</a>
         {% endif %}
-        {% if hoard.external_url %}
-            <a class="btn btn-sm btn-outline-secondary" href="{{ hoard.external_url }}" target="_blank" rel="noopener noreferrer">Open External Link</a>
+        {% if hoard.external_url and hoard.external_url != hoard.source_record_url %}
+            <a class="btn btn-sm btn-outline-secondary" href="{{ hoard.external_url }}" target="_blank" rel="noopener noreferrer">Open Source Dataset</a>
         {% endif %}
     </div>
     <div class="hoard-legend-row">
@@ -184,6 +184,7 @@
             <small class="text-secondary">
                 <b>Year meaning:</b>
                 <b>Terminal</b> = date range of latest coin issue in hoard;
+                <b>Deposit</b> = estimated burial/deposition date;
                 <b>Discovery</b> = when the hoard was discovered;
                 <b>Opening</b> = date range of the earliest coin issue in the hoard.
             </small>
@@ -204,6 +205,7 @@
                 <table class="table table-sm table-borderless mb-0 detail-record-table">
                     <tr><th>Opening</th><td>{% if hoard.opening_year1 and hoard.opening_year2 %}{% if hoard.opening_year1 == hoard.opening_year2 %}{% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}{% else %}{% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %} <span class="year-arrow">&rarr;</span> {% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}{% endif %}{% elif hoard.opening_year1 %}{% if hoard.opening_year1 < 0 %}<span class="year-num">{{ hoard.opening_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year1 }}</span> <span class="year-era">CE</span>{% endif %}{% elif hoard.opening_year2 %}{% if hoard.opening_year2 < 0 %}<span class="year-num">{{ hoard.opening_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.opening_year2 }}</span> <span class="year-era">CE</span>{% endif %}{% else %}-{% endif %}</td></tr>
                     <tr><th>Terminal</th><td>{% if hoard.year_from and hoard.year_to %}{% if hoard.year_from == hoard.year_to %}{% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %}{% else %}{% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %} <span class="year-arrow">&rarr;</span> {% if hoard.year_to < 0 %}<span class="year-num">{{ hoard.year_to|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_to }}</span> <span class="year-era">CE</span>{% endif %}{% endif %}{% elif hoard.year_from %}{% if hoard.year_from < 0 %}<span class="year-num">{{ hoard.year_from|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_from }}</span> <span class="year-era">CE</span>{% endif %}{% elif hoard.year_to %}{% if hoard.year_to < 0 %}<span class="year-num">{{ hoard.year_to|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.year_to }}</span> <span class="year-era">CE</span>{% endif %}{% else %}-{% endif %}</td></tr>
+                    <tr><th>Deposit</th><td>{{ hoard.deposit_year_label|default:"-" }}</td></tr>
                     <tr><th>Discovery</th><td>{% if hoard.discovery_year1 and hoard.discovery_year2 %}{% if hoard.discovery_year1 == hoard.discovery_year2 %}{% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}{% else %}{% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %} <span class="year-arrow">&rarr;</span> {% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}{% endif %}{% elif hoard.discovery_year1 %}{% if hoard.discovery_year1 < 0 %}<span class="year-num">{{ hoard.discovery_year1|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year1 }}</span> <span class="year-era">CE</span>{% endif %}{% elif hoard.discovery_year2 %}{% if hoard.discovery_year2 < 0 %}<span class="year-num">{{ hoard.discovery_year2|cut:"-" }}</span> <span class="year-era">BCE</span>{% else %}<span class="year-num">{{ hoard.discovery_year2 }}</span> <span class="year-era">CE</span>{% endif %}{% else %}-{% endif %}</td></tr>
                     <tr><th>City</th><td>{{ hoard.city|default:"-" }}</td></tr>
                     <tr><th>County</th><td>{{ hoard.county|default:"-" }}</td></tr>
@@ -239,12 +241,12 @@
                     <tr><th>External source</th><td>{{ hoard.external_source_text|default:"-" }}</td></tr>
                     <tr><th>Summary</th><td>{{ hoard.summary|default:"-" }}</td></tr>
                     <tr>
-                        <th>External URL</th>
+                        <th>Source/dataset URL</th>
                         <td>{% if hoard.external_url %}<a href="{{ hoard.external_url }}" target="_blank" rel="noopener noreferrer">{{ hoard.external_url }}</a>{% else %}-{% endif %}</td>
                     </tr>
                     <tr>
-                        <th>CHRE canonical URL</th>
-                        <td>{% if hoard.chre_url %}<a href="{{ hoard.chre_url }}" target="_blank" rel="noopener noreferrer">{{ hoard.chre_url }}</a>{% else %}-{% endif %}</td>
+                        <th>Source record URL</th>
+                        <td>{% if hoard.source_record_url %}<a href="{{ hoard.source_record_url }}" target="_blank" rel="noopener noreferrer">{{ hoard.source_record_url }}</a>{% else %}-{% endif %}</td>
                     </tr>
                 </table>
 
@@ -286,7 +288,7 @@
                         <td>
                             {% if hoard.polity_mapping_rows %}
                                 {% for row in hoard.polity_mapping_rows %}
-                                    <div>{{ row.overlap_year_from|default:"-" }}</div>
+                                    <div>{{ row.overlap_year_from|default:"-" }}{% if row.temporal_match_basis %} <span class="text-secondary small">({{ row.temporal_match_basis }})</span>{% endif %}</div>
                                 {% endfor %}
                             {% else %}
                                 -

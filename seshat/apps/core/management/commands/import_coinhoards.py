@@ -1,5 +1,5 @@
 """
-Import CHRE coin hoard CSV rows into ``core.CoinHoard``.
+Import coin hoard CSV rows into ``core.CoinHoard``.
 
 Django management command name (from this filename): ``import_coinhoards``.
 
@@ -14,8 +14,9 @@ Integration steps (run from the directory that contains ``manage.py``, e.g.
 
        python manage.py showmigrations core
 
-2. **Import the CHRE export CSV** (UTF-8 with BOM is fine; the importer uses
-   ``utf-8-sig``). Example::
+2. **Import a coin hoard CSV** (UTF-8 with BOM is fine; the importer uses
+   ``utf-8-sig``). The command supports both the original CHRE export and the
+   Seshat-shaped model-ready CSVs. Example::
 
        python manage.py import_coinhoards \\
            --csv "/path/to/CHRE_hoard_export_YYYY_MM_DD.csv" \\
@@ -37,10 +38,12 @@ Integration steps (run from the directory that contains ``manage.py``, e.g.
        python manage.py shell -c \\
            "from seshat.apps.core.models import CoinHoard; print(CoinHoard.objects.count())"
 
-**CSV expectations**: columns such as ``id``, ``hoardName``, ``coinCount``,
-``terminalYear1``/``terminalYear2``, ``openingYear1``/``openingYear2``,
-``discoveryYear1``/``discoveryYear2``, ``permalinkOnlineDatabases`` (mixed text
-and URLs), coordinates, etc., as produced by the CHRE export.
+**CSV expectations**: either CHRE export columns such as ``id``, ``hoardName``,
+``coinCount``, ``terminalYear1``/``terminalYear2``, ``openingYear1``/
+``openingYear2``, ``discoveryYear1``/``discoveryYear2``,
+``permalinkOnlineDatabases``; or Seshat-shaped columns such as
+``external_dataset_id``, ``data_source``, ``hoard_name``, ``number_of_coins``,
+``year_from``/``year_to`` and ``deposit_year_from``/``deposit_year_to``.
 
 **UI**: list at ``/core/coinhoards/`` (name ``coinhoards``); canonical CHRE
 permalink for a hoard is built in views as
@@ -148,6 +151,101 @@ def normalize_choice(value, allowed_values):
     return value if value in allowed_values else ""
 
 
+def is_model_ready_row(row):
+    return normalize_str(row.get("external_dataset_id")) != ""
+
+
+def normalize_model_ready_payload(row):
+    ext_id = clip_str(row.get("external_dataset_id"), 32)
+    if not ext_id:
+        return None
+    return {
+        "external_dataset_id": ext_id,
+        "raw_external_id": clip_str(row.get("raw_external_id"), 32),
+        "data_source": clip_str(row.get("data_source"), 128) or DEFAULT_SOURCE,
+        "hoard_name": clip_str(row.get("hoard_name"), 255),
+        "number_of_coins": parse_int(row.get("number_of_coins")),
+        "discovery_method": normalize_choice(
+            row.get("discovery_method"),
+            {choice[0] for choice in CoinHoard.DISCOVERY_METHOD_CHOICES},
+        ),
+        "discovery_year1": parse_int(row.get("discovery_year1")),
+        "discovery_year2": parse_int(row.get("discovery_year2")),
+        "opening_year1": parse_int(row.get("opening_year1")),
+        "opening_year2": parse_int(row.get("opening_year2")),
+        "year_from": parse_int(row.get("year_from")),
+        "year_to": parse_int(row.get("year_to")),
+        "deposit_year_from": parse_int(row.get("deposit_year_from")),
+        "deposit_year_to": parse_int(row.get("deposit_year_to")),
+        "deposit_display": clip_str(row.get("deposit_display"), 255),
+        "find_spot_rating": normalize_choice(
+            row.get("find_spot_rating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "contextual_rating": normalize_choice(
+            row.get("contextual_rating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "numismatic_rating": normalize_choice(
+            row.get("numismatic_rating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "latitude": parse_decimal(row.get("latitude")),
+        "longitude": parse_decimal(row.get("longitude")),
+        "altitude": parse_decimal(row.get("altitude")),
+        "city": clip_str(row.get("city"), 255),
+        "county": clip_str(row.get("county"), 255),
+        "region": clip_str(row.get("region"), 255),
+        "country": clip_str(row.get("country"), 255),
+        "summary": normalize_str(row.get("summary")),
+        "external_source_text": normalize_str(row.get("external_source_text")),
+        "external_url": clip_str(row.get("external_url"), 500),
+    }
+
+
+def normalize_chre_payload(row):
+    ext_id = make_external_dataset_id(row.get("id"))
+    if not ext_id:
+        return None
+    external_source_text, external_url = parse_external_source(row.get("permalinkOnlineDatabases"))
+    return {
+        "external_dataset_id": ext_id,
+        "raw_external_id": normalize_str(row.get("id")),
+        "data_source": DEFAULT_SOURCE,
+        "hoard_name": normalize_str(row.get("hoardName")),
+        "number_of_coins": parse_int(row.get("coinCount")),
+        "discovery_method": normalize_choice(
+            row.get("discoveryMethod"),
+            {choice[0] for choice in CoinHoard.DISCOVERY_METHOD_CHOICES},
+        ),
+        "discovery_year1": parse_int(row.get("discoveryYear1")),
+        "discovery_year2": parse_int(row.get("discoveryYear2")),
+        "opening_year1": parse_int(row.get("openingYear1")),
+        "opening_year2": parse_int(row.get("openingYear2")),
+        "year_from": parse_int(row.get("terminalYear1")),
+        "year_to": parse_int(row.get("terminalYear2")),
+        "deposit_year_from": None,
+        "deposit_year_to": None,
+        "deposit_display": "",
+        "find_spot_rating": normalize_choice(
+            row.get("findSpotRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "contextual_rating": normalize_choice(
+            row.get("contextualRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "numismatic_rating": normalize_choice(
+            row.get("numismaticRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
+        ),
+        "latitude": parse_decimal(row.get("latitude")),
+        "longitude": parse_decimal(row.get("longitude")),
+        "altitude": parse_decimal(row.get("altitude")),
+        "city": clip_str(row.get("city"), 255),
+        "county": clip_str(row.get("county"), 255),
+        "region": clip_str(choose_region(row), 255),
+        "country": clip_str(row.get("country"), 255),
+        "summary": normalize_str(row.get("summary")),
+        "external_source_text": external_source_text,
+        "external_url": clip_str(external_url, 500),
+    }
+
+
 def next_seshat_id(existing_max):
     if not existing_max:
         return 1
@@ -158,10 +256,10 @@ def next_seshat_id(existing_max):
 
 
 class Command(BaseCommand):
-    help = "Import CHRE CSV into core.CoinHoard. See module docstring for migrate + import commands."
+    help = "Import coin hoard CSV into core.CoinHoard. See module docstring for supported formats."
 
     def add_arguments(self, parser):
-        parser.add_argument("--csv", required=True, help="Path to CHRE CSV file")
+        parser.add_argument("--csv", required=True, help="Path to coin hoard CSV file")
         parser.add_argument("--chunk-size", type=int, default=2000, help="Bulk operation chunk size")
 
     def handle(self, *args, **options):
@@ -176,60 +274,27 @@ class Command(BaseCommand):
 
         normalized = []
         for row in rows:
-            ext_id = make_external_dataset_id(row.get("id"))
-            if ext_id:
-                normalized.append((row, ext_id))
+            payload = (
+                normalize_model_ready_payload(row)
+                if is_model_ready_row(row)
+                else normalize_chre_payload(row)
+            )
+            if payload:
+                normalized.append(payload)
 
         existing = {
             obj.external_dataset_id: obj
-            for obj in CoinHoard.objects.filter(external_dataset_id__in=[ext for _, ext in normalized])
+            for obj in CoinHoard.objects.filter(
+                external_dataset_id__in=[payload["external_dataset_id"] for payload in normalized]
+            )
         }
         seshat_counter = next_seshat_id(CoinHoard.objects.aggregate(mx=Max("seshat_id")).get("mx"))
 
         to_create = []
         to_update = []
 
-        for row, ext_id in normalized:
-            external_source_text, external_url = parse_external_source(
-                row.get("permalinkOnlineDatabases")
-            )
-            payload = {
-                "external_dataset_id": ext_id,
-                "raw_external_id": normalize_str(row.get("id")),
-                "data_source": DEFAULT_SOURCE,
-                "hoard_name": normalize_str(row.get("hoardName")),
-                "number_of_coins": parse_int(row.get("coinCount")),
-                "discovery_method": normalize_choice(
-                    row.get("discoveryMethod"),
-                    {choice[0] for choice in CoinHoard.DISCOVERY_METHOD_CHOICES},
-                ),
-                "discovery_year1": parse_int(row.get("discoveryYear1")),
-                "discovery_year2": parse_int(row.get("discoveryYear2")),
-                "opening_year1": parse_int(row.get("openingYear1")),
-                "opening_year2": parse_int(row.get("openingYear2")),
-                "year_from": parse_int(row.get("terminalYear1")),
-                "year_to": parse_int(row.get("terminalYear2")),
-                "find_spot_rating": normalize_choice(
-                    row.get("findSpotRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
-                ),
-                "contextual_rating": normalize_choice(
-                    row.get("contextualRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
-                ),
-                "numismatic_rating": normalize_choice(
-                    row.get("numismaticRating"), {choice[0] for choice in CoinHoard.RATING_CHOICES}
-                ),
-                "latitude": parse_decimal(row.get("latitude")),
-                "longitude": parse_decimal(row.get("longitude")),
-                "altitude": parse_decimal(row.get("altitude")),
-                "city": clip_str(row.get("city"), 255),
-                "county": clip_str(row.get("county"), 255),
-                "region": clip_str(choose_region(row), 255),
-                "country": clip_str(row.get("country"), 255),
-                "summary": normalize_str(row.get("summary")),
-                "external_source_text": external_source_text,
-                "external_url": clip_str(external_url, 500),
-            }
-
+        for payload in normalized:
+            ext_id = payload["external_dataset_id"]
             obj = existing.get(ext_id)
             if obj is None:
                 payload["seshat_id"] = f"{seshat_counter:06d}"
@@ -257,6 +322,9 @@ class Command(BaseCommand):
             "opening_year2",
             "year_from",
             "year_to",
+            "deposit_year_from",
+            "deposit_year_to",
+            "deposit_display",
             "find_spot_rating",
             "contextual_rating",
             "numismatic_rating",

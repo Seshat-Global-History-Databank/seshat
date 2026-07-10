@@ -13,6 +13,9 @@ from django.utils import timezone
 from .models import CoinHoard, CoinHoardPolityMapping, Polity
 
 CHRE_BASE_URL = "https://chre.ashmus.ox.ac.uk/hoard/"
+CHRE_DATA_SOURCE = "Coin Hoards of the Roman Empire"
+BNS_DATA_SOURCE = "British Numismatic Society"
+COINHOARDS_ORG_DATA_SOURCE = "CoinHoards.org"
 RATING_MAP = {
     "1": ("poor", "rating-poor"),
     "2": ("fair", "rating-fair"),
@@ -25,15 +28,43 @@ def _rating_meta(value):
     return RATING_MAP.get(str(value or "").strip(), ("-", "rating-empty"))
 
 
-def _chre_url(hoard):
-    raw_id = str(hoard.raw_external_id or "").strip()
-    if raw_id.isdigit():
-        return f"{CHRE_BASE_URL}{int(raw_id)}"
+def _is_direct_external_record_url(data_source, external_url):
+    source = str(data_source or "").strip()
+    url = str(external_url or "").strip()
+    if source == BNS_DATA_SOURCE:
+        return "britnumsoc.uk/hoard/" in url
+    if source == COINHOARDS_ORG_DATA_SOURCE:
+        return "coinhoards.org/id/" in url
+    return False
 
-    ext = str(hoard.external_dataset_id or "").strip().upper()
+
+def _source_record_url_from_parts(
+    data_source,
+    raw_external_id,
+    external_dataset_id,
+    external_url,
+):
+    ext = str(external_dataset_id or "").strip().upper()
     if ext.startswith("CHRE") and ext[4:].isdigit():
         return f"{CHRE_BASE_URL}{int(ext[4:])}"
+
+    source = str(data_source or "").strip()
+    if _is_direct_external_record_url(source, external_url):
+        return str(external_url or "").strip()
+
+    raw_id = str(raw_external_id or "").strip()
+    if source == CHRE_DATA_SOURCE and raw_id.isdigit():
+        return f"{CHRE_BASE_URL}{int(raw_id)}"
     return ""
+
+
+def _source_record_url(hoard):
+    return _source_record_url_from_parts(
+        hoard.data_source,
+        hoard.raw_external_id,
+        hoard.external_dataset_id,
+        hoard.external_url,
+    )
 
 
 COINHOARD_CSV_COLUMN_GROUPS = (
@@ -66,6 +97,9 @@ COINHOARD_CSV_COLUMN_GROUPS = (
         (
             ("year_from", "Terminal year (from)"),
             ("year_to", "Terminal year (to)"),
+            ("deposit_year_from", "Deposit year (from)"),
+            ("deposit_year_to", "Deposit year (to)"),
+            ("deposit_display", "Deposit date display"),
             ("opening_year1", "Opening year (from)"),
             ("opening_year2", "Opening year (to)"),
             ("discovery_year1", "Discovery year (from)"),
@@ -90,7 +124,7 @@ COINHOARD_CSV_COLUMN_GROUPS = (
             ("summary", "Summary"),
             ("external_source_text", "External source text"),
             ("external_url", "External URL"),
-            ("chre_url", "CHRE URL"),
+            ("source_record_url", "Source record URL"),
         ),
     ),
     (
@@ -150,13 +184,74 @@ COINHOARD_CSV_DEFAULT_COLS = (
     "number_of_coins",
     "year_from",
     "year_to",
+    "deposit_year_from",
+    "deposit_year_to",
     "latitude",
     "longitude",
     "region",
     "country",
-    "chre_url",
+    "source_record_url",
     "external_url",
 )
+
+
+def _format_year(value):
+    if value is None:
+        return ""
+    return f"{abs(value)} BCE" if value < 0 else f"{value} CE"
+
+
+def _format_year_range(start, end):
+    if start is None and end is None:
+        return ""
+    if start is None:
+        return _format_year(end)
+    if end is None or start == end:
+        return _format_year(start)
+    return f"{_format_year(start)} to {_format_year(end)}"
+
+
+def _format_deposit_date(hoard):
+    range_text = _format_year_range(hoard.deposit_year_from, hoard.deposit_year_to)
+    display = (hoard.deposit_display or "").strip()
+    return range_text or display
+
+
+def _external_dataset_id_label(value):
+    value = str(value or "").strip()
+    if value.startswith("COUPLAND_") and value.removeprefix("COUPLAND_").isdigit():
+        return value.replace("COUPLAND_", "COUPLAND", 1)
+    return value
+
+
+def _has_terminal_date_q():
+    return Q(year_from__isnull=False) | Q(year_to__isnull=False)
+
+
+def _has_deposit_date_q():
+    return Q(deposit_year_from__isnull=False) | Q(deposit_year_to__isnull=False)
+
+
+def _range_end_gte_q(start_field, end_field, value):
+    return Q(**{f"{end_field}__gte": value}) | (
+        Q(**{f"{end_field}__isnull": True}) & Q(**{f"{start_field}__gte": value})
+    )
+
+
+def _range_start_lte_q(start_field, end_field, value):
+    return Q(**{f"{start_field}__lte": value}) | (
+        Q(**{f"{start_field}__isnull": True}) & Q(**{f"{end_field}__lte": value})
+    )
+
+
+def _temporal_filter_q(predicate):
+    has_terminal = _has_terminal_date_q()
+    deposit_fallback = ~has_terminal & _has_deposit_date_q()
+    return (
+        has_terminal & predicate("year_from", "year_to")
+    ) | (
+        deposit_fallback & predicate("deposit_year_from", "deposit_year_to")
+    )
 
 
 def _filtered_coinhoard_queryset(request):
@@ -176,10 +271,22 @@ def _filtered_coinhoard_queryset(request):
     try:
         if start:
             start_int = int(start)
-            queryset = queryset.filter(Q(year_to__isnull=True) | Q(year_to__gte=start_int))
+            queryset = queryset.filter(
+                _temporal_filter_q(
+                    lambda start_field, end_field: _range_end_gte_q(
+                        start_field, end_field, start_int
+                    )
+                )
+            )
         if end:
             end_int = int(end)
-            queryset = queryset.filter(Q(year_from__isnull=True) | Q(year_from__lte=end_int))
+            queryset = queryset.filter(
+                _temporal_filter_q(
+                    lambda start_field, end_field: _range_start_lte_q(
+                        start_field, end_field, end_int
+                    )
+                )
+            )
     except ValueError:
         pass
 
@@ -205,8 +312,8 @@ def _mapped_polities_export_text(hoard):
 
 
 def _coinhoard_csv_cell_value(hoard, key):
-    if key == "chre_url":
-        return _chre_url(hoard)
+    if key == "source_record_url":
+        return _source_record_url(hoard)
     if key == "mapped_polities":
         return _mapped_polities_export_text(hoard)
     value = getattr(hoard, key)
@@ -247,7 +354,10 @@ def hoard_list(request):
         hoard.findspot_label, hoard.findspot_class = _rating_meta(hoard.find_spot_rating)
         hoard.context_label, hoard.context_class = _rating_meta(hoard.contextual_rating)
         hoard.numismatic_label, hoard.numismatic_class = _rating_meta(hoard.numismatic_rating)
-        hoard.chre_url = _chre_url(hoard)
+        hoard.source_record_url = _source_record_url(hoard)
+        hoard.terminal_year_label = _format_year_range(hoard.year_from, hoard.year_to)
+        hoard.deposit_year_label = _format_deposit_date(hoard)
+        hoard.external_dataset_id_label = _external_dataset_id_label(hoard.external_dataset_id)
         seen_polity_ids = set()
         hoard.mapped_polities = []
         for mapping in hoard.polity_mappings.all():
@@ -332,10 +442,12 @@ def hoard_detail(request, external_dataset_id):
         ),
         external_dataset_id=external_dataset_id,
     )
-    hoard.chre_url = _chre_url(hoard)
+    hoard.source_record_url = _source_record_url(hoard)
+    hoard.external_dataset_id_label = _external_dataset_id_label(hoard.external_dataset_id)
     hoard.findspot_label, hoard.findspot_class = _rating_meta(hoard.find_spot_rating)
     hoard.context_label, hoard.context_class = _rating_meta(hoard.contextual_rating)
     hoard.numismatic_label, hoard.numismatic_class = _rating_meta(hoard.numismatic_rating)
+    hoard.deposit_year_label = _format_deposit_date(hoard)
     hoard.polity_mapping_rows = []
     for mapping in hoard.polity_mappings.all():
         polity_name = (mapping.polity.long_name or mapping.polity.name or "").strip() or "-"
@@ -351,6 +463,7 @@ def hoard_detail(request, external_dataset_id):
                 "polity_year_to": mapping.polity.end_year,
                 "overlap_year_from": mapping.overlap_year_from,
                 "overlap_year_to": mapping.overlap_year_to,
+                "temporal_match_basis": mapping.temporal_match_basis,
                 "shape_name": shape_name,
             }
         )
@@ -363,12 +476,16 @@ def hoard_list_json(request):
         CoinHoard.objects.values(
             "external_dataset_id",
             "raw_external_id",
+            "data_source",
             "hoard_name",
             "number_of_coins",
             "opening_year1",
             "opening_year2",
             "year_from",
             "year_to",
+            "deposit_year_from",
+            "deposit_year_to",
+            "deposit_display",
             "latitude",
             "longitude",
             "region",
@@ -378,10 +495,10 @@ def hoard_list_json(request):
         )[:500]
     )
     for row in rows:
-        raw_id = str(row.get("raw_external_id") or "").strip()
-        if raw_id.isdigit():
-            row["chre_url"] = f"{CHRE_BASE_URL}{int(raw_id)}"
-        else:
-            ext = str(row.get("external_dataset_id") or "").strip().upper()
-            row["chre_url"] = f"{CHRE_BASE_URL}{int(ext[4:])}" if ext.startswith("CHRE") and ext[4:].isdigit() else ""
+        row["source_record_url"] = _source_record_url_from_parts(
+            row.get("data_source"),
+            row.get("raw_external_id"),
+            row.get("external_dataset_id"),
+            row.get("external_url"),
+        )
     return JsonResponse({"count": len(rows), "results": rows})
