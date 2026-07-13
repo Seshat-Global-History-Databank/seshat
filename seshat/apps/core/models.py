@@ -685,6 +685,9 @@ class CoinHoard(models.Model):
 
     year_from = models.IntegerField(null=True, blank=True, db_index=True)
     year_to = models.IntegerField(null=True, blank=True, db_index=True)
+    deposit_year_from = models.IntegerField(null=True, blank=True, db_index=True)
+    deposit_year_to = models.IntegerField(null=True, blank=True, db_index=True)
+    deposit_display = models.CharField(max_length=255, blank=True, default="")
     find_spot_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
     contextual_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
     numismatic_rating = models.CharField(max_length=1, choices=RATING_CHOICES, blank=True, default="")
@@ -708,6 +711,10 @@ class CoinHoard(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=["data_source", "year_from", "year_to"]),
+            models.Index(
+                fields=["data_source", "deposit_year_from", "deposit_year_to"],
+                name="core_coinho_data_so_c2c150_idx",
+            ),
             models.Index(fields=["region"]),
         ]
         ordering = ["external_dataset_id"]
@@ -736,6 +743,7 @@ class CoinHoardPolityMapping(models.Model):
     )
     overlap_year_from = models.IntegerField(null=True, blank=True)
     overlap_year_to = models.IntegerField(null=True, blank=True)
+    temporal_match_basis = models.CharField(max_length=32, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -1868,7 +1876,6 @@ class GADMShapefile(models.Model):
 
     def __str__(self):
         return "Name: %s" % self.name
-    
 class GADMCountries(models.Model):
     """
     Model representing a country (GADM).
@@ -1878,7 +1885,6 @@ class GADMCountries(models.Model):
 
     def __str__(self):
         return "Name: %s" % self.name
-    
 class GADMProvinces(models.Model):
     """
     Model representing a province (GADM).
@@ -1890,4 +1896,3 @@ class GADMProvinces(models.Model):
 
     def __str__(self):
         return "Name: %s" % self.name
-    

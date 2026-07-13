@@ -86,6 +86,7 @@ from ..crisisdb.instability_filters import (
 )
 
 from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion, HabitationSite, CityPolityRelation
+from .views_coinhoards import coinhoard_polity_context
 
 import pprint
 import requests
@@ -3114,6 +3115,16 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         context["selected_instability_source"] = selected_instability_source
         context["show_instability_source_filter"] = bool(selected_instability_source)
         context["show_instability_batch_filter"] = bool(selected_instability_batch)
+        context.update(
+            {
+                "associated_coinhoards": [],
+                "coinhoard_count": 0,
+                "coinhoard_dataset_counts": [],
+                "coinhoard_has_more": False,
+            }
+        )
+        if self.request.user.is_authenticated:
+            context.update(coinhoard_polity_context(self.object.pk))
         try:
             context["all_data"] = get_all_data_for_a_polity(self.object.pk, "crisisdb") 
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)

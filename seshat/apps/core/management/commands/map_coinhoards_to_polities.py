@@ -22,27 +22,40 @@ def normalize_range(start, end):
     return (start, end) if start <= end else (end, start)
 
 
+def coin_hoard_temporal_anchor(coin_hoard):
+    if coin_hoard.deposit_year_from is not None:
+        return coin_hoard.deposit_year_from, "deposit"
+    if coin_hoard.deposit_year_to is not None:
+        return coin_hoard.deposit_year_to, "deposit"
+    if coin_hoard.year_from is not None:
+        return coin_hoard.year_from, "terminal_fallback"
+    if coin_hoard.year_to is not None:
+        return coin_hoard.year_to, "terminal_fallback"
+    return None, ""
+
+
 def map_coinhoard_to_polities(coin_hoard, polities_by_seshat_id):
     """
     Return CoinHoardPolityMapping rows for one CoinHoard.
     Mapping criteria:
     1) hoard has a point (lon/lat),
-    2) terminal anchor year exists (year_from, fallback year_to),
+    2) deposit anchor year exists, falling back to terminal chronology when
+       deposit chronology is unavailable,
     3) Cliopatria polygon contains the point,
     4) anchor year falls within Cliopatria shape year range and Polity year range.
     """
     if coin_hoard.latitude is None or coin_hoard.longitude is None:
         return []
 
-    terminal_anchor_year = coin_hoard.year_from if coin_hoard.year_from is not None else coin_hoard.year_to
-    if terminal_anchor_year is None:
+    anchor_year, match_basis = coin_hoard_temporal_anchor(coin_hoard)
+    if anchor_year is None:
         return []
 
     point = Point(float(coin_hoard.longitude), float(coin_hoard.latitude), srid=4326)
     candidate_shapes = Cliopatria.objects.filter(
         geom__contains=point,
-        start_year__lte=terminal_anchor_year,
-        end_year__gte=terminal_anchor_year,
+        start_year__lte=anchor_year,
+        end_year__gte=anchor_year,
     ).only("id", "seshat_id", "start_year", "end_year").order_by("id")
 
     mappings = []
@@ -56,10 +69,10 @@ def map_coinhoard_to_polities(coin_hoard, polities_by_seshat_id):
             polity_start, polity_end = normalize_range(polity.start_year, polity.end_year)
             if polity_start is None:
                 continue
-            if not (polity_start <= terminal_anchor_year <= polity_end):
+            if not (polity_start <= anchor_year <= polity_end):
                 continue
 
-            if not (shape.start_year <= terminal_anchor_year <= shape.end_year):
+            if not (shape.start_year <= anchor_year <= shape.end_year):
                 continue
 
             mappings.append(
@@ -67,8 +80,9 @@ def map_coinhoard_to_polities(coin_hoard, polities_by_seshat_id):
                     coin_hoard=coin_hoard,
                     polity=polity,
                     cliopatria_shape=shape,
-                    overlap_year_from=terminal_anchor_year,
-                    overlap_year_to=terminal_anchor_year,
+                    overlap_year_from=anchor_year,
+                    overlap_year_to=anchor_year,
+                    temporal_match_basis=match_basis,
                 )
             )
             matched_polity_ids.add(polity.id)
