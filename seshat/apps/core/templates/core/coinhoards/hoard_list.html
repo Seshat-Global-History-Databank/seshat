@@ -240,19 +240,36 @@
 
     <form method="get" class="mb-3 filter-panel">
         <div class="row g-2 align-items-start">
-            <div class="col-md-4 filter-col">
+            <div class="col-xl-2 col-md-6 filter-col">
                 <label for="filter-q" class="form-label small text-secondary mb-0">Search</label>
                 <input id="filter-q" type="text" class="form-control" name="q" value="{{ q }}" placeholder="ID, name, country">
                 <div class="filter-chip-row">
                     {% if q %}
                         <span class="filter-chip">
                             search: "{{ q }}"
-                            <a class="filter-chip-remove filter-chip-remove-link" href="?start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove search filter">x</a>
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove search filter">x</a>
                         </span>
                     {% endif %}
                 </div>
             </div>
-            <div class="col-md-4 filter-col">
+            <div class="col-xl-4 col-md-6 filter-col">
+                <label for="filter-dataset" class="form-label small text-secondary mb-0">Dataset</label>
+                <select id="filter-dataset" class="form-select" name="dataset">
+                    <option value="">All datasets</option>
+                    {% for opt in coinhoard_dataset_options %}
+                        <option value="{{ opt.data_source }}" {% if opt.data_source == selected_dataset %}selected{% endif %}>{{ opt.data_source }} ({{ opt.count }})</option>
+                    {% endfor %}
+                </select>
+                <div class="filter-chip-row">
+                    {% if selected_dataset %}
+                        <span class="filter-chip">
+                            {{ selected_dataset }}
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove dataset filter">x</a>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 filter-col">
                 <label for="filter-polity" class="form-label small text-secondary mb-0">Mapped polity</label>
                 <select id="filter-polity" class="form-select" name="polity_picker" title="Select a polity to add as a filter">
                     <option value="">Add a polity filter...</option>
@@ -269,34 +286,38 @@
                     {% for item in selected_polity_items %}
                         <span class="filter-chip">
                             {{ item.label }}
-                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}{% if pid != item.id %}&polity={{ pid }}{% endif %}{% endfor %}" aria-label="Remove polity filter {{ item.label }}">x</a>
+                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}{% if pid != item.id %}&polity={{ pid }}{% endif %}{% endfor %}" aria-label="Remove polity filter {{ item.label }}">x</a>
                         </span>
                     {% endfor %}
                 </div>
                 <div class="form-text">Pick one polity at a time; each selection is added right away.</div>
             </div>
-            <div class="col-md-2 filter-col">
-                <label for="filter-start-year" class="form-label small text-secondary mb-0">Start year</label>
-                <input id="filter-start-year" type="number" class="form-control" name="start_year" value="{{ start_year }}" placeholder="Start">
-                <div class="filter-chip-row">
-                    {% if start_year %}
-                        <span class="filter-chip">
-                            start: {{ start_year }}
-                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove start year filter">x</a>
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-md-2 filter-col">
-                <label for="filter-end-year" class="form-label small text-secondary mb-0">End year</label>
-                <input id="filter-end-year" type="number" class="form-control" name="end_year" value="{{ end_year }}" placeholder="End">
-                <div class="filter-chip-row">
-                    {% if end_year %}
-                        <span class="filter-chip">
-                            end: {{ end_year }}
-                            <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q }}&start_year={{ start_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove end year filter">x</a>
-                        </span>
-                    {% endif %}
+            <div class="col-xl-3 col-md-6 filter-col">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label for="filter-start-year" class="form-label small text-secondary mb-0">Start year</label>
+                        <input id="filter-start-year" type="number" class="form-control" name="start_year" value="{{ start_year }}" placeholder="Start">
+                        <div class="filter-chip-row">
+                            {% if start_year %}
+                                <span class="filter-chip">
+                                    start: {{ start_year }}
+                                    <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove start year filter">x</a>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="filter-end-year" class="form-label small text-secondary mb-0">End year</label>
+                        <input id="filter-end-year" type="number" class="form-control" name="end_year" value="{{ end_year }}" placeholder="End">
+                        <div class="filter-chip-row">
+                            {% if end_year %}
+                                <span class="filter-chip">
+                                    end: {{ end_year }}
+                                    <a class="filter-chip-remove filter-chip-remove-link" href="?q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Remove end year filter">x</a>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,6 +331,7 @@
         <summary class="px-3 py-2 fw-semibold" style="cursor:pointer;">Download CSV (filtered results)</summary>
         <form method="get" action="{% url 'coinhoards-export-csv' %}" class="px-3 pb-3 pt-2 border-top" style="border-color:#eadfbe;">
             <input type="hidden" name="q" value="{{ q }}">
+            <input type="hidden" name="dataset" value="{{ selected_dataset }}">
             <input type="hidden" name="start_year" value="{{ start_year }}">
             <input type="hidden" name="end_year" value="{{ end_year }}">
             {% for pid in selected_polity_ids %}
@@ -365,14 +387,14 @@
         <ul class="pagination">
             {% if page_obj.number > 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
+                    <a class="page-link" href="?page=1&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
             {% endif %}
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -381,6 +403,7 @@
                 
                 <form method="get" class="jump-form page-link p-1 px-2">
                     <input type="hidden" name="q" value="{{ q }}">
+                    <input type="hidden" name="dataset" value="{{ selected_dataset }}">
                     <input type="hidden" name="start_year" value="{{ start_year }}">
                     <input type="hidden" name="end_year" value="{{ end_year }}">
                     {% for pid in selected_polity_ids %}
@@ -395,14 +418,14 @@
             </li>
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
             {% endif %}
             {% if page_obj.number < page_obj.paginator.num_pages %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
@@ -442,7 +465,7 @@
                 {% for hoard in page_obj %}
                 <tr>
                     <td class="row-num-cell">{{ page_obj.start_index|add:forloop.counter0 }}</td>
-                    <td><a href="{% url 'coinhoard-detail' hoard.external_dataset_id %}">{{ hoard.external_dataset_id_label }}</a></td>
+                    <td><a href="{% url 'coinhoard-detail' hoard.external_dataset_id %}">{{ hoard.external_dataset_id }}</a></td>
                     <td>{{ hoard.hoard_name|default:"-" }}</td>
                     <td>
                         {% if hoard.mapped_polities %}
@@ -518,14 +541,14 @@
         <ul class="pagination">
             {% if page_obj.number > 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
+                    <a class="page-link" href="?page=1&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="First page">&laquo;&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
             {% endif %}
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Previous page">&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -533,6 +556,7 @@
             <li class="page-item">
                 <form method="get" class="jump-form page-link p-1 px-2">
                     <input type="hidden" name="q" value="{{ q }}">
+                    <input type="hidden" name="dataset" value="{{ selected_dataset }}">
                     <input type="hidden" name="start_year" value="{{ start_year }}">
                     <input type="hidden" name="end_year" value="{{ end_year }}">
                     {% for pid in selected_polity_ids %}
@@ -547,14 +571,14 @@
             </li>
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Next page">&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
             {% endif %}
             {% if page_obj.number < page_obj.paginator.num_pages %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ q|urlencode }}&dataset={{ selected_dataset|urlencode }}&start_year={{ start_year }}&end_year={{ end_year }}{% for pid in selected_polity_ids %}&polity={{ pid }}{% endfor %}" aria-label="Last page">&raquo;&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>

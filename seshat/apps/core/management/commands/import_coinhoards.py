@@ -31,7 +31,9 @@ Integration steps (run from the directory that contains ``manage.py``, e.g.
 
 3. **Re-runs are safe**: rows are keyed by ``external_dataset_id`` (e.g.
    ``CHRE04630`` from CSV ``id``). Existing rows are updated; new rows are
-   created and ``seshat_id`` is assigned for new records only.
+   created and ``seshat_id`` is assigned for new records only. Model-ready
+   CSVs are full-record imports: the command rejects files missing any modeled
+   column rather than treating absent columns as blank values.
 
 4. **Quick sanity check** (optional)::
 
@@ -68,6 +70,36 @@ from seshat.apps.core.models import CoinHoard
 
 NULL_LIKE = {"", "not available", "n/a", "none", "null", "unknown"}
 DEFAULT_SOURCE = "Coin Hoards of the Roman Empire"
+MODEL_READY_REQUIRED_COLUMNS = (
+    "external_dataset_id",
+    "raw_external_id",
+    "data_source",
+    "hoard_name",
+    "number_of_coins",
+    "discovery_method",
+    "discovery_year1",
+    "discovery_year2",
+    "opening_year1",
+    "opening_year2",
+    "year_from",
+    "year_to",
+    "deposit_year_from",
+    "deposit_year_to",
+    "deposit_display",
+    "find_spot_rating",
+    "contextual_rating",
+    "numismatic_rating",
+    "latitude",
+    "longitude",
+    "altitude",
+    "city",
+    "county",
+    "region",
+    "country",
+    "summary",
+    "external_source_text",
+    "external_url",
+)
 
 
 def normalize_str(value):
@@ -151,18 +183,45 @@ def normalize_choice(value, allowed_values):
     return value if value in allowed_values else ""
 
 
-def is_model_ready_row(row):
-    return normalize_str(row.get("external_dataset_id")) != ""
+def validate_model_ready_csv(fieldnames, rows):
+    missing = sorted(set(MODEL_READY_REQUIRED_COLUMNS) - set(fieldnames))
+    if missing:
+        raise CommandError(
+            "Model-ready CSV is incomplete and was not imported. Missing columns: "
+            + ", ".join(missing)
+        )
+
+    seen_ids = {}
+    for row_number, row in enumerate(rows, start=2):
+        ext_id = normalize_str(row.get("external_dataset_id"))
+        if not ext_id:
+            raise CommandError(
+                f"Model-ready CSV row {row_number} has a blank external_dataset_id."
+            )
+        if len(ext_id) > 32:
+            raise CommandError(
+                f"Model-ready CSV row {row_number} has an external_dataset_id longer than 32 characters: {ext_id}"
+            )
+        if not normalize_str(row.get("data_source")):
+            raise CommandError(
+                f"Model-ready CSV row {row_number} ({ext_id}) has a blank data_source."
+            )
+        first_row = seen_ids.get(ext_id)
+        if first_row is not None:
+            raise CommandError(
+                f"Duplicate external_dataset_id {ext_id} in model-ready CSV rows {first_row} and {row_number}."
+            )
+        seen_ids[ext_id] = row_number
 
 
 def normalize_model_ready_payload(row):
-    ext_id = clip_str(row.get("external_dataset_id"), 32)
+    ext_id = normalize_str(row.get("external_dataset_id"))
     if not ext_id:
         return None
     return {
         "external_dataset_id": ext_id,
         "raw_external_id": clip_str(row.get("raw_external_id"), 32),
-        "data_source": clip_str(row.get("data_source"), 128) or DEFAULT_SOURCE,
+        "data_source": clip_str(row.get("data_source"), 128),
         "hoard_name": clip_str(row.get("hoard_name"), 255),
         "number_of_coins": parse_int(row.get("number_of_coins")),
         "discovery_method": normalize_choice(
@@ -268,18 +327,34 @@ class Command(BaseCommand):
 
         try:
             with open(csv_path, newline="", encoding="utf-8-sig") as handle:
-                rows = list(csv.DictReader(handle))
+                reader = csv.DictReader(handle)
+                fieldnames = reader.fieldnames or []
+                rows = list(reader)
         except FileNotFoundError as exc:
             raise CommandError(f"CSV not found: {csv_path}") from exc
 
-        normalized = []
-        for row in rows:
-            payload = (
-                normalize_model_ready_payload(row)
-                if is_model_ready_row(row)
-                else normalize_chre_payload(row)
+        if not fieldnames:
+            raise CommandError("CSV is missing a header row.")
+
+        is_model_ready_csv = "external_dataset_id" in fieldnames
+        if is_model_ready_csv:
+            validate_model_ready_csv(fieldnames, rows)
+        elif "id" not in fieldnames:
+            raise CommandError(
+                "Unrecognized coin-hoard CSV schema: expected external_dataset_id or legacy CHRE id column."
             )
+
+        normalized = []
+        seen_ids = set()
+        for row_number, row in enumerate(rows, start=2):
+            payload = normalize_model_ready_payload(row) if is_model_ready_csv else normalize_chre_payload(row)
             if payload:
+                ext_id = payload["external_dataset_id"]
+                if ext_id in seen_ids:
+                    raise CommandError(
+                        f"Duplicate external_dataset_id {ext_id} at CSV row {row_number}."
+                    )
+                seen_ids.add(ext_id)
                 normalized.append(payload)
 
         existing = {

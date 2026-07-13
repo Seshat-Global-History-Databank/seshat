@@ -5,7 +5,7 @@ from io import StringIO
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Prefetch, Q, prefetch_related_objects
+from django.db.models import Count, Prefetch, Q, prefetch_related_objects
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
@@ -164,6 +164,16 @@ def _coinhoard_mapped_polity_choices():
     return [{"id": p.id, "label": _coinhoard_mapped_polity_label(p)} for p in polities]
 
 
+def _coinhoard_dataset_choices():
+    return list(
+        CoinHoard.objects.exclude(data_source="")
+        .exclude(data_source__isnull=True)
+        .values("data_source")
+        .annotate(count=Count("id"))
+        .order_by("data_source")
+    )
+
+
 def _valid_selected_polity_ids(request):
     raw_ids = request.GET.getlist("polity")
     unique_ids = []
@@ -194,6 +204,8 @@ COINHOARD_CSV_DEFAULT_COLS = (
     "external_url",
 )
 
+POLITY_COINHOARD_PREVIEW_LIMIT = 10
+
 
 def _format_year(value):
     if value is None:
@@ -217,11 +229,52 @@ def _format_deposit_date(hoard):
     return range_text or display
 
 
-def _external_dataset_id_label(value):
-    value = str(value or "").strip()
-    if value.startswith("COUPLAND_") and value.removeprefix("COUPLAND_").isdigit():
-        return value.replace("COUPLAND_", "COUPLAND", 1)
-    return value
+def _coinhoard_location_label(hoard):
+    parts = []
+    seen = set()
+    for value in (hoard.city, hoard.county, hoard.region, hoard.country):
+        part = str(value or "").strip()
+        normalized = part.casefold()
+        if part and normalized not in seen:
+            seen.add(normalized)
+            parts.append(part)
+    if parts:
+        return ", ".join(parts)
+    if hoard.latitude is not None and hoard.longitude is not None:
+        return f"{hoard.latitude:.3f}, {hoard.longitude:.3f}"
+    return ""
+
+
+def coinhoard_polity_context(polity_id, preview_limit=POLITY_COINHOARD_PREVIEW_LIMIT):
+    queryset = CoinHoard.objects.filter(
+        polity_mappings__polity_id=polity_id
+    ).distinct()
+    count = queryset.count()
+    context = {
+        "associated_coinhoards": [],
+        "coinhoard_count": count,
+        "coinhoard_dataset_counts": [],
+        "coinhoard_has_more": False,
+    }
+    if not count:
+        return context
+
+    context["coinhoard_dataset_counts"] = list(
+        CoinHoard.objects.filter(polity_mappings__polity_id=polity_id)
+        .order_by()
+        .values("data_source")
+        .annotate(count=Count("id", distinct=True))
+        .order_by("data_source")
+    )
+    hoards = list(queryset.order_by("external_dataset_id")[:preview_limit])
+    for hoard in hoards:
+        hoard.location_label = _coinhoard_location_label(hoard)
+        hoard.terminal_year_label = _format_year_range(hoard.year_from, hoard.year_to)
+        hoard.deposit_year_label = _format_deposit_date(hoard)
+
+    context["associated_coinhoards"] = hoards
+    context["coinhoard_has_more"] = count > len(hoards)
+    return context
 
 
 def _has_terminal_date_q():
@@ -256,6 +309,7 @@ def _temporal_filter_q(predicate):
 
 def _filtered_coinhoard_queryset(request):
     q = request.GET.get("q", "").strip()
+    dataset = request.GET.get("dataset", "").strip()
     start = request.GET.get("start_year", "").strip()
     end = request.GET.get("end_year", "").strip()
 
@@ -267,6 +321,9 @@ def _filtered_coinhoard_queryset(request):
             | Q(hoard_name__icontains=q)
             | Q(country__icontains=q)
         )
+
+    if dataset:
+        queryset = queryset.filter(data_source=dataset)
 
     try:
         if start:
@@ -294,7 +351,7 @@ def _filtered_coinhoard_queryset(request):
     if selected_polity_ids:
         queryset = queryset.filter(polity_mappings__polity_id__in=selected_polity_ids).distinct()
 
-    return queryset, q, start, end, selected_polity_ids
+    return queryset, q, dataset, start, end, selected_polity_ids
 
 
 def _mapped_polities_export_text(hoard):
@@ -328,7 +385,10 @@ def _coinhoard_csv_cell_value(hoard, key):
 
 @login_required
 def hoard_list(request):
-    queryset, q, start, end, selected_polity_ids = _filtered_coinhoard_queryset(request)
+    queryset, q, dataset, start, end, selected_polity_ids = _filtered_coinhoard_queryset(
+        request
+    )
+    dataset_options = _coinhoard_dataset_choices()
     polity_options = _coinhoard_mapped_polity_choices()
     polity_label_by_id = {str(item["id"]): item["label"] for item in polity_options}
     selected_polity_items = [
@@ -357,7 +417,6 @@ def hoard_list(request):
         hoard.source_record_url = _source_record_url(hoard)
         hoard.terminal_year_label = _format_year_range(hoard.year_from, hoard.year_to)
         hoard.deposit_year_label = _format_deposit_date(hoard)
-        hoard.external_dataset_id_label = _external_dataset_id_label(hoard.external_dataset_id)
         seen_polity_ids = set()
         hoard.mapped_polities = []
         for mapping in hoard.polity_mappings.all():
@@ -377,6 +436,8 @@ def hoard_list(request):
         {
             "page_obj": page_obj,
             "q": q,
+            "selected_dataset": dataset,
+            "coinhoard_dataset_options": dataset_options,
             "start_year": start,
             "end_year": end,
             "selected_polity_ids": selected_polity_ids,
@@ -443,7 +504,6 @@ def hoard_detail(request, external_dataset_id):
         external_dataset_id=external_dataset_id,
     )
     hoard.source_record_url = _source_record_url(hoard)
-    hoard.external_dataset_id_label = _external_dataset_id_label(hoard.external_dataset_id)
     hoard.findspot_label, hoard.findspot_class = _rating_meta(hoard.find_spot_rating)
     hoard.context_label, hoard.context_class = _rating_meta(hoard.contextual_rating)
     hoard.numismatic_label, hoard.numismatic_class = _rating_meta(hoard.numismatic_rating)
