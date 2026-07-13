@@ -225,6 +225,19 @@ class CoinHoardViewHelperTests(SimpleTestCase):
             "https://www.britnumsoc.uk/hoard/ENG0735",
         )
 
+    def test_source_record_url_builds_bns_url_from_raw_id(self):
+        hoard = CoinHoard(
+            external_dataset_id="BNSCY0137",
+            raw_external_id="CY0137",
+            data_source="British Numismatic Society",
+            external_url="https://www.britnumsoc.org/mchbi",
+        )
+
+        self.assertEqual(
+            _source_record_url(hoard),
+            "https://www.britnumsoc.uk/hoard/CY0137",
+        )
+
     def test_source_record_url_uses_coinhoards_org_per_hoard_url(self):
         hoard = CoinHoard(
             external_dataset_id="CHORGigch0091",
@@ -236,6 +249,19 @@ class CoinHoardViewHelperTests(SimpleTestCase):
         self.assertEqual(
             _source_record_url(hoard),
             "http://coinhoards.org/id/igch0091",
+        )
+
+    def test_source_record_url_builds_coinhoards_org_url_from_raw_id(self):
+        hoard = CoinHoard(
+            external_dataset_id="CHORGCHANGE0006",
+            raw_external_id="change.0006",
+            data_source="CoinHoards.org",
+            external_url="http://coinhoards.org/",
+        )
+
+        self.assertEqual(
+            _source_record_url(hoard),
+            "http://coinhoards.org/id/change.0006",
         )
 
 

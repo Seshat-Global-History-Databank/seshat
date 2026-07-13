@@ -13,6 +13,8 @@ from django.utils import timezone
 from .models import CoinHoard, CoinHoardPolityMapping, Polity
 
 CHRE_BASE_URL = "https://chre.ashmus.ox.ac.uk/hoard/"
+BNS_RECORD_BASE_URL = "https://www.britnumsoc.uk/hoard/"
+COINHOARDS_ORG_RECORD_BASE_URL = "http://coinhoards.org/id/"
 CHRE_DATA_SOURCE = "Coin Hoards of the Roman Empire"
 BNS_DATA_SOURCE = "British Numismatic Society"
 COINHOARDS_ORG_DATA_SOURCE = "CoinHoards.org"
@@ -55,6 +57,10 @@ def _source_record_url_from_parts(
     raw_id = str(raw_external_id or "").strip()
     if source == CHRE_DATA_SOURCE and raw_id.isdigit():
         return f"{CHRE_BASE_URL}{int(raw_id)}"
+    if source == BNS_DATA_SOURCE and raw_id:
+        return f"{BNS_RECORD_BASE_URL}{raw_id}"
+    if source == COINHOARDS_ORG_DATA_SOURCE and raw_id:
+        return f"{COINHOARDS_ORG_RECORD_BASE_URL}{raw_id}"
     return ""
 
 
