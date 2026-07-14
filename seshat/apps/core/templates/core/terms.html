@@ -7,29 +7,26 @@
     <div>
         {{terms.body_html|safe}}
     </div>
-  {% if false %}
-
-        <div class="modal-footer">
-            {% if TERMS_ALREADY_ACCEPTED %}
-                <div class="text-start me-auto">
+    <div class="d-flex align-items-center border-top mt-3 pt-3">
+        {% if TERMS_ALREADY_ACCEPTED %}
+            <div class="text-start me-auto">
                 <div class="alert alert-success mb-0" role="alert">
-                    You’ve already accepted <strong>{{ TERMS_CURRENT.title }}</strong>
+                    You’ve already accepted <strong>{{ terms.title }}</strong>
                     {% if TERMS_ACCEPTED_AT %} on {{ TERMS_ACCEPTED_AT|date:"Y-m-d" }}{% endif %}.
                 </div>
-                </div>
-                <a href="{% url 'seshat-index' %}" class="btn btn-primary">
-                Home
-                </a>
-            {% else %}
-                <form id="terms-accept-form" method="post" action="{% url 'terms_accept' %}">
+            </div>
+            <a href="{{ next|default:'/' }}" class="btn btn-primary">Continue</a>
+        {% elif user.is_authenticated %}
+            <form id="terms-accept-form" method="post" action="{% url 'terms_accept' %}">
                 {% csrf_token %}
-                <input type="hidden" name="next" value="{{ my_caller|default:request.get_full_path }}">
+                <input type="hidden" name="next" value="{{ next|default:'/' }}">
                 <button type="submit" class="btn btn-success">I Agree</button>
-                </form>
-                <a href="{% url 'seshat-index' %}" class="btn btn-outline-secondary">Cancel</a>
-            {% endif %}
-        </div>
-{% endif %}
+            </form>
+            <a href="{% url 'account_logout' %}" class="btn btn-outline-secondary ms-2">Sign out</a>
+        {% else %}
+            <a href="{% url 'seshat-index' %}" class="btn btn-primary ms-auto">Home</a>
+        {% endif %}
+    </div>
 
 </div>
 

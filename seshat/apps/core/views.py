@@ -19,7 +19,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User, Group, Permission
@@ -7053,12 +7053,9 @@ def terms_current(request):
             accepted_at = qs.first().accepted_at
 
     next_url = request.GET.get("next") or "/"
-    my_caller = request.META.get("HTTP_REFERER")
-
     return render(request, "core/terms.html", {
         "terms": current, 
         "next": next_url,
-        'my_caller': my_caller,
         "TERMS_ALREADY_ACCEPTED": already_accepted,
         "TERMS_ACCEPTED_AT": accepted_at,})
 
@@ -7084,7 +7081,14 @@ def terms_accept(request):
                 "user_agent": request.META.get("HTTP_USER_AGENT", "")[:1000],
             }
         )
-        return redirect(request.POST.get("next") or "/")
+        next_url = request.POST.get("next") or "/"
+        if not url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            next_url = "/"
+        return redirect(next_url)
     #return redirect(f"{reverse('terms_launch')}?next={quote(request.get_full_path())}")
 
     return redirect(reverse("seshat-index"))
