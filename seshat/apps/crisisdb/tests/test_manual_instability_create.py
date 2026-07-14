@@ -6,7 +6,11 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
-from seshat.apps.accounts.models import Seshat_Expert
+from seshat.apps.accounts.models import (
+    Seshat_Expert,
+    TermsAcceptance,
+    TermsVersion,
+)
 from seshat.apps.core.models import Polity, SeshatComment
 from seshat.apps.crisisdb.instability_filters import (
     GOOD_ROW_FILTER,
@@ -35,6 +39,9 @@ class InstabilityCreateViewTests(TestCase):
             Permission.objects.get(codename="add_seshatprivatecommentpart")
         )
         Seshat_Expert.objects.create(user=user, role=Seshat_Expert.RA)
+        current_terms = TermsVersion.objects.filter(is_active=True).first()
+        if current_terms:
+            TermsAcceptance.objects.create(user=user, terms=current_terms)
         self.user = user
         self.client.force_login(user)
 

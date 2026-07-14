@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model, login
 from django.conf import settings
 from django.shortcuts import redirect
 from django.urls import reverse, resolve, Resolver404
+
 from .terms_utils import user_has_accepted_latest_terms
 
 class AutoLoginMiddleware:
@@ -30,7 +31,12 @@ class AutoLoginMiddleware:
 # core/middleware.py
 
 EXEMPT_PREFIXES = ('/admin/', '/static/', '/media/')
-EXEMPT_VIEWNAMES = {'terms_current', 'terms_accept', 'account_login', 'account_logout'}
+EXEMPT_VIEWNAMES = {
+    'terms_current',
+    'terms_accept',
+    'account_login',
+    'account_logout',
+}
 
 class EnforceLatestTermsMiddleware:
     def __init__(self, get_response):
@@ -47,7 +53,8 @@ class EnforceLatestTermsMiddleware:
         if not (user and user.is_authenticated):
             return self.get_response(request)
 
-        # Already accepted → clear any stale flags and continue
+        # Acceptance is recorded per TermsVersion, so accepting an older version
+        # does not satisfy the currently active agreement.
         if user_has_accepted_latest_terms(user):
             request.session.pop('FORCE_TERMS_MODAL', None)
             request.session.pop('TERMS_MODAL_SHOWN', None)
@@ -61,14 +68,14 @@ class EnforceLatestTermsMiddleware:
         if view_name in EXEMPT_VIEWNAMES:
             return self.get_response(request)
 
-        # 🔑 First non-exempt hit this session → arm one-shot modal
+        # The original workflow shows the active agreement in a modal on the
+        # requested page. The context processor consumes this one-shot flag.
         request.session['FORCE_TERMS_MODAL'] = True
 
-        if "download" in path:
-            if user and user.is_authenticated:
-                if not user_has_accepted_latest_terms(user):
-                    return redirect(reverse("seshat-index"))
-
+        # Downloads cannot render the modal, so return to the homepage where it
+        # will be shown before the user can retry the download.
+        if 'download' in path:
+            return redirect(reverse('seshat-index'))
 
         return self.get_response(request)
 
