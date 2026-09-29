@@ -2,6 +2,7 @@
 
 from django.core.management.base import BaseCommand
 from seshat.apps.core.models import Section, Subsection, Variablehierarchy
+from seshat.apps.general.var_defs import SUPRAPOLITY_RELATIONS_DEFINITION
 
 VARIABLE_DATA = [{'name': 'Long Wall',
   'section': 'Fortifications',
@@ -980,7 +981,7 @@ VARIABLE_DATA = [{'name': 'Long Wall',
   'subsection': None,
   'db_section': 'General',
   'who_can_access': 'public',
-  'var_def': 'unknown/ none/ alliance/ nominal allegiance/ personal union/ vassalage/\n\n\'alliance\' = belongs to a long-term military-political alliance of independent polities (\'long-term\' refers to more or less permanent relationship between polities extending over multiple years)\n\'nominal allegiance\' = same as \'nominal\' under the variable "Degree of centralization" but now reflecting the position of the focal polity within the overarching political authority\n\'personal union\' = the focal polity is united with another, or others, as a result of a dynastic marriage\n\'vassalage\' = corresponding to \'loose\' category in the Degree of centralization'},
+  'var_def': SUPRAPOLITY_RELATIONS_DEFINITION},
  {'name': 'Polity Capital',
   'section': 'Identity and Location',
   'subsection': None,

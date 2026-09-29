@@ -58,9 +58,9 @@ POLITY_CONSECUTIVE_ENTITY_CHOICES = (
 )
 
 POLITY_SUPRAPOLITY_RELATIONS_CHOICES = (
-('vassalage', 'vassalage to'),
+('vassalage', 'subject to'),
 ('alliance', 'alliance with'),
-('nominal allegiance', 'nominal allegiance to'),
+('nominal allegiance', 'nominally subject to'),
 ('personal union', 'personal union with'),
 ('unknown', 'unknown'),
 ('uncoded', 'uncoded'),
