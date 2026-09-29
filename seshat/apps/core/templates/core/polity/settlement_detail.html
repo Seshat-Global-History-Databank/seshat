@@ -779,12 +779,20 @@
     if (lat && lon) {
       var map = L.map('map').setView([lat, lon], 6); // zoom level 6
 
-      var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      var osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       });
 
       var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: '&copy; Esri, Maxar, Earthstar Geographics, and the GIS community'
+      });
+
+      // Keep the map usable if OpenStreetMap rejects a tile request.
+      osmLayer.on('tileerror', function () {
+        if (map.hasLayer(osmLayer)) {
+          map.removeLayer(osmLayer);
+          satelliteLayer.addTo(map);
+        }
       });
 
       osmLayer.addTo(map);
@@ -879,5 +887,4 @@
   
 
 {% endblock content%}
-
 

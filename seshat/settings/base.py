@@ -45,6 +45,9 @@ DEBUG = False
 if os.path.exists(local_env_path):
     DEBUG = config("DEBUG", default=True, cast=bool) 
 
+# Tile services need an origin referrer; do not expose individual page paths.
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
 # if DEBUG:
 #     MY_CURRENT_SERVER = "http://127.0.0.1:8000"
 # else:

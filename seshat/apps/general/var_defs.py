@@ -2,6 +2,14 @@ swapped_dict = {
     'Widespread_religion': 'Widespread religion',}
 
 
+SUPRAPOLITY_RELATIONS_DEFINITION = """unknown/ none/ alliance/ personal union/ subject to/ nominally subject to/
+
+'alliance' = belongs to a long-term military-political alliance of independent polities ('long-term' refers to more or less permanent relationship between polities extending over multiple years)
+'personal union' = the focal polity is united with another, or others, as a result of a dynastic marriage
+'subject to' = the polity is subject to political, economic, and/or military control by another state. Includes vassalage, colonial domination, or consistent external interference. May be part of a larger structure (e.g., Holy Roman Empire or South Asian mandala system).
+'nominally subject to' = the polity pays formal allegiance (e.g., acknowledges the suzerainty of) to another polity while maintaining political, military, and economic independence. Often corresponds to “nominal” under the degree of centralization of the dominant polity."""
+
+
 general_var_defs = {
     #'Polity capital':"The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence.",
     'polity_utm_zone': 'Usually where the capital city is locate. List only one per polity.',
@@ -16,12 +24,7 @@ general_var_defs = {
 'loose' = the central government exercises a certain degree of control, especially over military matters and international relations. Otherwise the regional rulers are left alone (example: European 'feudalism' after the collapse of the Carolingian empire)
 'confederated state' = regions enjoy a large degree of autonomy in internal (regional) government. In particular, the regional governors are either hereditary rulers, or are elected by regional elites or by the population of the region; and regional governments can levy and dispose of regional taxes. Use this category for the more centralized 'feudal states'.
 'unitary state' = regional governors are appointed and removed by the central authorities, taxes are imposed by, and transmitted to the center""",
-    'polity_suprapolity_relations': """unknown/ none/ alliance/ nominal allegiance/ personal union/ vassalage/
-
-'alliance' = belongs to a long-term military-political alliance of independent polities ('long-term' refers to more or less permanent relationship between polities extending over multiple years)
-'nominal allegiance' = same as 'nominal' under the variable "Degree of centralization" but now reflecting the position of the focal polity within the overarching political authority
-'personal union' = the focal polity is united with another, or others, as a result of a dynastic marriage
-'vassalage' = corresponding to 'loose' category in the Degree of centralization""",
+    'polity_suprapolity_relations': SUPRAPOLITY_RELATIONS_DEFINITION,
     'polity_capital': 'The city where the ruler spends most of its time. If there were more than one capital supply all names and enclose in curly braces. For example, {Susa; Pasargadae; Persepolis; Ecbatana; Babylon}. Note that the capital may be different from the largest city (see below). Capital may be difficult to code for archaeologically known societies. If there is reasonable basis to believe that the largest known settlement was the seat of the ruler code it as capital (and indicate uncertainty in the narrative paragraph). Archaeologists are able to recognize special architectural structures, such as a ceremonial centres and some kind of citadels or palaces. These features could be recognized with certainty after a careful study of the whole region and the settlement network. If such an inference cannot be made, code as "unknown" (again, the largest settlement is coded elsewhere).',
     'polity_language': 'The language(s) used polity-wide for administration, religion, and military affairs.',
     'polity_linguistic_family': 'Linguistic family of the Polity.',
@@ -40,4 +43,3 @@ general_var_defs = {
     'polity_religious_tradition': 'Religious tradition  of the Polity.',
 
 }
-
